@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mycompany.airtunes.R;
 import com.wrapper.spotify.methods.TrackSearchRequest;
@@ -28,10 +29,24 @@ public class PlaylistActivity extends ActionBarActivity {
     public static ArrayList<String> queueSongs;
     ListView playlist;
     Exception mException = null;
+
+    // Properties for non-song attributes
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
+
+        //Wai's Code on Receiving Groups
+        Group model = (Group) getIntent().getSerializableExtra("Group");
+        System.out.println("Group name received is: " + model.groupName);
+        // Update Room information
+        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
+        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+
+
+
+
         playlist = (ListView) findViewById(R.id.listView);
         queue = new ArrayList<Track>();
         queueSongs = new ArrayList<String>();

@@ -2,6 +2,7 @@ package com.mycompany.airtunes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,9 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mycompany.airtunes.R;
+import com.wrapper.spotify.models.Playlist;
+
+import java.io.Serializable;
 
 
 public class SearchGroupActivity extends Activity {
@@ -60,23 +64,9 @@ public class SearchGroupActivity extends Activity {
         }
         Log.d("Message: ", "Group found: " + group.groupName);
 
-
-        // TODO: Akash
-        /* TODO: Akash
-
-        Intent goToRoom = new Intent(this, PlayButtonClickActivity.class);
-        goToRoom.putExtra("Size", boardSize);
-        startActivityForResult(startPlay, SearchButtonActivity_ID);
-
-        //receive
-            ClassName model = (ClassName) getIntent().getSerializableExtra("Editing");
-
-            And
-
-            Class ClassName implements Serializable {
-            }
-          */
-
+        Intent goToRoom = new Intent(this, PlaylistActivity.class);
+        goToRoom.putExtra("Group", group);
+        startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
 

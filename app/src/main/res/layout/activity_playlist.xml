@@ -9,12 +9,45 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mycompany.airtunes.PlaylistActivity">
 
+
+    <TextView
+        android:id="@+id/roomTagView"
+        android:text="Room Name is: "
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/roomNameView"
+        android:layout_alignRight="@id/roomTagView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:id="@+id/ownerTagView"
+        android:text="Owner of Room: "
+        android:layout_alignBottom="@id/roomTagView"
+        android:layout_alignLeft="@id/roomTagView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/ownerView"
+        android:layout_alignRight="@id/ownerTagView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:dividerHeight="1px"
+        android:layout_alignBottom="@id/ownerTagView"
+        android:layout_alignParentLeft="true"
+        android:divider="#c92121"
+        />
 
 
 </RelativeLayout>
