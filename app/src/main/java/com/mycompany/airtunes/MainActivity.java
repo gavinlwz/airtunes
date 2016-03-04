@@ -95,7 +95,9 @@ public class MainActivity extends Activity implements
                         mPlayer.addConnectionStateCallback(MainActivity.this);
                         mPlayer.addPlayerNotificationCallback(MainActivity.this);
                         //mPlayer.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V");
+
                     }
+
 
                     @Override
                     public void onError(Throwable throwable) {
@@ -104,11 +106,15 @@ public class MainActivity extends Activity implements
                 });
             }
         }
+        Intent i = new Intent(this, SearchGroupActivity.class);
+        startActivityForResult(i, 1);
     }
 
     @Override
     public void onLoggedIn() {
         Log.d("MainActivity", "User logged in");
+
+
     }
 
     @Override
