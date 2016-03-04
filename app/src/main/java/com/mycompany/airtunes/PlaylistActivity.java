@@ -1,8 +1,10 @@
 package com.mycompany.airtunes;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -26,6 +28,8 @@ public class PlaylistActivity extends ActionBarActivity {
     ArrayAdapter<String> queueAdapter;
     public static ArrayList<Track> queue;
     public static ArrayList<String> queueSongs;
+    boolean play = false;
+    boolean isShuffling = false;
     ListView playlist;
     Exception mException = null;
     @Override
@@ -39,7 +43,12 @@ public class PlaylistActivity extends ActionBarActivity {
         playlist.setAdapter(queueAdapter);
 //        queue.add("Hello");
 //        queue.add("Daft Punk");
-        new RetrieveStuff().execute("hymn for the weekend");
+
+
+
+        new RetrieveStuff().execute("take me to church");
+        new RetrieveStuff().execute("jesus take the wheel");
+        new RetrieveStuff().execute("happy pharrel");
         //MainActivity.mPlayer.play(queue.get(0).getUri());
         //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
 //        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();
@@ -52,10 +61,41 @@ public class PlaylistActivity extends ActionBarActivity {
 //            System.out.println("Something went wrong!" + e.getMessage());
 //        }
 
-
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Do something after 5s = 5000ms
+//                //buttons[inew][jnew].setBackgroundColor(Color.BLACK);
+//                if (queue.size() != 0) {
+//                    System.out.println(queue.get(0).getUri());
+//                    MainActivity.mPlayer.play(queue.get(0).getUri());
+//                }
+//            }
+//        }, 10000);
     }
 
-//    void makeApiRequest(String urlString) {
+    public void onPlayButtonClick(View view) {
+        play = !play;
+        if (play == true) {
+            MainActivity.mPlayer.resume();
+        } else {
+            MainActivity.mPlayer.pause();
+        }
+    }
+
+    public void onNextButtonClick(View view) {
+        MainActivity.mPlayer.skipToNext();
+    }
+
+    public void onShuffleButtonClick(View view) {
+        isShuffling = !isShuffling;
+        MainActivity.mPlayer.setShuffle(isShuffling);
+    }
+
+
+
+//    void makeAiRequest(String urlString) {
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
