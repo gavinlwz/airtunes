@@ -38,11 +38,16 @@ public class MainActivity extends Activity implements
     private static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
     // TODO: Replace with your redirect URI
     private static final String REDIRECT_URI = "airtunes-login://callback";
+    private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     private static final int REQUEST_CODE = 1337;
     private static String access_token;
     private final String USER_AGENT = "Mozilla/5.0";
 
-    Api api = Api.DEFAULT_API;
+    public static final Api api = Api.builder()
+            .clientId(CLIENT_ID)
+            .clientSecret(CLIENT_SECRET)
+            .redirectURI(REDIRECT_URI)
+            .build();
 
     // Create a request object for the type of request you want to make
     AlbumRequest request = api.getAlbum("7e0ij2fpWaxOEHv5fUYZjd").build();
@@ -74,6 +79,8 @@ public class MainActivity extends Activity implements
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+            access_token = response.getAccessToken();
+            api.setAccessToken(access_token);
             retrieveAlbum();
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 access_token = response.getAccessToken();
