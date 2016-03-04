@@ -94,7 +94,7 @@ public class MainActivity extends Activity implements
                 });
             }
         }
-        Intent i = new Intent(this, PlaylistActivity.class);
+        Intent i = new Intent(this, SearchGroupActivity.class);
         startActivityForResult(i, 1);
     }
 

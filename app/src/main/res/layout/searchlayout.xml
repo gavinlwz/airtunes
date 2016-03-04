@@ -43,7 +43,7 @@
             android:layout_width="227dp"
             android:layout_height="wrap_content"
             android:id="@+id/searchView"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_horizontal"
             android:background="#9d8181"
             android:minWidth="100dp"
             android:gravity="center_vertical"

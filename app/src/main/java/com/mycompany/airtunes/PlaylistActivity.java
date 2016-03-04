@@ -43,11 +43,11 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
 
         //Wai's Code on Receiving Groups
-//        Group model = (Group) getIntent().getSerializableExtra("Group");
-//        System.out.println("Group name received is: " + model.groupName);
-//        // Update Room information
-//        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
-//        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+        Group model = (Group) getIntent().getSerializableExtra("Group");
+        System.out.println("Group name received is: " + model.groupName);
+        // Update Room information
+        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
+        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
 
 
 
@@ -57,18 +57,13 @@ public class PlaylistActivity extends ActionBarActivity {
         queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
         playlist.setAdapter(queueAdapter);
 
-//        queue.add("Hello");
-//        queue.add("Daft Punk");
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
-        playlist.setAdapter(queueAdapter);
-
-        for (String song : model.songNames) {
-            new RetrieveStuff().execute(song);
-        }
-
-        for (String s : queueSongs) {
-            System.out.println("Song in queue: " + s);
-        }
+//        for (String song : model.songNames) {
+//            new RetrieveStuff().execute(song);
+//        }
+//
+//        for (String s : queueSongs) {
+//            System.out.println("Song in queue: " + s);
+//        }
 
 
 
@@ -107,7 +102,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onPlayButtonClick(View view) {
         play = !play;
-        if (play == true) {
+        if (play) {
             MainActivity.mPlayer.resume();
         } else {
             MainActivity.mPlayer.pause();
@@ -127,9 +122,8 @@ public class PlaylistActivity extends ActionBarActivity {
         SearchView search = (SearchView) findViewById(R.id.songSearchView);
         String query = search.getQuery() + "";
         new RetrieveStuff().execute(query);
-        ListView lv = (ListView) findViewById(R.id.listView);
-        PlaylistActivity.queueAdapter.notifyDataSetChanged();
-        lv.requestLayout();
+        //ListView lv = (ListView) findViewById(R.id.listView);
+//        lv.requestLayout();
 
 
     }

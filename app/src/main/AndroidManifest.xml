@@ -21,10 +21,13 @@
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <activity
             android:name=".SearchGroupActivity"
 
-            android:label="@string/title_activity_search_group" />
+            android:label="@string/title_activity_search_group">
+
+        </activity>
 
 
 
