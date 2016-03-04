@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mycompany.airtunes.R;
 import com.wrapper.spotify.methods.TrackSearchRequest;
@@ -25,30 +26,50 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class PlaylistActivity extends ActionBarActivity {
-    ArrayAdapter<String> queueAdapter;
+    public static ArrayAdapter<String> queueAdapter;
     public static ArrayList<Track> queue;
     public static ArrayList<String> queueSongs;
     boolean play = false;
     boolean isShuffling = false;
     ListView playlist;
     Exception mException = null;
+
+    // Properties for non-song attributes
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
+
+        //Wai's Code on Receiving Groups
+        Group model = (Group) getIntent().getSerializableExtra("Group");
+        System.out.println("Group name received is: " + model.groupName);
+        // Update Room information
+        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
+        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+
+
+
         playlist = (ListView) findViewById(R.id.listView);
         queue = new ArrayList<Track>();
         queueSongs = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
-        playlist.setAdapter(queueAdapter);
+
+
 //        queue.add("Hello");
 //        queue.add("Daft Punk");
+
 
 
 
         new RetrieveStuff().execute("take me to church");
         new RetrieveStuff().execute("jesus take the wheel");
         new RetrieveStuff().execute("happy pharrel");
+
+        new RetrieveStuff().execute("hymn for the weekend");
+
+        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
+        playlist.setAdapter(queueAdapter);
+
         //MainActivity.mPlayer.play(queue.get(0).getUri());
         //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
 //        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();

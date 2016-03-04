@@ -23,13 +23,14 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".SearchGroupActivity"
+
             android:label="@string/title_activity_search_group" />
+
+
 
         <activity
             android:name=".PlaylistActivity"
-            android:label="@string/title_activity_playlist">
-
-        </activity>
+            android:label="@string/title_activity_playlist" />
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
