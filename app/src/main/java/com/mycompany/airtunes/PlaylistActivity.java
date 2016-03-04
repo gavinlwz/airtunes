@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.mycompany.airtunes.R;
@@ -42,33 +43,33 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
 
         //Wai's Code on Receiving Groups
-        Group model = (Group) getIntent().getSerializableExtra("Group");
-        System.out.println("Group name received is: " + model.groupName);
-        // Update Room information
-        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
-        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+//        Group model = (Group) getIntent().getSerializableExtra("Group");
+//        System.out.println("Group name received is: " + model.groupName);
+//        // Update Room information
+//        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
+//        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
 
 
 
         playlist = (ListView) findViewById(R.id.listView);
         queue = new ArrayList<Track>();
         queueSongs = new ArrayList<String>();
-
+        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
+        playlist.setAdapter(queueAdapter);
 
 //        queue.add("Hello");
 //        queue.add("Daft Punk");
 
 
 
+        //new RetrieveStuff().execute("truffle butter");
+//
+//        new RetrieveStuff().execute("jesus take the wheel");
+//        new RetrieveStuff().execute("happy pharrel");
 
-        new RetrieveStuff().execute("take me to church");
-        new RetrieveStuff().execute("jesus take the wheel");
-        new RetrieveStuff().execute("happy pharrel");
 
-        new RetrieveStuff().execute("hymn for the weekend");
 
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
-        playlist.setAdapter(queueAdapter);
+
 
         //MainActivity.mPlayer.play(queue.get(0).getUri());
         //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
@@ -112,6 +113,17 @@ public class PlaylistActivity extends ActionBarActivity {
     public void onShuffleButtonClick(View view) {
         isShuffling = !isShuffling;
         MainActivity.mPlayer.setShuffle(isShuffling);
+    }
+
+    public void onAddSongButtonClick(View view) {
+        SearchView search = (SearchView) findViewById(R.id.songSearchView);
+        String query = search.getQuery() + "";
+        new RetrieveStuff().execute(query);
+        ListView lv = (ListView) findViewById(R.id.listView);
+        PlaylistActivity.queueAdapter.notifyDataSetChanged();
+        lv.requestLayout();
+
+
     }
 
 

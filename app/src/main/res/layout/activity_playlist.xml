@@ -39,23 +39,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-
-    <ListView
-        android:layout_width="wrap_content"
+    <SearchView
+        android:layout_width="227dp"
         android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:dividerHeight="1px"
+        android:id="@+id/songSearchView"
         android:layout_below="@id/ownerTagView"
-        android:layout_alignParentLeft="true"
-        android:divider="#c92121"
-        android:background="#e17979" />
+        android:layout_gravity="center_vertical"
+        android:background="#9d8181"
+        android:minWidth="100dp"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/songSearchView"
+        android:id="@+id/addButton"
+        android:onClick="onAddSongButtonClick"/>
+
+
+
 
     <ImageButton
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_below="@+id/listView"
         android:layout_centerInParent="true"
-        android:background="@mipmap/button_play"/>
+        android:background="@mipmap/button_play"
+        android:id="@+id/playButton"
+        android:onClick="onPlayButtonClick"/>
+
+    <ImageButton
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_toRightOf="@+id/playButton"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/button_play"
+        android:id="@+id/skipButton"
+        android:onClick="onNextButtonClick"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:dividerHeight="1px"
+        android:layout_below="@id/skipButton"
+        android:layout_alignParentLeft="true"
+        android:divider="#c92121"
+        android:background="#e17979" />
 
 
 </RelativeLayout>

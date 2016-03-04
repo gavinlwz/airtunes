@@ -51,7 +51,7 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
 
             MainActivity.mPlayer.queue(track.getUri());
 
-            PlaylistActivity.queueAdapter.notifyDataSetChanged();
+
 
 
             if (track.isExplicit()) {
