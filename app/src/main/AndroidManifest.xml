@@ -19,15 +19,17 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".SearchGroupActivity"
-            android:label="@string/title_activity_search_group" />
-
-        <activity
-            android:name=".PlaylistActivity"
-            android:label="@string/title_activity_playlist">
+            android:label="@string/title_activity_search_group">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".PlaylistActivity"
+            android:label="@string/title_activity_playlist">
+
         </activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
