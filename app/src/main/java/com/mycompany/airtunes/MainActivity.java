@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -20,9 +21,12 @@ import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.methods.AlbumRequest;
+import com.wrapper.spotify.methods.CurrentUserRequest;
 import com.wrapper.spotify.methods.TrackRequest;
 import com.wrapper.spotify.models.Album;
+import com.wrapper.spotify.models.Image;
 import com.wrapper.spotify.models.Track;
+import com.wrapper.spotify.models.User;
 
 
 public class MainActivity extends Activity implements
@@ -34,6 +38,7 @@ public class MainActivity extends Activity implements
     private static final String REDIRECT_URI = "airtunes-login://callback";
     private static final int REQUEST_CODE = 1337;
     private static String access_token;
+    private static String refresh_token;
     private final String USER_AGENT = "Mozilla/5.0";
 
     private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
@@ -57,11 +62,13 @@ public class MainActivity extends Activity implements
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN,
                 REDIRECT_URI);
-        builder.setScopes(new String[]{"user-read-private", "streaming"});
+        builder.setScopes(new String[]{"user-read-private", "streaming", "user-read-birthdate", "user-read-email"});
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
         new RetrieveStuff().execute();
+
 
     }
 
@@ -76,6 +83,8 @@ public class MainActivity extends Activity implements
 
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 access_token = response.getAccessToken();
+                refresh_token = response.getCode();
+
                 api.setAccessToken(access_token);
                 System.out.println("access_token " + access_token);
                 Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
@@ -138,28 +147,42 @@ public class MainActivity extends Activity implements
         super.onDestroy();
     }
 
-    class RetrieveStuff extends AsyncTask<String, Void, String> {
+    class RetrieveStuff extends AsyncTask<String, Void, User> {
 
         private Exception exception;
+        User user;
+        TextView tv;
 
-        protected String doInBackground(String... urls) {
 
-            final TrackRequest request = api.getTrack("0eGsygTp906u18L0Oimnem").build();
+        protected User doInBackground(String... urls) {
+            api.setAccessToken(access_token);
+            api.setRefreshToken(refresh_token);
+
+
+            final CurrentUserRequest request = api.getMe().build();
+            User user = null;
 
             try {
-                final Track track = request.get();
-                System.out.println("Retrieved track " + track.getName());
-                System.out.println("Its popularity is " + track.getPopularity());
+                user = request.get();
 
-                if (track.isExplicit()) {
-                    System.out.println("This track is explicit!");
-                } else {
-                    System.out.println("It's OK, this track isn't explicit.");
+                System.out.println("Display name: " + user.getDisplayName());
+                System.out.println("Email: " + user.getEmail());
+
+                System.out.println("Images:");
+                for (Image image : user.getImages()) {
+                    System.out.println(image.getUrl());
                 }
+
+                System.out.println("This account is a " + user.getProduct() + " account");
             } catch (Exception e) {
-                System.out.println("Something went wrong!" + e.getMessage());
+                e.printStackTrace();
             }
-            return "hallo";
+            tv = (TextView) findViewById(R.id.fuck);
+            return user;
+        }
+
+        protected void onPostExecute(String result) {
+            tv.setText(user.getDisplayName());
         }
 
 
