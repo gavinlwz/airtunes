@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 
@@ -19,17 +20,10 @@ import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.wrapper.spotify.Api;
 import com.wrapper.spotify.methods.AlbumRequest;
+import com.wrapper.spotify.methods.TrackRequest;
 import com.wrapper.spotify.models.Album;
+import com.wrapper.spotify.models.Track;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
 
 public class MainActivity extends Activity implements
         PlayerNotificationCallback, ConnectionStateCallback {
@@ -38,27 +32,28 @@ public class MainActivity extends Activity implements
     private static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
     // TODO: Replace with your redirect URI
     private static final String REDIRECT_URI = "airtunes-login://callback";
-    private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
+    //private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     private static final int REQUEST_CODE = 1337;
     private static String access_token;
     private final String USER_AGENT = "Mozilla/5.0";
 
-    public static final Api api = Api.builder()
+
+    private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
+
+
+    final Api api = Api.builder()
             .clientId(CLIENT_ID)
             .clientSecret(CLIENT_SECRET)
             .redirectURI(REDIRECT_URI)
             .build();
 
-    // Create a request object for the type of request you want to make
-    AlbumRequest request = api.getAlbum("7e0ij2fpWaxOEHv5fUYZjd").build();
-
-
 
     private Player mPlayer;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("goodness", "graciousme7");
+        Log.d("Hallo", "hi Wai");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -69,6 +64,8 @@ public class MainActivity extends Activity implements
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+        new RetrieveStuff().execute();
+
     }
 
     @Override
@@ -79,16 +76,14 @@ public class MainActivity extends Activity implements
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            access_token = response.getAccessToken();
-            api.setAccessToken(access_token);
-            retrieveAlbum();
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 access_token = response.getAccessToken();
+                api.setAccessToken(access_token);
+                System.out.println("access_token " + access_token);
                 Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
                 Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
                     @Override
                     public void onInitialized(Player player) {
-                        Log.d("goodness", "gracious");
                         mPlayer = player;
                         mPlayer.addConnectionStateCallback(MainActivity.this);
                         mPlayer.addPlayerNotificationCallback(MainActivity.this);
@@ -145,20 +140,34 @@ public class MainActivity extends Activity implements
         super.onDestroy();
     }
 
+    class RetrieveStuff extends AsyncTask<String, Void, String> {
 
-   public void retrieveAlbum() {
-        try {
-            Album album = request.get();
+        private Exception exception;
 
-            // Print the genres of the album
-            List<String> genres = album.getGenres();
-            for (String genre : genres) {
-                Log.d("Genres are", genre);
-            };
+        protected String doInBackground(String... urls) {
 
-        } catch (Exception e) {
-            System.out.println("Could not get albums.");
+            final TrackRequest request = api.getTrack("0eGsygTp906u18L0Oimnem").build();
+
+            try {
+                final Track track = request.get();
+                System.out.println("Retrieved track " + track.getName());
+                System.out.println("Its popularity is " + track.getPopularity());
+
+                if (track.isExplicit()) {
+                    System.out.println("This track is explicit!");
+                } else {
+                    System.out.println("It's OK, this track isn't explicit.");
+                }
+            } catch (Exception e) {
+                System.out.println("Something went wrong!" + e.getMessage());
+            }
+            return "hallo";
         }
+
+
+
     }
 
+
 }
+
