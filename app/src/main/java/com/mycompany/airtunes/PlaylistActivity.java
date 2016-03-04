@@ -24,7 +24,8 @@ import java.util.ArrayList;
 
 public class PlaylistActivity extends ActionBarActivity {
     ArrayAdapter<String> queueAdapter;
-    ArrayList<String> queue;
+    public static ArrayList<Track> queue;
+    public static ArrayList<String> queueSongs;
     ListView playlist;
     Exception mException = null;
     @Override
@@ -32,11 +33,14 @@ public class PlaylistActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
         playlist = (ListView) findViewById(R.id.listView);
-        queue = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queue);
+        queue = new ArrayList<Track>();
+        queueSongs = new ArrayList<String>();
+        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
         playlist.setAdapter(queueAdapter);
-        queue.add("Hello");
-        queue.add("Daft Punk");
+//        queue.add("Hello");
+//        queue.add("Daft Punk");
+        new RetrieveStuff().execute("hymn for the weekend");
+        //MainActivity.mPlayer.play(queue.get(0).getUri());
         //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
 //        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();
 //        Log.d(getClass().getName(), "" + request);

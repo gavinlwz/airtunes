@@ -2,12 +2,9 @@ package com.mycompany.airtunes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
-import android.view.View;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -19,9 +16,7 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.wrapper.spotify.Api;
-import com.wrapper.spotify.methods.AlbumRequest;
 import com.wrapper.spotify.methods.TrackRequest;
-import com.wrapper.spotify.models.Album;
 import com.wrapper.spotify.models.Track;
 
 
@@ -41,14 +36,14 @@ public class MainActivity extends Activity implements
     private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
 
 
-    final Api api = Api.builder()
+    public static final Api api = Api.builder()
             .clientId(CLIENT_ID)
             .clientSecret(CLIENT_SECRET)
             .redirectURI(REDIRECT_URI)
             .build();
 
 
-    private Player mPlayer;
+    public static Player mPlayer;
 
 
     @Override
@@ -64,7 +59,7 @@ public class MainActivity extends Activity implements
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-        new RetrieveStuff().execute();
+       // new RetrieveStuff().execute();
 
     }
 
@@ -140,34 +135,10 @@ public class MainActivity extends Activity implements
         super.onDestroy();
     }
 
-    class RetrieveStuff extends AsyncTask<String, Void, String> {
 
-        private Exception exception;
-
-        protected String doInBackground(String... urls) {
-
-            final TrackRequest request = api.getTrack("0eGsygTp906u18L0Oimnem").build();
-
-            try {
-                final Track track = request.get();
-                System.out.println("Retrieved track " + track.getName());
-                System.out.println("Its popularity is " + track.getPopularity());
-
-                if (track.isExplicit()) {
-                    System.out.println("This track is explicit!");
-                } else {
-                    System.out.println("It's OK, this track isn't explicit.");
-                }
-            } catch (Exception e) {
-                System.out.println("Something went wrong!" + e.getMessage());
-            }
-            return "hallo";
-        }
-
-
-
-    }
-
+    /**
+     * Created by akashsubramanian on 3/4/16.
+     */
 
 }
 
