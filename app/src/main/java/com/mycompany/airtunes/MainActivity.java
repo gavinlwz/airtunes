@@ -2,10 +2,8 @@ package com.mycompany.airtunes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +23,7 @@ import com.wrapper.spotify.methods.CurrentUserRequest;
 import com.wrapper.spotify.methods.TrackRequest;
 import com.wrapper.spotify.models.Album;
 import com.wrapper.spotify.models.Image;
+import com.wrapper.spotify.methods.TrackRequest;
 import com.wrapper.spotify.models.Track;
 import com.wrapper.spotify.models.User;
 
@@ -36,21 +35,24 @@ public class MainActivity extends Activity implements
     private static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
     // TODO: Replace with your redirect URI
     private static final String REDIRECT_URI = "airtunes-login://callback";
+    //private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     private static final int REQUEST_CODE = 1337;
     private static String access_token;
     private static String refresh_token;
     private final String USER_AGENT = "Mozilla/5.0";
 
+
     private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
 
-    final Api api = Api.builder()
+
+    public static final Api api = Api.builder()
             .clientId(CLIENT_ID)
             .clientSecret(CLIENT_SECRET)
             .redirectURI(REDIRECT_URI)
             .build();
 
 
-    private Player mPlayer;
+    public static Player mPlayer;
 
 
     @Override
@@ -67,7 +69,6 @@ public class MainActivity extends Activity implements
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-        new RetrieveStuff().execute();
 
 
     }
@@ -80,7 +81,6 @@ public class MainActivity extends Activity implements
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 access_token = response.getAccessToken();
                 refresh_token = response.getCode();
@@ -147,48 +147,11 @@ public class MainActivity extends Activity implements
         super.onDestroy();
     }
 
-    class RetrieveStuff extends AsyncTask<String, Void, User> {
-
-        private Exception exception;
-        User user;
-        TextView tv;
 
 
-        protected User doInBackground(String... urls) {
-            api.setAccessToken(access_token);
-            api.setRefreshToken(refresh_token);
-
-
-            final CurrentUserRequest request = api.getMe().build();
-            User user = null;
-
-            try {
-                user = request.get();
-
-                System.out.println("Display name: " + user.getDisplayName());
-                System.out.println("Email: " + user.getEmail());
-
-                System.out.println("Images:");
-                for (Image image : user.getImages()) {
-                    System.out.println(image.getUrl());
-                }
-
-                System.out.println("This account is a " + user.getProduct() + " account");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            tv = (TextView) findViewById(R.id.fuck);
-            return user;
-        }
-
-        protected void onPostExecute(String result) {
-            tv.setText(user.getDisplayName());
-        }
-
-
-
-    }
-
+    /**
+     * Created by akashsubramanian on 3/4/16.
+     */
 
 }
 
