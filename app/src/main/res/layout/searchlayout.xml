@@ -50,5 +50,15 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listOfGroups"
+            android:dividerHeight="1px"
+            android:layout_below="@id/createButton"
+            android:layout_alignParentLeft="true"
+            android:divider="#c92121" />
+
+
     </RelativeLayout>
 </LinearLayout>

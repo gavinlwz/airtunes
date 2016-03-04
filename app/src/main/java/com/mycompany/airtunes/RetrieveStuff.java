@@ -48,7 +48,6 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
             System.out.println("Its popularity is " + track.getPopularity());
             PlaylistActivity.queue.add(track);
             PlaylistActivity.queueSongs.add(track.getName());
-            PlaylistActivity.queueAdapter.notifyDataSetChanged();
 
             if (track.isExplicit()) {
                 System.out.println("This track is explicit!");
@@ -60,7 +59,7 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
         }
 
         return track;
-    }
+    } 
 
 
 

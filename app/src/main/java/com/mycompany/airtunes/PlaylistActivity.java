@@ -53,10 +53,20 @@ public class PlaylistActivity extends ActionBarActivity {
 
 //        queue.add("Hello");
 //        queue.add("Daft Punk");
-        new RetrieveStuff().execute("hymn for the weekend");
-
         queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
         playlist.setAdapter(queueAdapter);
+
+        for (String song : model.songNames) {
+            new RetrieveStuff().execute(song);
+        }
+
+        for (String s : queueSongs) {
+            System.out.println("Song in queue: " + s);
+        }
+
+
+
+
         //MainActivity.mPlayer.play(queue.get(0).getUri());
         //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
 //        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();
