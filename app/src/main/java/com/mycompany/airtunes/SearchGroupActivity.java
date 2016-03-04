@@ -69,5 +69,29 @@ public class SearchGroupActivity extends Activity {
         startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
+    public void onSearchUserClick(View view) {
+        String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
+        User user = sc.searchUser(search);
+        if (user == null) {
+            System.out.println("User not found!");
+            Context context = getApplicationContext();
+            CharSequence text = "User not found!";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            return;
+        } else {
+            Context context = getApplicationContext();
+            CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            return;
+        }
+
+    }
+
 
 }
