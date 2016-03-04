@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:background="#ffffff">
+    android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,8 +14,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
-        android:background="#9b9b83">
+        android:weightSum="1">
 
         <ImageButton
             android:layout_width="88dp"
@@ -24,7 +22,7 @@
             android:layout_alignLeft="@+id/searchView"
             android:text="2"
             android:id="@+id/searchButton"
-            android:src="@mipmap/button_search"
+            android:background="@mipmap/button_search"
             android:layout_below="@+id/searchView"
             android:onClick="onSearchButtonClick"/>
 
@@ -35,7 +33,7 @@
             android:layout_height="88dp"
             android:text="1"
             android:id="@+id/createButton"
-            android:src="@mipmap/button_create"
+            android:background="@mipmap/button_create"
             android:layout_below="@+id/searchView"
             android:layout_alignRight="@+id/searchView"
             android:layout_alignEnd="@+id/searchView"

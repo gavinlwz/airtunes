@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class PlaylistActivity extends ActionBarActivity {
-    ArrayAdapter<String> queueAdapter;
+    public static ArrayAdapter<String> queueAdapter;
     public static ArrayList<Track> queue;
     public static ArrayList<String> queueSongs;
     ListView playlist;
@@ -46,15 +46,17 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
 
-
         playlist = (ListView) findViewById(R.id.listView);
         queue = new ArrayList<Track>();
         queueSongs = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
-        playlist.setAdapter(queueAdapter);
+
+
 //        queue.add("Hello");
 //        queue.add("Daft Punk");
         new RetrieveStuff().execute("hymn for the weekend");
+
+        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
+        playlist.setAdapter(queueAdapter);
         //MainActivity.mPlayer.play(queue.get(0).getUri());
         //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
 //        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();

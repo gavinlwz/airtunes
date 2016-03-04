@@ -46,6 +46,9 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
             //track.setUri(uri[2]);
             System.out.println("Retrieved track " + track.getName());
             System.out.println("Its popularity is " + track.getPopularity());
+            PlaylistActivity.queue.add(track);
+            PlaylistActivity.queueSongs.add(track.getName());
+            PlaylistActivity.queueAdapter.notifyDataSetChanged();
 
             if (track.isExplicit()) {
                 System.out.println("This track is explicit!");
@@ -55,8 +58,7 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
         } catch (Exception e) {
             System.out.println("Something went wrong!" + e.getMessage());
         }
-        PlaylistActivity.queue.add(track);
-        PlaylistActivity.queueSongs.add(track.getName());
+
         return track;
     }
 
