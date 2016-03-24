@@ -1,6 +1,7 @@
 package com.mycompany.airtunes;
 
 import android.app.Activity;
+import android.os.*;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,6 +43,8 @@ public class SearchGroupActivity extends Activity {
      */
     private GoogleApiClient client;
 
+    FirebaseCalls fb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,10 @@ public class SearchGroupActivity extends Activity {
             }
         });
 
+        //Firebase stuff
+        fb = new FirebaseCalls();
+
+
 
     }
 
@@ -77,7 +85,28 @@ public class SearchGroupActivity extends Activity {
         sc.addGroup(groupName, "Wai Wu");
         transition(sc.groups.get(groupName));
         System.out.println("Created group");
+
+        //Firebase stuff
+        final Group newRoom = sc.groups.get(groupName);
+        fb.createRoom(newRoom);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                newRoom.addSong("New song!");
+                newRoom.addMember("Another Wai!");
+                testUpdateRoom(newRoom);
+            }
+        }, 5000);
+
     }
+
+    //Firebase test
+    public void testUpdateRoom(Group group) {
+        fb.updateRoom(group);
+    }
+
 
 
 

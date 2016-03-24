@@ -127,7 +127,6 @@ public class MainActivity extends Activity implements
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
         Firebase.setAndroidContext(this);
-        myFirebaseRef = new Firebase("https://crackling-fire-3903.firebaseio.com/");
 
 
         // Testing code

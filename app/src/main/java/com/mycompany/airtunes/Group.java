@@ -18,6 +18,7 @@ public class Group implements Serializable {
      String groupName;
      Set<String> songNames;
      String owner;
+     String fbID;
 
     // TODO: Akash Change song to actual Song objects
     // TODO: Arvind Pass the user object from login to constructor

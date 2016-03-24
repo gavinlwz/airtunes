@@ -6,7 +6,7 @@ package com.mycompany.airtunes;
 public class User {
     private String firstName;
     private String lastName;
-    private int id;
+    int id;
     private String username;
     private String password;
 
