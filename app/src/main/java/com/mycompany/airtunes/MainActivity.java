@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.SettableFuture;
@@ -98,6 +99,12 @@ public class MainActivity extends Activity implements
 
     String authorizeURL = api.createAuthorizeURL(scopes, state);
 
+    //Firebase stuff
+    Firebase myFirebaseRef;
+    User testUser;
+    Group testRoom;
+
+
 
 
 
@@ -115,6 +122,10 @@ public class MainActivity extends Activity implements
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+        Firebase.setAndroidContext(this);
+        myFirebaseRef = new Firebase("https://crackling-fire-3903.firebaseio.com/");
+
 
 
 

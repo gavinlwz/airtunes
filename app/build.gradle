@@ -57,6 +57,8 @@ dependencies {
 
     compile 'com.github.kaaes:spotify-web-api-android:0.3.0'
 
+    compile 'com.firebase:firebase-client-android:2.5.2+'
+
 
 }
 
