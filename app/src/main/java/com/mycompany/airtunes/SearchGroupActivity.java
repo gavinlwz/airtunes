@@ -66,10 +66,8 @@ public class SearchGroupActivity extends Activity {
         });
 
         //Firebase stuff
-        fb = new FirebaseCalls();
-
-
-
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
     }
 
     public void transition(Group group) {
@@ -82,23 +80,24 @@ public class SearchGroupActivity extends Activity {
     // Add group
     public void onCreateButtonClick(View view) {
         String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
+        System.out.println("New Group name is: " + groupName);
         sc.addGroup(groupName, "Wai Wu");
         transition(sc.groups.get(groupName));
         System.out.println("Created group");
 
         //Firebase stuff
-        final Group newRoom = sc.groups.get(groupName);
+        Group newRoom = sc.groups.get(groupName);
         fb.createRoom(newRoom);
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
                 // Do something after 5s = 5000ms
                 newRoom.addSong("New song!");
                 newRoom.addMember("Another Wai!");
                 testUpdateRoom(newRoom);
-            }
-        }, 5000);
+//            }
+//        }, 5000);
 
     }
 

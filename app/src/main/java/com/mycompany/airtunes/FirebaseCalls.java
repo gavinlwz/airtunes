@@ -1,7 +1,9 @@
 package com.mycompany.airtunes;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,19 +19,37 @@ public class FirebaseCalls {
     Firebase userIDOne;
     Firebase roomRef;
 
+    private static final FirebaseCalls dataHolder = new FirebaseCalls();
+    public static FirebaseCalls getInstance() { return dataHolder; }
 
-    public FirebaseCalls() {
+    private FirebaseCalls() {
         myFirebaseRef = new Firebase("https://crackling-fire-3903.firebaseio.com/");
         userRef = myFirebaseRef.child("users");
         userIDOne = userRef.child("1");
         roomRef = myFirebaseRef.child("rooms");
-    }
 
+
+        // Add event listeners
+        myFirebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("Data in firebase has changed, updated data is");
+                System.out.println(dataSnapshot.getValue());
+                Object updatedObj = dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+
+    }
 
     public void test() {
         // Testing code
         User testUser = new User("Wai", "Wu", "ihugacownow", 1);
-
         System.out.println("Just before saving data");
 
     }
@@ -38,7 +58,8 @@ public class FirebaseCalls {
 // Update Remote
 
     public void createRoom(Group group) {
-        final Firebase newRoomRef = roomRef.push();
+        // TODO: Check if there is existing room name
+        final Firebase newRoomRef = roomRef.child(group.getGroupName());
         newRoomRef.setValue(group, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -46,7 +67,6 @@ public class FirebaseCalls {
                     System.out.println("Room could not be saved. " + firebaseError.getMessage());
                 } else {
                     System.out.println("Room saved successfully with ID: " + newRoomRef.getKey());
-                    group.fbID = newRoomRef;
                 }
             }
         });
@@ -62,7 +82,6 @@ public class FirebaseCalls {
                     System.out.println("User could not be saved. " + firebaseError.getMessage());
                 } else {
                     System.out.println("User saved successfully  with ID: " + newUserRef.getKey());
-                    user.id = newUserRef.getKey() + "";
                 }
             }
         });
@@ -73,10 +92,12 @@ public class FirebaseCalls {
     }
 
     public void updateRoom(Group group) {
-       //Firebase updateRoomRef = this.roomRef.child(group.fbID);
-        Map<String, Object> groupInfo = new HashMap<String, Object>();
-        groupInfo.put(group.fbID, group);
-        this.roomRef.updateChildren(groupInfo);
+       Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
+        updateRoomRef.setValue(group);
+//        Map<String, Object> groupInfo = new HashMap<String, Object>();
+//
+//        groupInfo.put(group.fbID, group);
+//        this.roomRef.updateChildren(groupInfo);
 
     }
 

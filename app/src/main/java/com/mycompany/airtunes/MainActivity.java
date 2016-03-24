@@ -126,7 +126,6 @@ public class MainActivity extends Activity implements
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-        Firebase.setAndroidContext(this);
 
 
         // Testing code
