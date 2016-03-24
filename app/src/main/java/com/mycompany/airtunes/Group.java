@@ -14,13 +14,14 @@ import java.io.Serializable;
 
 
 public class Group implements Serializable {
-    List<String> memberNames;
-    String groupName;
-    Set<String> songNames;
-    String owner;
+     List<String> memberNames;
+     String groupName;
+     Set<String> songNames;
+     String owner;
 
     // TODO: Akash Change song to actual Song objects
     // TODO: Arvind Pass the user object from login to constructor
+    public Group() {};
     public Group(String groupName, String owner) {
         this.groupName = groupName;
         this.memberNames = new ArrayList<String>();
@@ -35,6 +36,23 @@ public class Group implements Serializable {
     public void addSong(String song) {
         this.songNames.add(song);
     }
+
+    public List<String> getMemberNames() {
+        return memberNames;
+    }
+
+    public Set<String> getSongNames() {
+        return songNames;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
 
 
 
