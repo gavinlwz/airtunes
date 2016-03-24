@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mycompany.airtunes.UserProfileActivity">
+    tools:context="com.mycompany.airtunes.UserSearchResultActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="115dp"
         android:text="New Text"
-        android:id="@+id/accountType"
+        android:id="@+id/privacy"
         android:layout_below="@+id/fullName"
         />
 
@@ -36,8 +36,4 @@
         android:id="@+id/searchUserButton"
         android:onClick="launchSearch"/>
 
-
-
 </RelativeLayout>
-
-

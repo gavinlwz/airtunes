@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class UserProfileActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             fullName = extras.getString("fullName");
+            System.out.println("full name is hallo there : " + fullName);
             accountType = extras.getString("accountType");
             profilePic = extras.getString("profilePic");
 
@@ -53,6 +55,13 @@ public class UserProfileActivity extends ActionBarActivity {
 
 
     }
+
+    public void launchSearch(View v) {
+        Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
+        startActivity(i);
+
+    }
+
 
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 

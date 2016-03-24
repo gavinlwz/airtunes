@@ -7,11 +7,13 @@ public class User {
     private String firstName;
     private String lastName;
     private int id;
+    private boolean privacy;
 
     public User(String firstName, String lastName, String username, int id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = id;
+        this.privacy = false;
     }
 
     private String username;
@@ -27,6 +29,14 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public boolean getPrivacy() {
+        return privacy;
+    }
+
+    public void togglePrivacy() {
+        privacy = !privacy;
     }
 
 }

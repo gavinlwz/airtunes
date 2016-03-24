@@ -35,7 +35,13 @@
             android:label="@string/title_activity_user_profile" />
         <activity
             android:name=".PremiumRedirectActivity"
-            android:label="@string/title_activity_premium_redirect"></activity>
+            android:label="@string/title_activity_premium_redirect" />
+        <activity
+            android:name=".UserSearchResultActivity"
+            android:label="@string/title_activity_user_search_result" />
+        <activity
+            android:name=".SearchUserActivity"
+            android:label="@string/title_activity_search_user"></activity>
     </application>
 
 </manifest>
