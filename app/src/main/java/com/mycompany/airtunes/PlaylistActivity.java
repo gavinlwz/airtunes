@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
 import com.mycompany.airtunes.R;
@@ -41,6 +42,9 @@ public class PlaylistActivity extends ActionBarActivity {
     boolean firstTimePlayButtonPressed = true;
     Song currentSong;
     User me;
+
+    ToggleButton toggleButton;
+
     // Properties for non-song attributes
 
     @Override
@@ -49,8 +53,10 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-        fb.test();
+        //fb.test();
         me = fb.currentUser;
+
+        toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
         //Wai's Code on Receiving Groups
 
@@ -136,6 +142,10 @@ public class PlaylistActivity extends ActionBarActivity {
                 MainActivity.mPlayer.pause();
             }
         }
+    }
+
+    public void onToggleStar(View view) {
+        
     }
 
     public void onNextButtonClick(View view) {
