@@ -15,7 +15,7 @@ public class User {
     private String lastName;
 
 
-    String identity;
+   // String identity;
     String name;
 
     private int id;
@@ -41,10 +41,10 @@ public class User {
         this.privacy = false;
     }
 
-    public User (String name, String username, String id) {
+    public User (String name, String username) {
         this.name = name;
         this.username = username;
-        this.identity = id;
+        //this.identity = id;
     }
 
 

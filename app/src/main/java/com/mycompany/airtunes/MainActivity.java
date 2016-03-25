@@ -328,10 +328,10 @@ public class MainActivity extends Activity implements
                 profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
                 username = (String) object.get("email");
                 id = (String) object.get("id");
-                User currentUser = new User(fullName, username, id);
+                User currentUser = new User(fullName, id);
                 int count = 0;
                 for (String u : fb.users.keySet()) {
-                    if (u.equals(username)) {
+                    if (u.equals(id)) {
                         count = 1;
                         break;
                     }
@@ -351,7 +351,7 @@ public class MainActivity extends Activity implements
                     i.putExtra("fullName", fullName);
                     i.putExtra("accountType", accountType);
                     i.putExtra("profilePic", profilePic);
-                    i.putExtra("username", username);
+                   // i.putExtra("username", username);
                     i.putExtra("id", id);
                     startActivity(i);
                 } else {

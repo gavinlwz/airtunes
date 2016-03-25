@@ -50,6 +50,7 @@ public class PlaylistActivity extends ActionBarActivity {
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
         fb.test();
+        me = fb.currentUser;
 
         //Wai's Code on Receiving Groups
 
