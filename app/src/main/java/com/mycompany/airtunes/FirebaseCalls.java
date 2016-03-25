@@ -192,8 +192,7 @@ public class FirebaseCalls {
             }
         });
 
-        Firebase memberRef = newRoomRef.child("memberNames");
-        memberRef.addChildEventListener(new ChildEventListener() {
+        newRoomRef.addChildEventListener(new ChildEventListener() {
 
             // Event
             @Override
@@ -204,6 +203,15 @@ public class FirebaseCalls {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                System.out.println("-----------------------------Child has been changed -----------------------");
+                System.out.println(dataSnapshot);
+                System.out.println(s);
+                //TODO: Hard coded
+                testGroup = groups.get("testing");
+                Object listOfMembers = dataSnapshot.child("memberNames").getValue();
+                String roomName = dataSnapshot.getKey();
+//                inviteRoom = roomName;
+                System.out.println("Members in invited room:  " + roomName + " are : " + listOfMembers);
 
             }
 
@@ -222,6 +230,7 @@ public class FirebaseCalls {
 
             }
         });
+
 
 
     }
