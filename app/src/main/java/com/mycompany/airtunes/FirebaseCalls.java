@@ -128,50 +128,50 @@ public class FirebaseCalls {
     }
 
 
-    public void test() {
-        // Testing code
-
-        // Members
-
-        User testUser = new User("Wai", "Wu", "ihugacownow");
-        this.createUser(testUser);
-
-        User one = new User("Wai", "Wu", "Wai 2!");
-        this.createUser(one);
-
-        User two = new User("Wai", "Wu", "Another Wai!");
-        this.createUser(two);
-
-
-        //one.addSongs(new Track());
-        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
-        this.updateUserSongs(one);
-
-        // Rooms
-        Group newRoom = new Group("groupName1", "groupOwner1");
-        this.createRoom(newRoom);
-
-
-        newRoom.addSong("song 1");
-        this.updateRoomSongs(newRoom);
-
-        newRoom.addSong("song 2");
-        this.updateRoomSongs(newRoom);
-
-        newRoom.removeSong("song 1");
-        this.updateRoomSongs(newRoom);
-
-        newRoom.addMember("Another Wai!");
-        this.updateRoomMembers(newRoom);
-
-        newRoom.addMember("Wai 2!");
-        this.updateRoomMembers(newRoom);
-
-        newRoom.removeMember("Another Wai!");
-        this.updateRoomMembers(newRoom);
-
-        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
-    }
+//    public void test() {
+//        // Testing code
+//
+//        // Members
+//
+//        User testUser = new User("Wai", "Wu", "ihugacownow");
+//        this.createUser(testUser);
+//
+//        User one = new User("Wai", "Wu", "Wai 2!");
+//        this.createUser(one);
+//
+//        User two = new User("Wai", "Wu", "Another Wai!");
+//        this.createUser(two);
+//
+//
+//        //one.addSongs(new Track());
+//        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
+//        this.updateUserSongs(one);
+//
+//        // Rooms
+//        Group newRoom = new Group("groupName1", "groupOwner1");
+//        this.createRoom(newRoom);
+//
+//
+//        newRoom.addSong("song 1");
+//        this.updateRoomSongs(newRoom);
+//
+//        newRoom.addSong("song 2");
+//        this.updateRoomSongs(newRoom);
+//
+//        newRoom.removeSong("song 1");
+//        this.updateRoomSongs(newRoom);
+//
+//        newRoom.addMember("Another Wai!");
+//        this.updateRoomMembers(newRoom);
+//
+//        newRoom.addMember("Wai 2!");
+//        this.updateRoomMembers(newRoom);
+//
+//        newRoom.removeMember("Another Wai!");
+//        this.updateRoomMembers(newRoom);
+//
+//        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
+//    }
 
 
 // Update Remote

@@ -49,7 +49,7 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-        fb.test();
+        //fb.test();
         me = fb.currentUser;
 
         //Wai's Code on Receiving Groups
@@ -78,6 +78,8 @@ public class PlaylistActivity extends ActionBarActivity {
                 }
             }
         });
+
+        
 
 //        for (String song : model.songNames) {
 //            new RetrieveStuff().execute(song);
