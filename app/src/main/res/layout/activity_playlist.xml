@@ -96,4 +96,13 @@
         android:id="@+id/pauseButton"
         android:onClick="onPlayButtonClick"/>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listView"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/button_create"
+        android:id="@+id/addPerson"
+        android:onClick="onAddSongButtonClick"/>
+
 </RelativeLayout>
