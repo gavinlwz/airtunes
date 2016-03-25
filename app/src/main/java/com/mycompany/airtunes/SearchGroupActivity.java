@@ -98,6 +98,7 @@ public class SearchGroupActivity extends Activity {
             } finally {
                 // 100% guarantee that this always happens, even if
                 // your update method throws an exception
+                System.out.println("Runninggggg");
                 mHandler.postDelayed(mStatusChecker, 4000);
             }
         }
@@ -110,6 +111,7 @@ public class SearchGroupActivity extends Activity {
 
     void updateStatus() {
         if (fb.testGroup != null) {
+            System.out.println("FB test group not null");
 //            if (testGroup.getMemberNames().contains(fb.currentUser.getUsername())) {
             Intent goToRoom = new Intent(this, PlaylistActivity.class);
             goToRoom.putExtra("Group", fb.testGroup);
