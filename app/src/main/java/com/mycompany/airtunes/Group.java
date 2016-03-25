@@ -22,8 +22,7 @@ public class Group implements Serializable {
      List<String> songNames;
     List<Song> songs;
      String owner;
-
-    boolean isPrivate;
+    boolean isPrivate = false;
 
 
 
@@ -84,6 +83,12 @@ public class Group implements Serializable {
     public String getOwner() {
         return owner;
     }
+
+    public void setPrivate(boolean p) {
+        isPrivate = p;
+    }
+
+
 
 
 

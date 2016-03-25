@@ -79,7 +79,7 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
-        
+
 
 //        for (String song : model.songNames) {
 //            new RetrieveStuff().execute(song);
@@ -170,6 +170,10 @@ public class PlaylistActivity extends ActionBarActivity {
             me.addSongs(currentSong);
             fb.updateUserSongs(me);
         }
+    }
+
+    public void onPrivacyButtonClick(View view) {
+        model.isPrivate = !model.isPrivate;
     }
 
 
