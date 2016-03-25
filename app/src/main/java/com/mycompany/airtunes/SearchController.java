@@ -47,6 +47,7 @@ public class SearchController {
         users.put("Arvind", user1);
 
         User user2 = new User("Wai", "Wu", "ihugacownow", 2);
+        user2.togglePrivacy();
         users.put("Wai", user2);
 
         User user3 = new User("Akash", "Subramanian", "asub", 3);

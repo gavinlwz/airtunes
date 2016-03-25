@@ -23,17 +23,5 @@
         android:layout_below="@+id/fullName"
         />
 
-    <ImageButton
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        android:text="2"
-        android:id="@+id/profilePic"
-        android:layout_below="@+id/accountType" />
-    <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:text="Search"
-        android:id="@+id/searchUserButton"
-        android:onClick="launchSearch"/>
 
 </RelativeLayout>

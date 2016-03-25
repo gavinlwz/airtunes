@@ -9,7 +9,7 @@ import com.mycompany.airtunes.R;
 
 public class UserSearchResultActivity extends ActionBarActivity {
     private String fullName;
-    private String privacy;
+    private boolean privacy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +20,13 @@ public class UserSearchResultActivity extends ActionBarActivity {
         if (extras != null) {
             String firstName = extras.getString("firstName");
             String lastName = extras.getString("lastName");
-            fullName = firstName + lastName;
-            privacy = extras.getString("privacy");
+            privacy = extras.getBoolean("privacy");
+            if (privacy == true) {
+                fullName = firstName + " " + lastName.charAt(0);
+            } else {
+                fullName = firstName + " " + lastName;
+
+            }
 
         }
 
@@ -29,7 +34,7 @@ public class UserSearchResultActivity extends ActionBarActivity {
         tv.setText(fullName);
 
         tv = (TextView) findViewById(R.id.privacy);
-        tv.setText(privacy);
+        tv.setText("" + privacy);
     }
 
 }
