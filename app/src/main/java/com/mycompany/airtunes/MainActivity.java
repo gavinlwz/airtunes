@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.SettableFuture;
@@ -33,7 +35,9 @@ import com.wrapper.spotify.models.ClientCredentials;
 import com.wrapper.spotify.models.Image;
 import com.wrapper.spotify.methods.TrackRequest;
 import com.wrapper.spotify.models.Track;
-import com.wrapper.spotify.models.User;
+//import com.wrapper.spotify.models.User;
+import com.mycompany.airtunes.User;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,6 +102,12 @@ public class MainActivity extends Activity implements
 
     String authorizeURL = api.createAuthorizeURL(scopes, state);
 
+    //Firebase stuff
+    Firebase myFirebaseRef;
+    User testUser;
+    Group testRoom;
+
+
 
 
 
@@ -115,6 +125,28 @@ public class MainActivity extends Activity implements
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+
+
+        // Testing code
+        testUser = new User("Wai", "Wu", "ihugacownow");
+        Firebase userRef = myFirebaseRef.child("users");
+        Firebase userIDOne = userRef.child("1");
+        System.out.println("Just before saving data");
+        userIDOne.setValue(testUser,  new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
+                } else {
+                    System.out.println("Data saved successfully.");
+                }
+            }
+        });
+
+
+
+
 
 
 

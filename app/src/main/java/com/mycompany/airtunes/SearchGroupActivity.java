@@ -1,6 +1,11 @@
 package com.mycompany.airtunes;
 
+
 import android.app.Activity;
+
+
+import android.app.Activity;
+import android.os.*;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,10 +21,16 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.mycompany.airtunes.FirebaseCalls;
+import com.mycompany.airtunes.Group;
+import com.mycompany.airtunes.PlaylistActivity;
 import com.mycompany.airtunes.R;
+import com.mycompany.airtunes.SearchController;
+import com.mycompany.airtunes.User;
 import com.wrapper.spotify.models.Playlist;
 import com.wrapper.spotify.models.Track;
 
@@ -41,6 +52,8 @@ public class SearchGroupActivity extends Activity {
      */
     private GoogleApiClient client;
 
+    FirebaseCalls fb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +74,11 @@ public class SearchGroupActivity extends Activity {
             }
         });
 
+        //Firebase stuff
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
 
+        fb.test();
     }
 
     public void transition(Group group) {
@@ -73,11 +90,22 @@ public class SearchGroupActivity extends Activity {
 
     // Add group
     public void onCreateButtonClick(View view) {
-        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
+        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
+        System.out.println("New Group name is: " + groupName);
         sc.addGroup(groupName, "Wai Wu");
         transition(sc.groups.get(groupName));
         System.out.println("Created group");
+
+        //Firebase stuff
+        Group newRoom = sc.groups.get(groupName);
+
     }
+
+//    //Firebase test
+//    public void testUpdateRoom(Group group) {
+//        fb.updateRoom(group);
+//    }
+
 
 
 
