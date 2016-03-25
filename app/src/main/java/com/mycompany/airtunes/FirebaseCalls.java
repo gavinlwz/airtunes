@@ -146,7 +146,9 @@ public class FirebaseCalls {
 //
 //
 //        //one.addSongs(new Track());
-//        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
+//        one.addSongs(new Song("lajksdhakjshd", "child
+//
+// ", "dohee", null));
 //        this.updateUserSongs(one);
 //
 //        // Rooms
@@ -207,7 +209,7 @@ public class FirebaseCalls {
                 System.out.println(dataSnapshot);
                 System.out.println(s);
                 //TODO: Hard coded
-                testGroup = groups.get("testing");
+//                testGroup = groups.get("testing");
                 Object listOfMembers = dataSnapshot.child("memberNames").getValue();
                 String roomName = dataSnapshot.getKey();
 //                inviteRoom = roomName;
