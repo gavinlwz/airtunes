@@ -129,7 +129,7 @@ public class MainActivity extends Activity implements
 
 
         // Testing code
-        testUser = new User("Wai", "Wu", "ihugacownow", 1);
+        testUser = new User("Wai", "Wu", "ihugacownow");
         Firebase userRef = myFirebaseRef.child("users");
         Firebase userIDOne = userRef.child("1");
         System.out.println("Just before saving data");
