@@ -80,7 +80,7 @@ public class SearchGroupActivity extends Activity {
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
 
-        //fb.test();
+
     }
 
     public void transition(Group group) {
