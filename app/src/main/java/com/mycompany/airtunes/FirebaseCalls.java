@@ -257,10 +257,11 @@ public class FirebaseCalls {
     }
 
     public void updateUserSongs(User user) {
-        Firebase updateRef = this.userRef.child(user.getUsername());
-        Map<String, Object> info = new HashMap<String, Object> ();
-        info.put("favSongs", user.getSongs());
-        updateRef.updateChildren(info);
+        Firebase updateRef = this.userRef.child(user.getUsername()).child("favSongs");
+        updateRef.setValue(user.getSongs());
+        //Map<String, Object> info = new HashMap<String, Object> ();
+        //info.put("favSongs", user.getSongs());
+        //updateRef.updateChildren(info);
     }
 
 

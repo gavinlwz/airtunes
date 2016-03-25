@@ -47,7 +47,11 @@
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:text="private"
+        android:checked="false"
+        android:clickable="true"
+        android:onClick="onPrivacyButtonClick" />
 
     <SearchView
         android:layout_width="match_parent"
@@ -107,7 +111,7 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/favoriteoff"
         android:background="#00ffffff"
-        android:onClick="onToggleStar"
+        android:onClick="onFavoriteButtonClick"
         android:layout_toRightOf="@id/nextButton"
         android:layout_alignParentBottom="true" />
 

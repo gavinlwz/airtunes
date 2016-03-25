@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff000000"
+
     android:weightSum="1">
 
     <TextView
@@ -25,7 +25,8 @@
             android:id="@+id/searchButton"
             android:background="@mipmap/button_search"
             android:layout_below="@+id/searchView"
-            android:onClick="onSearchButtonClick"/>
+            android:onClick="onSearchButtonClick"
+            android:nestedScrollingEnabled="true" />
 
         <ImageButton
             style="?android:attr/buttonStyleSmall"

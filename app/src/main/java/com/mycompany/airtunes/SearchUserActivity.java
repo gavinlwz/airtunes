@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mycompany.airtunes.R;
 
@@ -22,6 +23,7 @@ public class SearchUserActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
     public static ArrayList<String> queueSongs;
     ListView playlist;
+    FirebaseCalls fb;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -34,6 +36,8 @@ public class SearchUserActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user);
         sc = new SearchController();
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
 
         /*playlist = (ListView) findViewById(R.id.listOfGroups);
         queueSongs = new ArrayList<String>();
@@ -59,13 +63,13 @@ public class SearchUserActivity extends ActionBarActivity {
     }
 
 
-    // Add group
-    public void onCreateButtonClick(View view) {
-        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
-        sc.addGroup(groupName, "Wai Wu");
-        transition(sc.groups.get(groupName));
-        System.out.println("Created group");
-    }
+//    // Add group
+//    public void onCreateButtonClick(View view) {
+//        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
+//        sc.addGroup(groupName, fb.currentUser);
+//        transition(sc.groups.get(groupName));
+//        System.out.println("Created group");
+//    }
 
 
 
@@ -75,7 +79,7 @@ public class SearchUserActivity extends ActionBarActivity {
 
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-        User user = sc.searchUser(search);
+        User user = sc.searchUser(search, fb.users);
         if (user == null) {
             System.out.println("User not found!");
             Context context = getApplicationContext();
