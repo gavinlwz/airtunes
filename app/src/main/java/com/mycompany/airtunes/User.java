@@ -1,5 +1,6 @@
 package com.mycompany.airtunes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wrapper.spotify.models.Track;
 
 import java.io.Serializable;
@@ -8,23 +9,29 @@ import java.util.ArrayList;
 /**
  * Created by arvindraju on 3/4/16.
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class User {
     private String firstName;
     private String lastName;
+
+
+   // String identity;
+    String name;
+
     private int id;
     private boolean privacy;
 
-    private String username;
     private String password;
+    private String username;
     private ArrayList<Song> favSongs;
 
 
-    public User(String firstName, String lastName, String username) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.favSongs = new ArrayList<>();
-    }
+//    public User(String firstName, String lastName, String username) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.username = username;
+//        this.favSongs = new ArrayList<>();
+//    }
 
     public User(String firstName, String lastName, String username, int id) {
         this.firstName = firstName;
@@ -34,9 +41,15 @@ public class User {
         this.privacy = false;
     }
 
+    public User (String name, String username) {
+        this.name = name;
+        this.username = username;
+        //this.identity = id;
+    }
 
 
-//    public User() {};
+
+    public User() {};
 
 
 
@@ -47,6 +60,8 @@ public class User {
     public String getLastName() {
         return lastName;
     }
+
+    public String getName() { return name; }
 
     public int getId() {
         return id;
@@ -62,7 +77,10 @@ public class User {
 
 
     public String getUsername() { return username; }
+
+
     public String getPassword() { return password; }
+
 
     public void addSongs(Song song) {
         favSongs.add(song);

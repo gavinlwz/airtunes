@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.firebase.client.Firebase;
 import com.mycompany.airtunes.R;
 
 import org.json.JSONArray;
@@ -28,15 +29,26 @@ import java.net.URL;
 
 public class UserProfileActivity extends ActionBarActivity {
     private String fullName;
+    private String username; // this is the spotify user uri
     private String accountType;
     private String profilePic;
+    String id;
     private Drawable drawable;
+
+    private static FirebaseCalls fb;
+    User me;
+
     private boolean privacy;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -44,8 +56,13 @@ public class UserProfileActivity extends ActionBarActivity {
             System.out.println("full name is hallo there : " + fullName);
             accountType = extras.getString("accountType");
             profilePic = extras.getString("profilePic");
-
+            username = extras.getString("username");
+            id = extras.getString("id");
         }
+            //me = new User(fullName, username, id);
+
+
+
 
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(MainActivity.fullName);

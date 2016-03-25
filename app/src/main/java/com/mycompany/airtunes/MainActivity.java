@@ -75,7 +75,9 @@ public class MainActivity extends Activity implements
     public static String fullName;
     public static String accountType;
     public static String profilePic;
-
+    public static String username;
+    public static String id;
+    FirebaseCalls fb;
 
     private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
 
@@ -100,7 +102,6 @@ public class MainActivity extends Activity implements
     String authorizeURL = api.createAuthorizeURL(scopes, state);
 
     //Firebase stuff
-    Firebase myFirebaseRef;
     User testUser;
     Group testRoom;
 
@@ -109,6 +110,9 @@ public class MainActivity extends Activity implements
         Log.d("Hallo", "hi Wai");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
+
 
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN,
@@ -117,22 +121,7 @@ public class MainActivity extends Activity implements
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-//
-//        // Testing code
-//        testUser = new User("Wai", "Wu", "ihugacownow");
-//        Firebase userRef = myFirebaseRef.child("users");
-//        Firebase userIDOne = userRef.child("1");
-//        System.out.println("Just before saving data");
-//        userIDOne.setValue(testUser,  new Firebase.CompletionListener() {
-//            @Override
-//            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-//                if (firebaseError != null) {
-//                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
-//                } else {
-//                    System.out.println("Data saved successfully.");
-//                }
-//            }
-//        });
+
     }
 
     @Override
@@ -302,24 +291,51 @@ public class MainActivity extends Activity implements
                     System.out.println("hallo " + temp);
                 }
                 object = (JSONObject) new JSONTokener(response).nextValue();
-                fullName = (String) object.get("display_name");
+                if (object.get("display_name") == null) {
+                    fullName = "idk";
+                } else {
+                    fullName = object.get("display_name").toString();
+                    System.out.println(fullName);
+                }
+
                 accountType = (String) object.get("product");
                 profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
+                username = (String) object.get("email");
+                id = (String) object.get("id");
+                User currentUser = new User(fullName, id);
+                int count = 0;
+                for (String u : fb.users.keySet()) {
+                    if (u.equals(id)) {
+                        count = 1;
+                        break;
+                    }
+                }
+                if (count == 0) { // if user doesn't exist in database
+                    fb.createUser(currentUser);
+                }
+                fb.currentUser = currentUser;
+
+
                 System.out.println("my full name is " + fullName);
                 System.out.println("my account type is " + accountType);
-                System.out.println("my uri is " + profilePic);
+                System.out.println("my profile pic is " + profilePic);
 
+
+//
 //                if (accountType.equals("premium")) {
 //                    Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
 //                    i.putExtra("fullName", fullName);
 //                    i.putExtra("accountType", accountType);
 //                    i.putExtra("profilePic", profilePic);
+//                   // i.putExtra("username", username);
+//                    i.putExtra("id", id);
 //                    startActivity(i);
 //                } else {
 //                    Intent i = new Intent(getApplicationContext(), PremiumRedirectActivity.class);
 //                    startActivity(i);
 //
 //                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
