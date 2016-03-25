@@ -55,7 +55,8 @@ public class PlaylistActivity extends ActionBarActivity {
         fb = FirebaseCalls.getInstance();
         //fb.test();
         me = fb.currentUser;
-
+        fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+        //me = fb.users.get(fb.currentUser.getUsername());
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
         //Wai's Code on Receiving Groups
@@ -67,6 +68,7 @@ public class PlaylistActivity extends ActionBarActivity {
         ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
+        fb.updateRoomMembers(model);
 
         playlist = (ListView) findViewById(R.id.listView);
         //queue = new ArrayList<Track>();
@@ -182,13 +184,14 @@ public class PlaylistActivity extends ActionBarActivity {
         if (currentSong != null && me != null) {
             System.out.println("CURRENT SONG = " + currentSong);
             System.out.println("CURRENT USER = " + me);
-            me.addSongs(currentSong);
+            //fb.users.get(me.getUsername()).addSongs(currentSong);
+           me.addSongs(currentSong);
             fb.updateUserSongs(me);
         }
     }
 
     public void onPrivacyButtonClick(View view) {
-        model.isPrivate = !model.isPrivate;
+        model.setIsPrivate(!model.isPrivate);
     }
 
 
