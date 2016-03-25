@@ -47,11 +47,46 @@ public class FirebaseCalls {
 
     }
 
+
     public void test() {
         // Testing code
-        User testUser = new User("Wai", "Wu", "ihugacownow", 1);
-        System.out.println("Just before saving data");
 
+        // Members
+
+        User testUser = new User("Wai", "Wu", "ihugacownow");
+        this.createUser(testUser);
+
+        User one = new User("Wai", "Wu", "Wai 2!");
+        this.createUser(one);
+
+        User two = new User("Wai", "Wu", "Another Wai!");
+        this.createUser(two);
+
+        one.addSongs("Hello Dohee Song");
+        this.updateUserSongs(one);
+
+        // Rooms
+        Group newRoom = new Group("groupName1", "groupOwner1");
+        this.createRoom(newRoom);
+
+
+        newRoom.addSong("song 1");
+        this.updateRoomSongs(newRoom);
+
+        newRoom.addSong("song 2");
+        this.updateRoomSongs(newRoom);
+
+        newRoom.removeSong("song 1");
+        this.updateRoomSongs(newRoom);
+
+        newRoom.addMember("Another Wai!");
+        this.updateRoomMembers(newRoom);
+
+        newRoom.addMember("Wai 2!");
+        this.updateRoomMembers(newRoom);
+
+        newRoom.removeMember("Another Wai!");
+        this.updateRoomMembers(newRoom);
     }
 
 
@@ -66,46 +101,57 @@ public class FirebaseCalls {
                 if (firebaseError != null) {
                     System.out.println("Room could not be saved. " + firebaseError.getMessage());
                 } else {
-                    System.out.println("Room saved successfully with ID: " + newRoomRef.getKey());
+                    System.out.println("New room saved successfully with ID: " + newRoomRef.getKey());
                 }
             }
         });
 
     }
 
+    public void updateRoomMembers(Group group) {
+       Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
+        Map<String, Object> info = new HashMap<String, Object> ();
+        info.put("memberNames", group.getMemberNames());
+        updateRoomRef.updateChildren(info);
+    }
+
+    public void updateRoomSongs(Group group) {
+        Firebase updateRoomRef = roomRef.child(group.getGroupName());
+        Map<String, Object> songInfo = new HashMap<String, Object> ();
+        songInfo.put("songNames", group.getSongNames());
+        updateRoomRef.updateChildren(songInfo);
+    }
+
+// Users
+
     public void createUser(User user) {
-        final Firebase newUserRef = userRef.push();
+        Firebase newUserRef = userRef.child(user.getUsername());
         newUserRef.setValue(user, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
                     System.out.println("User could not be saved. " + firebaseError.getMessage());
                 } else {
-                    System.out.println("User saved successfully  with ID: " + newUserRef.getKey());
+                    System.out.println("User saved successfully  with ID: ");
                 }
             }
         });
     }
 
-    public static void createFavoriteList(ArrayList<String> songs) {
-
+    public void updateUserSongs(User user) {
+        Firebase updateRef = this.userRef.child(user.getUsername());
+        Map<String, Object> info = new HashMap<String, Object> ();
+        info.put("favSongs", user.getSongs());
+        updateRef.updateChildren(info);
     }
 
-    public void updateRoom(Group group) {
-       Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
-        updateRoomRef.setValue(group);
-//        Map<String, Object> groupInfo = new HashMap<String, Object>();
-//
-//        groupInfo.put(group.fbID, group);
-//        this.roomRef.updateChildren(groupInfo);
+
+    // Favorite lists
+
+    public void createFavoriteList(ArrayList<String> songs) {
 
     }
-
-    public static void updateUser(User user) {
-
-    }
-
-    public static void updateSongList(ArrayList<String> songs) {
+    public void updateSongList(ArrayList<String> songs) {
 
     }
 

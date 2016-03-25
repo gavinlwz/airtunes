@@ -14,9 +14,9 @@ import java.io.Serializable;
 
 
 public class Group implements Serializable {
-     List<String> memberNames;
+     List<String> memberUsernames;
      String groupName;
-     Set<String> songNames;
+     List<String> songNames;
      String owner;
      String fbID;
 
@@ -25,24 +25,28 @@ public class Group implements Serializable {
     public Group() {};
     public Group(String groupName, String owner) {
         this.groupName = groupName;
-        this.memberNames = new ArrayList<String>();
-        this.songNames = new HashSet<String>();
+        this.memberUsernames = new ArrayList<String>();
+        this.songNames = new ArrayList<>();
         this.owner = owner;
     }
 
     public void addMember(String name) {
-        this.memberNames.add(name);
+        this.memberUsernames.add(name);
     }
+
+    public void removeMember(String name) { this.memberUsernames.remove(name); }
 
     public void addSong(String song) {
         this.songNames.add(song);
     }
 
+    public void removeSong(String song) {this.songNames.remove(song); }
+
     public List<String> getMemberNames() {
-        return memberNames;
+        return memberUsernames;
     }
 
-    public Set<String> getSongNames() {
+    public List<String> getSongNames() {
         return songNames;
     }
 
