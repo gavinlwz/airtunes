@@ -60,12 +60,13 @@ public class PlaylistActivity extends ActionBarActivity {
 
         //Wai's Code on Receiving Groups
 
-        //model = (Group) getIntent().getSerializableExtra("Group");
-        model = new Group("Why", "Wai");
+        model = (Group) getIntent().getSerializableExtra("Group");
+        //model = new Group("Why", "Wai");
         System.out.println("Group name received is: " + model.groupName);
         // Update Room information
         ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+        model.addMember(me.getUsername());
 
         playlist = (ListView) findViewById(R.id.listView);
         //queue = new ArrayList<Track>();
@@ -131,10 +132,12 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onPlayButtonClick(View view) {
+        System.out.println("play button clicked");
         if (me.getUsername().equals(model.getOwner())) {
+            System.out.println("KAJSDHKALSDHJASD");
             play = !play;
             if (play) {
-                //MainActivity.mPlayer.resume();
+                MainActivity.mPlayer.resume();
                 if (firstTimePlayButtonPressed) {
                     firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
                     MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
@@ -177,6 +180,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onFavoriteButtonClick(View view) {
         if (currentSong != null && me != null) {
+            System.out.println("CURRENT SONG = " + currentSong);
+            System.out.println("CURRENT USER = " + me);
             me.addSongs(currentSong);
             fb.updateUserSongs(me);
         }

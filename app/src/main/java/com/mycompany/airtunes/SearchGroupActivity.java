@@ -148,6 +148,9 @@ public class SearchGroupActivity extends Activity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             return;
+        } else {
+            System.out.println("groups have been found");
+
         }
 
 
