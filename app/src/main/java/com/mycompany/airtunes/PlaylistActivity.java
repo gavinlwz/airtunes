@@ -43,7 +43,8 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
 
         //Wai's Code on Receiving Groups
-        Group model = (Group) getIntent().getSerializableExtra("Group");
+        //Group model = (Group) getIntent().getSerializableExtra("Group");
+        Group model = new Group("Wai", "WU");
         System.out.println("Group name received is: " + model.groupName);
         // Update Room information
         ((TextView)findViewById(R.id.ownerView)).setText(model.owner);

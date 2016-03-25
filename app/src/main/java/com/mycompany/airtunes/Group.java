@@ -20,6 +20,8 @@ public class Group implements Serializable {
     List<Song> songs;
      String owner;
      String fbID;
+    boolean isPrivate;
+
 
     // TODO: Akash Change song to actual Song objects
     // TODO: Arvind Pass the user object from login to constructor
@@ -32,6 +34,11 @@ public class Group implements Serializable {
         this.songs = new ArrayList<Song>();
 
         this.owner = owner;
+        this.isPrivate = false;
+    }
+
+    public void changeToPrivate() {
+        this.isPrivate = true;
     }
 
     public void addMember(String name) {
