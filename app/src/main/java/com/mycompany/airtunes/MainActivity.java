@@ -198,6 +198,12 @@ public class MainActivity extends Activity implements
 
     }
 
+    public static void logout(View view) {
+        AuthenticationClient.clearCookies(view.getContext());
+        
+    }
+
+
 
     /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

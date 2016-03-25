@@ -1,45 +1,22 @@
 package com.mycompany.airtunes;
 
-
-import android.app.Activity;
-
-
-import android.app.Activity;
-import android.os.*;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-
-import com.firebase.client.Firebase;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.mycompany.airtunes.FirebaseCalls;
-import com.mycompany.airtunes.Group;
-import com.mycompany.airtunes.PlaylistActivity;
 import com.mycompany.airtunes.R;
-import com.mycompany.airtunes.SearchController;
-import com.mycompany.airtunes.User;
-import com.wrapper.spotify.models.Playlist;
-import com.wrapper.spotify.models.Track;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-
-public class SearchGroupActivity extends Activity {
+public class SearchUserActivity extends ActionBarActivity {
 
     SearchController sc;
     public static ArrayAdapter<String> queueAdapter;
@@ -52,19 +29,17 @@ public class SearchGroupActivity extends Activity {
      */
     private GoogleApiClient client;
 
-    FirebaseCalls fb;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.searchlayout);
+        setContentView(R.layout.activity_search_user);
         sc = new SearchController();
 
-        playlist = (ListView) findViewById(R.id.listOfGroups);
+        /*playlist = (ListView) findViewById(R.id.listOfGroups);
         queueSongs = new ArrayList<String>();
         queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
         playlist.setAdapter(queueAdapter);
-        playlist.setOnItemClickListener(new OnItemClickListener() {
+        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 String groupName = (String) playlist.getItemAtPosition(position);
@@ -72,13 +47,9 @@ public class SearchGroupActivity extends Activity {
                 Group group = sc.groups.get(groupName);
                 transition(group);
             }
-        });
+        });*/
 
-        //Firebase stuff
-        Firebase.setAndroidContext(this);
-        fb = FirebaseCalls.getInstance();
 
-        fb.test();
     }
 
     public void transition(Group group) {
@@ -90,49 +61,17 @@ public class SearchGroupActivity extends Activity {
 
     // Add group
     public void onCreateButtonClick(View view) {
-        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-        System.out.println("New Group name is: " + groupName);
+        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
         sc.addGroup(groupName, "Wai Wu");
         transition(sc.groups.get(groupName));
         System.out.println("Created group");
-
-        //Firebase stuff
-        Group newRoom = sc.groups.get(groupName);
-
     }
-
-//    //Firebase test
-//    public void testUpdateRoom(Group group) {
-//        fb.updateRoom(group);
-//    }
-
 
 
 
     // Request code to create new Activity
     public static final int SearchButtonActivity_ID = 1;
 
-    public void onSearchButtonClick(View view) {
-        queueAdapter.clear();
-        queueAdapter.notifyDataSetChanged();
-        String search = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
-        boolean contains = sc.searchGroup(search);
-        if (!contains) {
-            System.out.println("Group not found!");
-            Context context = getApplicationContext();
-            CharSequence text = "Group not found!";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            return;
-        }
-//        Log.d("Message: ", "Group found: " + group.groupName);
-//
-//        Intent goToRoom = new Intent(this, PlaylistActivity.class);
-//        goToRoom.putExtra("Group", group);
-//        startActivityForResult(goToRoom, SearchButtonActivity_ID);
-    }
 
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
@@ -163,6 +102,5 @@ public class SearchGroupActivity extends Activity {
         }
 
     }
-
 
 }

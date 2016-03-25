@@ -6,8 +6,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.mycompany.airtunes.R;
 
@@ -28,6 +31,7 @@ public class UserProfileActivity extends ActionBarActivity {
     private String accountType;
     private String profilePic;
     private Drawable drawable;
+    private boolean privacy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class UserProfileActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             fullName = extras.getString("fullName");
+            System.out.println("full name is hallo there : " + fullName);
             accountType = extras.getString("accountType");
             profilePic = extras.getString("profilePic");
 
@@ -45,14 +50,43 @@ public class UserProfileActivity extends ActionBarActivity {
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(MainActivity.fullName);
 
-        tv = (TextView) findViewById(R.id.accountType);
-        tv.setText(MainActivity.accountType);
+
         new RetrieveFeedTask().execute();
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.privacyToggle);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    System.out.println("it is now true");
+                    privacy = true;
+
+                } else {
+                    System.out.println("it is now false");
+                    privacy = false;
+                }
+            }
+        });
 
 
 
 
     }
+
+    public void launchSearch(View v) {
+        Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
+        startActivity(i);
+
+    }
+
+    public void logout(View v) {
+        MainActivity.logout(v);
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
+
+    }
+
+
+
 
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
 
