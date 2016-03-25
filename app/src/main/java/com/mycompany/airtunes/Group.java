@@ -17,6 +17,7 @@ public class Group implements Serializable {
      List<String> memberNames;
      String groupName;
      Set<String> songNames;
+    List<Song> songs;
      String owner;
      String fbID;
 
@@ -27,6 +28,7 @@ public class Group implements Serializable {
         this.groupName = groupName;
         this.memberNames = new ArrayList<String>();
         this.songNames = new HashSet<String>();
+        this.songs = new ArrayList<Song>();
         this.owner = owner;
     }
 
