@@ -80,6 +80,7 @@ public class SearchGroupActivity extends Activity {
         //Firebase stuff
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
+        fb.test();
 
         mHandler = new Handler();
         this.startRepeatingTask();
