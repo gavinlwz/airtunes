@@ -1,5 +1,8 @@
 package com.mycompany.airtunes;
 
+import com.wrapper.spotify.models.Track;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +14,7 @@ public class User {
     int id;
     private String username;
     private String password;
-    private ArrayList<String> favSongs;
+    private ArrayList<Song> favSongs;
 
 
     public User(String firstName, String lastName, String username) {
@@ -49,15 +52,15 @@ public class User {
     public String getUsername() { return username; }
     public String getPassword() { return password; }
 
-    public void addSongs(String song) {
+    public void addSongs(Song song) {
         favSongs.add(song);
     }
 
-    public void removeSongs(String song) {
+    public void removeSongs(Song song) {
         favSongs.remove(song);
     }
 
-    public ArrayList<String> getSongs() { return favSongs; }
+    public ArrayList<Song> getSongs() { return favSongs; }
 
 
 }

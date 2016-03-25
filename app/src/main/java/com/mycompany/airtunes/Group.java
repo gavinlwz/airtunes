@@ -4,6 +4,8 @@ package com.mycompany.airtunes;
  * Created by ihugacownow on 3/4/16.
  */
 
+import com.wrapper.spotify.models.Track;
+
 import java.util.List;
 import java.util.HashSet;
 import java.util.Deque;
@@ -16,9 +18,10 @@ import java.io.Serializable;
 public class Group implements Serializable {
      List<String> memberUsernames;
      String groupName;
-     Set<String> songNames;
+     List<String> songNames;
     List<Song> songs;
      String owner;
+    User dj;
      String fbID;
 
     // TODO: Akash Change song to actual Song objects
@@ -28,7 +31,7 @@ public class Group implements Serializable {
         this.groupName = groupName;
 
         this.memberUsernames = new ArrayList<String>();
-        this.songNames = new HashSet<String>();
+        this.songNames = new ArrayList<String>();
         this.songs = new ArrayList<Song>();
 
         this.owner = owner;
@@ -43,14 +46,26 @@ public class Group implements Serializable {
     public void addSong(String song) {
         this.songNames.add(song);
     }
+    public void addSong(Song song) {
+        this.songs.add(song);
+        addSong(song.getName());
+    }
 
     public void removeSong(String song) {this.songNames.remove(song); }
+    public void removeSong(Song song) {
+        this.songs.remove(song);
+        removeSong(song.getName());
+    }
+
+    public List<Song> getSongs() {
+        return songs;
+    }
 
     public List<String> getMemberNames() {
         return memberUsernames;
     }
 
-    public Set<String> getSongNames() {
+    public List<String> getSongNames() {
         return songNames;
     }
 
