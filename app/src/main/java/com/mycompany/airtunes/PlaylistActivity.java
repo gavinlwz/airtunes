@@ -46,6 +46,8 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
+        fb.test();
+
 
         //Wai's Code on Receiving Groups
         //model = (Group) getIntent().getSerializableExtra("Group");
