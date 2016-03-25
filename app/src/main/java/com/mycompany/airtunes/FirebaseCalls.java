@@ -1,5 +1,6 @@
 package com.mycompany.airtunes;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -21,6 +22,13 @@ public class FirebaseCalls {
     Firebase userIDOne;
     Firebase roomRef;
 
+    HashMap<String, User> users;
+    HashMap<String, Group> groups;
+
+    User currentUser;
+
+
+
     private static final FirebaseCalls dataHolder = new FirebaseCalls();
     public static FirebaseCalls getInstance() { return dataHolder; }
 
@@ -30,14 +38,23 @@ public class FirebaseCalls {
         userIDOne = userRef.child("1");
         roomRef = myFirebaseRef.child("rooms");
 
+        users = new HashMap<>();
+        groups = new HashMap<>();
 
         // Add event listeners
-        myFirebaseRef.addValueEventListener(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println("Data in firebase has changed, updated data is");
                 System.out.println(dataSnapshot.getValue());
-                Object updatedObj = dataSnapshot.getValue();
+
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    System.out.println(snapshot);
+                    String username = snapshot.getKey();
+                    User user = snapshot.getValue(User.class);
+                    users.put(username, user);
+                    System.out.println("Adding user to users");
+                }
             }
 
             @Override
@@ -45,6 +62,67 @@ public class FirebaseCalls {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
+
+        // Add event listeners
+        roomRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("Data in firebase has changed, updated data is");
+                System.out.println(dataSnapshot.getValue());
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        System.out.println(snapshot);
+                        String groupName = snapshot.getKey();
+                        Group group = snapshot.getValue(Group.class);
+                        groups.put(groupName, group);
+                        System.out.println("Adding group to gruops: " + groupName);
+                    }
+
+
+                }
+
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
+
+
+
+//        // Add event listener for rooms
+//        // So when room is added
+//        roomRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
+
+
+
+
 
 
     }
@@ -64,7 +142,7 @@ public class FirebaseCalls {
         User two = new User("Wai", "Wu", "Another Wai!");
         this.createUser(two);
 
-        //one.addSongs("Hello Dohee Song");
+
         //one.addSongs(new Track());
         one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
         this.updateUserSongs(one);
@@ -91,6 +169,8 @@ public class FirebaseCalls {
 
         newRoom.removeMember("Another Wai!");
         this.updateRoomMembers(newRoom);
+
+        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
     }
 
 
@@ -109,6 +189,38 @@ public class FirebaseCalls {
                 }
             }
         });
+
+        Firebase memberRef = newRoomRef.child("memberNames");
+        memberRef.addChildEventListener(new ChildEventListener() {
+
+            // Event
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
 
     }
 

@@ -130,14 +130,6 @@ public class MainActivity extends Activity implements
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -185,6 +177,12 @@ public class MainActivity extends Activity implements
 
 
     }
+
+    public static void logout(View view) {
+        AuthenticationClient.clearCookies(view.getContext());
+        
+    }
+
 
 
     /*@Override

@@ -4,6 +4,7 @@ package com.mycompany.airtunes;
  * Created by ihugacownow on 3/4/16.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wrapper.spotify.models.Track;
 
 import java.util.List;
@@ -14,14 +15,17 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 
-
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Group implements Serializable {
-     List<String> memberUsernames;
+     List<String> memberNames;
      String groupName;
      List<String> songNames;
     List<Song> songs;
      String owner;
-     String fbID;
+
+    boolean isPrivate;
+
+
 
     // TODO: Akash Change song to actual Song objects
     // TODO: Arvind Pass the user object from login to constructor
@@ -29,18 +33,23 @@ public class Group implements Serializable {
     public Group(String groupName, String owner) {
         this.groupName = groupName;
 
-        this.memberUsernames = new ArrayList<String>();
+        this.memberNames = new ArrayList<String>();
         this.songNames = new ArrayList<String>();
         this.songs = new ArrayList<Song>();
 
         this.owner = owner;
+        this.isPrivate = false;
+    }
+
+    public void changeToPrivate() {
+        this.isPrivate = true;
     }
 
     public void addMember(String name) {
-        this.memberUsernames.add(name);
+        this.memberNames.add(name);
     }
 
-    public void removeMember(String name) { this.memberUsernames.remove(name); }
+    public void removeMember(String name) { this.memberNames.remove(name); }
 
     public void addSong(String song) {
         this.songNames.add(song);
@@ -61,7 +70,7 @@ public class Group implements Serializable {
     }
 
     public List<String> getMemberNames() {
-        return memberUsernames;
+        return memberNames;
     }
 
     public List<String> getSongNames() {
