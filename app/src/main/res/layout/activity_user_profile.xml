@@ -9,26 +9,54 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mycompany.airtunes.UserProfileActivity">
 
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="115dp"
         android:text="New Text"
         android:id="@+id/fullName" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="115dp"
-        android:text="New Text"
-        android:id="@+id/accountType"
-        android:layout_below="@+id/fullName"
-        />
-
     <ImageButton
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:text="2"
         android:id="@+id/profilePic"
-        android:layout_below="@+id/accountType" />
+        android:layout_below="@+id/fullName" />
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:text="Search"
+        android:id="@+id/searchUserButton"
+        android:onClick="launchSearch"
+        android:layout_below="@+id/profilePic" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="115dp"
+        android:text="Privacy:"
+        android:id="@+id/privacy"
+        android:layout_below="@+id/searchUserButton"
+        />
+
+    <ToggleButton
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:text="Private?"
+        android:id="@+id/privacyToggle"
+        android:layout_below="@+id/privacy" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:text="Logout"
+        android:id="@+id/logoutButton"
+        android:onClick="logout"
+        android:layout_below="@+id/privacyToggle" />
+
+
+
 
 
 

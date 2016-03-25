@@ -36,6 +36,8 @@ public class SearchController {
         groups.put("aaa", groupC);
         groups.put("aaaa", groupD);
 
+        users = new HashMap<String, User>();
+        populateUsers();
 
 
     }
@@ -45,6 +47,7 @@ public class SearchController {
         users.put("Arvind", user1);
 
         User user2 = new User("Wai", "Wu", "ihugacownow", 2);
+        user2.togglePrivacy();
         users.put("Wai", user2);
 
         User user3 = new User("Akash", "Subramanian", "asub", 3);
@@ -76,6 +79,7 @@ public class SearchController {
     }
 
     public User searchUser(String search) {
+
         if (users.containsKey(search)) {
             User user = users.get(search);
             return user;

@@ -50,6 +50,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
         //Wai's Code on Receiving Groups
+
         //model = (Group) getIntent().getSerializableExtra("Group");
         model = new Group("Why", "Wai");
         System.out.println("Group name received is: " + model.groupName);

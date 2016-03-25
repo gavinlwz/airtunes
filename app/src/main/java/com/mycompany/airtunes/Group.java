@@ -22,6 +22,7 @@ public class Group implements Serializable {
      List<String> songNames;
     List<Song> songs;
      String owner;
+    boolean isPrivate;
 
 
     // TODO: Akash Change song to actual Song objects
@@ -35,6 +36,11 @@ public class Group implements Serializable {
         this.songs = new ArrayList<Song>();
 
         this.owner = owner;
+        this.isPrivate = false;
+    }
+
+    public void changeToPrivate() {
+        this.isPrivate = true;
     }
 
     public void addMember(String name) {

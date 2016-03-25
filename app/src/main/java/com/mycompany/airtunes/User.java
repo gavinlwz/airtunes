@@ -13,7 +13,9 @@ import java.util.ArrayList;
 public class User {
     private String firstName;
     private String lastName;
-    int id;
+    private int id;
+    private boolean privacy;
+
     private String username;
     private ArrayList<Song> favSongs;
 
@@ -30,6 +32,7 @@ public class User {
         this.lastName = lastName;
         this.favSongs = new ArrayList<>();
         this.id = id;
+        this.privacy = false;
     }
 
 
@@ -49,6 +52,15 @@ public class User {
     public int getId() {
         return id;
     }
+
+    public boolean getPrivacy() {
+        return privacy;
+    }
+
+    public void togglePrivacy() {
+        privacy = !privacy;
+    }
+
 
     public String getUsername() { return username; }
 

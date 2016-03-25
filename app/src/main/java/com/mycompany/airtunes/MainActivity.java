@@ -127,22 +127,22 @@ public class MainActivity extends Activity implements
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
 
-
-        // Testing code
-        testUser = new User("Wai", "Wu", "ihugacownow");
-        Firebase userRef = myFirebaseRef.child("users");
-        Firebase userIDOne = userRef.child("1");
-        System.out.println("Just before saving data");
-        userIDOne.setValue(testUser,  new Firebase.CompletionListener() {
-            @Override
-            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                if (firebaseError != null) {
-                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
-                } else {
-                    System.out.println("Data saved successfully.");
-                }
-            }
-        });
+//
+//        // Testing code
+//        testUser = new User("Wai", "Wu", "ihugacownow");
+//        Firebase userRef = myFirebaseRef.child("users");
+//        Firebase userIDOne = userRef.child("1");
+//        System.out.println("Just before saving data");
+//        userIDOne.setValue(testUser,  new Firebase.CompletionListener() {
+//            @Override
+//            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+//                if (firebaseError != null) {
+//                    System.out.println("Data could not be saved. " + firebaseError.getMessage());
+//                } else {
+//                    System.out.println("Data saved successfully.");
+//                }
+//            }
+//        });
 
 
 
@@ -197,6 +197,12 @@ public class MainActivity extends Activity implements
 
 
     }
+
+    public static void logout(View view) {
+        AuthenticationClient.clearCookies(view.getContext());
+        
+    }
+
 
 
     /*@Override
