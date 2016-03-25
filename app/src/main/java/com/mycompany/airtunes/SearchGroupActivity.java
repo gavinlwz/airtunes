@@ -92,14 +92,29 @@ public class SearchGroupActivity extends Activity {
 
     // Add group
     public void onCreateButtonClick(View view) {
-        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-        System.out.println("New Group name is: " + groupName);
-        //Firebase stuff
-        Group newRoom = fb.groups.get(groupName);
-        fb.createRoom(newRoom);
-        //sc.addGroup(groupName, fb.currentUser.getUsername());
-        transition(newRoom);
-        System.out.println("Created group");
+//        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
+//        System.out.println("New Group name is: " + groupName);
+//        //Firebase stuff
+//        Group newRoom = fb.groups.get(groupName);
+//        fb.createRoom(newRoom);
+//        //sc.addGroup(groupName, fb.currentUser.getUsername());
+//        transition(newRoom);
+//        System.out.println("Created group");
+        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
+
+        if (fb.groups.containsKey(groupName)) {
+            Context context = getApplicationContext();
+            CharSequence text = "A group with that name already exists!";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
+            Group g = new Group(groupName, fb.currentUser.getUsername());
+            fb.createRoom(g);
+            transition(g);
+            System.out.println("Created group");
+        }
 
 
 

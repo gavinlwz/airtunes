@@ -63,13 +63,13 @@ public class SearchUserActivity extends ActionBarActivity {
     }
 
 
-    // Add group
-    public void onCreateButtonClick(View view) {
-        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
-        sc.addGroup(groupName, fb.currentUser.getUsername());
-        transition(sc.groups.get(groupName));
-        System.out.println("Created group");
-    }
+//    // Add group
+//    public void onCreateButtonClick(View view) {
+//        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
+//        sc.addGroup(groupName, fb.currentUser);
+//        transition(sc.groups.get(groupName));
+//        System.out.println("Created group");
+//    }
 
 
 
@@ -79,7 +79,7 @@ public class SearchUserActivity extends ActionBarActivity {
 
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-        User user = sc.searchUser(search);
+        User user = sc.searchUser(search, fb.users);
         if (user == null) {
             System.out.println("User not found!");
             Context context = getApplicationContext();
