@@ -3,6 +3,7 @@ package com.mycompany.airtunes;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.wrapper.spotify.models.Track;
 
@@ -63,8 +64,9 @@ public class FirebaseCalls {
         User two = new User("Wai", "Wu", "Another Wai!");
         this.createUser(two);
 
-       // one.addSongs("Hello Dohee Song");
+        //one.addSongs("Hello Dohee Song");
         //one.addSongs(new Track());
+        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
         this.updateUserSongs(one);
 
         // Rooms
@@ -120,6 +122,7 @@ public class FirebaseCalls {
     public void updateRoomSongs(Group group) {
         Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("songs");
         updateRoomRef.setValue(group.getSongs());
+
 //        Map<String, Object> songInfo = new HashMap<String, Object> ();
 //        songInfo.put("songs", group.getSongs());
 //        updateRoomRef.updateChildren(songInfo);
@@ -147,6 +150,8 @@ public class FirebaseCalls {
         info.put("favSongs", user.getSongs());
         updateRef.updateChildren(info);
     }
+
+
 
 
     // Favorite lists

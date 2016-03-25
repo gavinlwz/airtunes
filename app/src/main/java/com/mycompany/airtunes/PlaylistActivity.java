@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -37,7 +38,9 @@ public class PlaylistActivity extends ActionBarActivity {
     Exception mException = null;
     public static Group model;
     public static FirebaseCalls fb;
+    boolean firstTimePlayButtonPressed = true;
     Song currentSong;
+    User me;
     // Properties for non-song attributes
 
     @Override
@@ -46,7 +49,7 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-
+        fb.test();
         //Wai's Code on Receiving Groups
         //model = (Group) getIntent().getSerializableExtra("Group");
         model = new Group("Why", "Wai");
@@ -60,6 +63,18 @@ public class PlaylistActivity extends ActionBarActivity {
        // queueSongs = new ArrayList<String>();
         queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, model.getSongNames());
         playlist.setAdapter(queueAdapter);
+        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String songName = (String) playlist.getItemAtPosition(position);
+                System.out.println("Clicked on: " + songName);
+                for (Song s : model.getSongs()) {
+                    if (s.getName().equals(songName)) {
+                        currentSong = s;
+                    }
+                }
+            }
+        });
 
 //        for (String song : model.songNames) {
 //            new RetrieveStuff().execute(song);
@@ -105,21 +120,33 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onPlayButtonClick(View view) {
-        play = !play;
-        if (play) {
-            MainActivity.mPlayer.resume();
-        } else {
-            MainActivity.mPlayer.pause();
+        if (me.getUsername().equals(model.getOwner())) {
+            play = !play;
+            if (play) {
+                //MainActivity.mPlayer.resume();
+                if (firstTimePlayButtonPressed) {
+                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
+                    MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                }
+
+            } else {
+                MainActivity.mPlayer.pause();
+            }
         }
     }
 
     public void onNextButtonClick(View view) {
-        MainActivity.mPlayer.skipToNext();
+        if (me.getUsername().equals(model.getOwner())) {
+            MainActivity.mPlayer.skipToNext();
+        }
+
     }
 
     public void onShuffleButtonClick(View view) {
-        isShuffling = !isShuffling;
-        MainActivity.mPlayer.setShuffle(isShuffling);
+        if (me.getUsername().equals(model.getOwner())) {
+            isShuffling = !isShuffling;
+            MainActivity.mPlayer.setShuffle(isShuffling);
+        }
     }
 
     public void onAddSongButtonClick(View view) {
@@ -134,7 +161,10 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onFavoriteButtonClick(View view) {
-        
+        if (currentSong != null && me != null) {
+            me.addSongs(currentSong);
+            fb.updateUserSongs(me);
+        }
     }
 
 

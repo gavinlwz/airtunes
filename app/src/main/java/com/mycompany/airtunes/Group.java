@@ -21,7 +21,6 @@ public class Group implements Serializable {
      List<String> songNames;
     List<Song> songs;
      String owner;
-    User dj;
      String fbID;
 
     // TODO: Akash Change song to actual Song objects

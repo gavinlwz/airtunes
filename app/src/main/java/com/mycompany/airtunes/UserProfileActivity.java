@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
 import com.mycompany.airtunes.R;
 
 import org.json.JSONArray;
@@ -25,22 +26,44 @@ import java.net.URL;
 
 public class UserProfileActivity extends ActionBarActivity {
     private String fullName;
+    private String username; // this is the spotify user uri
     private String accountType;
     private String profilePic;
+    String id;
     private Drawable drawable;
+    private static FirebaseCalls fb;
+    User me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             fullName = extras.getString("fullName");
             accountType = extras.getString("accountType");
             profilePic = extras.getString("profilePic");
-
+            username = extras.getString("username");
+            id = extras.getString("id");
         }
+            me = new User(fullName, username, id);
+            int count = 0;
+            for (String u : users.getKeys()) {
+                if (u.equals(username)) {
+                    count = 1;
+                    break;
+                }
+            }
+        if (count == 0) { // if user doesn't exist in database
+            fb.createUser(me);
+        }
+
+
 
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(MainActivity.fullName);
