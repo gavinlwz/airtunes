@@ -249,7 +249,7 @@ public class FirebaseCalls {
                 System.out.println(dataSnapshot);
                 System.out.println(s);
                 //TODO: Hard coded
-//                testGroup = groups.get("testing");
+                testGroup = groups.get("testing");
                 Object listOfMembers = dataSnapshot.child("memberNames").getValue();
                 String roomName = dataSnapshot.getKey();
 //                inviteRoom = roomName;
