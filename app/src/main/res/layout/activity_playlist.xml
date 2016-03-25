@@ -122,7 +122,7 @@
         android:layout_alignParentRight="true"
         android:background="@mipmap/button_create"
         android:id="@+id/addPerson"
-        android:onClick="onAddSongButtonClick"/>
+        android:onClick="onInviteButtonClick"/>
 
     <SearchView
         android:layout_width="wrap_content"
@@ -131,6 +131,7 @@
         android:id="@+id/searchForUser"
         android:layout_toLeftOf="@id/addPerson"
         android:background="#87cefa"
-        android:minWidth="100dp" />
+        android:minWidth="100dp"
+        />
 
 </RelativeLayout>

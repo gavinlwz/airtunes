@@ -55,6 +55,7 @@ public class SearchGroupActivity extends Activity {
 
     FirebaseCalls fb;
 
+    Handler mHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,9 +80,50 @@ public class SearchGroupActivity extends Activity {
         //Firebase stuff
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
+        fb.test();
+
+        mHandler = new Handler();
+        this.startRepeatingTask();
+
 
 
     }
+
+    //WC COde
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                updateStatus(); //this function can change value of mInterval.
+            } finally {
+                // 100% guarantee that this always happens, even if
+                // your update method throws an exception
+                System.out.println("Runninggggg");
+                mHandler.postDelayed(mStatusChecker, 4000);
+            }
+        }
+    };
+
+
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+    void updateStatus() {
+        if (fb.testGroup != null) {
+            System.out.println("FB test group not null");
+//            if (testGroup.getMemberNames().contains(fb.currentUser.getUsername())) {
+            Intent goToRoom = new Intent(this, PlaylistActivity.class);
+            goToRoom.putExtra("Group", fb.testGroup);
+            fb.testGroup = null;
+            startActivityForResult(goToRoom, SearchButtonActivity_ID);
+            //}
+
+        }
+
+    }
+
+
 
     public void transition(Group group) {
         Intent goToRoom = new Intent(this, PlaylistActivity.class);
@@ -110,7 +152,7 @@ public class SearchGroupActivity extends Activity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            Group g = new Group(groupName, fb.currentUser.getUsername());
+            Group g = new Group(groupName, fb.currentUser.getUsername(), false);
             fb.createRoom(g);
             transition(g);
             System.out.println("Created group");

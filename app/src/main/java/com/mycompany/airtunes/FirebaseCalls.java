@@ -27,6 +27,8 @@ public class FirebaseCalls {
 
     User currentUser;
 
+    Group testGroup;
+
 
 
     private static final FirebaseCalls dataHolder = new FirebaseCalls();
@@ -91,6 +93,8 @@ public class FirebaseCalls {
 
 
 
+
+
 //        // Add event listener for rooms
 //        // So when room is added
 //        roomRef.addChildEventListener(new ChildEventListener() {
@@ -144,7 +148,9 @@ public class FirebaseCalls {
 //
 //
 //        //one.addSongs(new Track());
-//        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
+//        one.addSongs(new Song("lajksdhakjshd", "child
+//
+// ", "dohee", null));
 //        this.updateUserSongs(one);
 //
 //        // Rooms
@@ -173,6 +179,46 @@ public class FirebaseCalls {
 //        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
 //    }
 
+    public void test() {
+        // Testing code
+
+        // Members
+
+
+        User one = new User("Wai", "Wu");
+        this.createUser(one);
+
+
+        //one.addSongs(new Track());
+        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
+        this.updateUserSongs(one);
+
+        // Rooms
+        Group newRoom = new Group("groupName1", "groupOwner1", true);
+        this.createRoom(newRoom);
+
+
+        newRoom.addSong("song 1");
+        this.updateRoomSongs(newRoom);
+
+        newRoom.addSong("song 2");
+        this.updateRoomSongs(newRoom);
+
+        newRoom.removeSong("song 1");
+        this.updateRoomSongs(newRoom);
+
+        newRoom.addMember("Another Wai!");
+        this.updateRoomMembers(newRoom);
+
+        newRoom.addMember("Wai 2!");
+        this.updateRoomMembers(newRoom);
+
+        newRoom.removeMember("Another Wai!");
+        this.updateRoomMembers(newRoom);
+
+        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
+    }
+
 
 // Update Remote
 
@@ -190,8 +236,7 @@ public class FirebaseCalls {
             }
         });
 
-        Firebase memberRef = newRoomRef.child("memberNames");
-        memberRef.addChildEventListener(new ChildEventListener() {
+        newRoomRef.addChildEventListener(new ChildEventListener() {
 
             // Event
             @Override
@@ -202,6 +247,15 @@ public class FirebaseCalls {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                System.out.println("-----------------------------Child has been changed -----------------------");
+                System.out.println(dataSnapshot);
+                System.out.println(s);
+                //TODO: Hard coded
+//                testGroup = groups.get("testing");
+                Object listOfMembers = dataSnapshot.child("memberNames").getValue();
+                String roomName = dataSnapshot.getKey();
+//                inviteRoom = roomName;
+                System.out.println("Members in invited room:  " + roomName + " are : " + listOfMembers);
 
             }
 
@@ -220,6 +274,7 @@ public class FirebaseCalls {
 
             }
         });
+
 
 
     }
