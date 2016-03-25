@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
 import com.mycompany.airtunes.R;
 import com.wrapper.spotify.methods.TrackSearchRequest;
 import com.wrapper.spotify.models.Page;
@@ -28,33 +29,37 @@ import java.util.ArrayList;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
-    public static ArrayList<Track> queue;
-    public static ArrayList<String> queueSongs;
+    //public static ArrayList<Track> queue;
+    //public static ArrayList<String> queueSongs;
     boolean play = false;
     boolean isShuffling = false;
     ListView playlist;
     Exception mException = null;
-
+    public static Group model;
+    public static FirebaseCalls fb;
+    Song currentSong;
     // Properties for non-song attributes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
 
         //Wai's Code on Receiving Groups
-        Group model = (Group) getIntent().getSerializableExtra("Group");
+
+        //model = (Group) getIntent().getSerializableExtra("Group");
+        model = new Group("Why", "Wai");
         System.out.println("Group name received is: " + model.groupName);
         // Update Room information
         ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
 
-
-
         playlist = (ListView) findViewById(R.id.listView);
-        queue = new ArrayList<Track>();
-        queueSongs = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
+        //queue = new ArrayList<Track>();
+       // queueSongs = new ArrayList<String>();
+        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, model.getSongNames());
         playlist.setAdapter(queueAdapter);
 
 //        for (String song : model.songNames) {
@@ -122,10 +127,15 @@ public class PlaylistActivity extends ActionBarActivity {
         SearchView search = (SearchView) findViewById(R.id.songSearchView);
         String query = search.getQuery() + "";
         new RetrieveStuff().execute(query);
+
         //ListView lv = (ListView) findViewById(R.id.listView);
 //        lv.requestLayout();
 
 
+    }
+
+    public void onFavoriteButtonClick(View view) {
+        
     }
 
 
