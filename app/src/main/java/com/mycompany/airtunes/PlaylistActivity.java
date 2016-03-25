@@ -133,6 +133,16 @@ public class PlaylistActivity extends ActionBarActivity {
 //        }, 10000);
     }
 
+    public void onInviteButtonClick(View view) {
+        SearchView search = (SearchView) findViewById(R.id.searchForUser);
+        String query = search.getQuery() + "";
+
+        if (me.getUsername().equals(model.getOwner())) {
+            model.addMember(query);
+            fb.testGroup = model;
+            fb.updateRoomMembers(model);
+        }
+    }
     public void onPlayButtonClick(View view) {
         System.out.println("play button clicked");
         if (me.getUsername().equals(model.getOwner())) {

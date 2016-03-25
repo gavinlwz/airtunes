@@ -27,6 +27,8 @@ public class FirebaseCalls {
 
     User currentUser;
 
+    Group testGroup;
+
 
 
     private static final FirebaseCalls dataHolder = new FirebaseCalls();
