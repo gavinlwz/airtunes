@@ -78,6 +78,13 @@ public class UserProfileActivity extends ActionBarActivity {
 
     }
 
+    public void logout(View v) {
+        MainActivity.logout(v);
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
+
+    }
+
 
 
 
