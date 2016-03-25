@@ -329,6 +329,16 @@ public class MainActivity extends Activity implements
                 username = (String) object.get("email");
                 id = (String) object.get("id");
                 User currentUser = new User(fullName, username, id);
+                int count = 0;
+                for (String u : fb.users.keySet()) {
+                    if (u.equals(username)) {
+                        count = 1;
+                        break;
+                    }
+                }
+                if (count == 0) { // if user doesn't exist in database
+                    fb.createUser(currentUser);
+                }
                 fb.currentUser = currentUser;
 
 

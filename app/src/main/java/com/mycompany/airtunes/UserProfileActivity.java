@@ -59,17 +59,8 @@ public class UserProfileActivity extends ActionBarActivity {
             username = extras.getString("username");
             id = extras.getString("id");
         }
-            me = new User(fullName, username, id);
-            int count = 0;
-            for (String u : users.getKeys()) {
-                if (u.equals(username)) {
-                    count = 1;
-                    break;
-                }
-            }
-        if (count == 0) { // if user doesn't exist in database
-            fb.createUser(me);
-        }
+            //me = new User(fullName, username, id);
+
 
 
 
