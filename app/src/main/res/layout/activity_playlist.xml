@@ -72,16 +72,25 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listView"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:background="@mipmap/button_play"
-        android:layout_toLeftOf="@+id/pauseButton"
         android:id="@+id/playButton"
         android:onClick="onPlayButtonClick"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listView"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/playButton"
+        android:background="@mipmap/pause"
+        android:id="@+id/pauseButton"
+        android:onClick="onPlayButtonClick"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/pauseButton"
         android:background="@mipmap/nextbutt"
         android:id="@+id/nextButton"
@@ -90,19 +99,19 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/listView"
-        android:layout_centerInParent="true"
-        android:background="@mipmap/pause"
-        android:id="@+id/pauseButton"
-        android:onClick="onPlayButtonClick"/>
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/listView"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@mipmap/button_create"
         android:id="@+id/addPerson"
         android:onClick="onAddSongButtonClick"/>
+
+    <SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/searchForUser"
+        android:layout_toLeftOf="@id/addPerson"
+        android:background="#87cefa"
+        android:minWidth="100dp" />
 
 </RelativeLayout>
