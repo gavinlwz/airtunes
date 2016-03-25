@@ -145,7 +145,7 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onToggleStar(View view) {
-        
+
     }
 
     public void onNextButtonClick(View view) {
