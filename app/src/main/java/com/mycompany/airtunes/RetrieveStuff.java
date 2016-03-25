@@ -46,10 +46,14 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
             track.setUri(trackSearchResult.getItems().get(0).getUri());
             System.out.println("Retrieved track " + track.getName());
             System.out.println("Its popularity is " + track.getPopularity());
-            PlaylistActivity.queue.add(track);
-            PlaylistActivity.queueSongs.add(track.getName());
+            //PlaylistActivity.queue.add(track);
+            Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
+            PlaylistActivity.model.addSong(song);
+            PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
+            //PlaylistActivity.queueSongs.add(track.getName());
 
-            MainActivity.mPlayer.queue(track.getUri());
+           MainActivity.mPlayer.queue(track.getUri());
+
 
 
             if (track.isExplicit()) {

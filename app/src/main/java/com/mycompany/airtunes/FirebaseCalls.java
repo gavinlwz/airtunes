@@ -4,6 +4,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.wrapper.spotify.models.Track;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +63,8 @@ public class FirebaseCalls {
         User two = new User("Wai", "Wu", "Another Wai!");
         this.createUser(two);
 
-        one.addSongs("Hello Dohee Song");
+       // one.addSongs("Hello Dohee Song");
+        //one.addSongs(new Track());
         this.updateUserSongs(one);
 
         // Rooms
@@ -116,10 +118,11 @@ public class FirebaseCalls {
     }
 
     public void updateRoomSongs(Group group) {
-        Firebase updateRoomRef = roomRef.child(group.getGroupName());
-        Map<String, Object> songInfo = new HashMap<String, Object> ();
-        songInfo.put("songNames", group.getSongNames());
-        updateRoomRef.updateChildren(songInfo);
+        Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("songs");
+        updateRoomRef.setValue(group.getSongs());
+//        Map<String, Object> songInfo = new HashMap<String, Object> ();
+//        songInfo.put("songs", group.getSongs());
+//        updateRoomRef.updateChildren(songInfo);
     }
 
 // Users

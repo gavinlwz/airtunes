@@ -1,18 +1,22 @@
 package com.mycompany.airtunes;
 
+import java.io.Serializable;
+
 /**
  * Created by akashsubramanian on 3/24/16.
  */
-public class Song {
-    private String uri;
-    private String name;
-    private String artist;
-    private String pictureUrl;
+public class Song implements Serializable {
+    String uri;
+    String name;
+    String artist;
+    String pictureUrl;
 
     public Song(String uri) {
         this.uri = uri;
     }
+    public Song() {
 
+    };
     public Song(String uri, String name, String artist, String pictureUrl) {
         this.uri = uri;
         this.name = name;
