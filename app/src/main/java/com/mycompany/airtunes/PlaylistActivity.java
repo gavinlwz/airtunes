@@ -274,6 +274,7 @@ public class PlaylistActivity extends ActionBarActivity {
                 Intent i = new Intent(getApplicationContext(), SongDisplay.class);
                 i.putExtra("songTitle", currentSong.getName());
                 i.putExtra("albumCover", currentSong.getPictureUrl());
+                i.putExtra("artistName", currentSong.getArtist());
                 startActivity(i);
                 System.out.println("I am done with async");
                 if (inStream != null) {

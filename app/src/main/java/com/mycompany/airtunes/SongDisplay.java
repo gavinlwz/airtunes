@@ -32,7 +32,7 @@ import java.net.URL;
 public class SongDisplay extends ActionBarActivity {
     String songTitle = "";
     String albumCover = "";
-
+    String artistName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class SongDisplay extends ActionBarActivity {
             System.out.println("songTitle is hallo there : " + songTitle);
             albumCover = extras.getString("albumCover");
             System.out.println("albumCover is hallo there : " + albumCover);
+            artistName = extras.getString("artistName");
+            System.out.println("artistName is hallo there : " + artistName);
 
         }
 
@@ -53,6 +55,9 @@ public class SongDisplay extends ActionBarActivity {
 
         TextView tv = (TextView) findViewById(R.id.songTitle);
         tv.setText(songTitle);
+
+        tv = (TextView) findViewById(R.id.artistName);
+        tv.setText(artistName);
 
 
     }
