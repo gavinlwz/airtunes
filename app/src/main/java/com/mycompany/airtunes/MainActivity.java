@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements
     private static final String REDIRECT_URI = "airtunes-login://callback";
     //private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     private static final int REQUEST_CODE = 1337;
-    private static String access_token;
+    public static String access_token;
     private static String refresh_token;
     private final String USER_AGENT = "Mozilla/5.0";
 

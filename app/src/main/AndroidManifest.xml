@@ -41,7 +41,10 @@
             android:label="@string/title_activity_user_search_result" />
         <activity
             android:name=".SearchUserActivity"
-            android:label="@string/title_activity_search_user"></activity>
+            android:label="@string/title_activity_search_user" />
+        <activity
+            android:name=".SongDisplay"
+            android:label="@string/title_activity_song_display"></activity>
     </application>
 
 </manifest>

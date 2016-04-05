@@ -1,5 +1,7 @@
 package com.mycompany.airtunes;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +20,7 @@ import com.wrapper.spotify.methods.TrackSearchRequest;
 import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Track;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -25,9 +28,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
@@ -85,6 +90,9 @@ public class PlaylistActivity extends ActionBarActivity {
                         currentSong = s;
                     }
                 }
+                new RetrieveSong().execute();
+
+
             }
         });
 
@@ -208,48 +216,79 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
 
-//    void makeAiRequest(String urlString) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                HttpURLConnection urlConnection = null;
-//                URL url = null;
-//                JSONObject object = null;
-//                InputStream inStream = null;
-//                try {
-//                    url = new URL(urlString.toString());
-//                    urlConnection = (HttpURLConnection) url.openConnection();
-//                    urlConnection.setRequestMethod("GET");
-//                    urlConnection.setDoOutput(true);
-//                    urlConnection.setDoInput(true);
-//                    urlConnection.connect();
-//                    inStream = urlConnection.getInputStream();
-//                    BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
-//                    String temp, response = "";
-//                    while ((temp = bReader.readLine()) != null) {
-//                        response += temp;
-//                    }
-//                    Log.d("yoyoyoyooyoy", ""+response);
-//                    object = (JSONObject) new JSONTokener(response).nextValue();
-//                } catch (Exception e) {
-//                    this.mException = e;
-//                    Log.d(getClass().getName(), "exception = "+mException);
-//                } finally {
-//                    if (inStream != null) {
-//                        try {
-//                            // this will close the bReader as well
-//                            inStream.close();
-//                        } catch (IOException ignored) {
-//                        }
-//                    }
-//                    if (urlConnection != null) {
-//                        urlConnection.disconnect();
-//                    }
-//                }
-//            }
-//
-//        }).start();
-//
-//    }
+    class RetrieveSong extends AsyncTask<Void, Void, String> {
+
+        private Exception exception;
+
+        protected void onPreExecute() { }
+
+        protected String doInBackground(Void... urls) {
+            // Do some validation here
+
+            HttpURLConnection urlConnection = null;
+            URL url = null;
+            JSONObject object = null;
+            InputStream inStream = null;
+            try {
+                String s = "";
+                String finalUri = "";
+                for (int i = currentSong.getUri().length() - 1; i > 0; i--) {
+                    if (currentSong.getUri().charAt(i) == ':') {
+                        break;
+                    } else {
+                        s += currentSong.getUri().charAt(i);
+                    }
+                }
+                for (int i = s.length() - 1; i >= 0; i--) {
+                    finalUri += s.charAt(i);
+
+                }
+                String searchUrl = "https://api.spotify.com/v1/tracks/" + finalUri;
+                url = new URL(searchUrl);
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+
+                urlConnection.setRequestProperty("Authorization", "Bearer " + MainActivity.access_token);
+                urlConnection.setDoOutput(false);
+                urlConnection.setDoInput(true);
+                urlConnection.connect();
+                inStream = urlConnection.getInputStream();
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
+                String temp, response = "";
+                while ((temp = bReader.readLine()) != null) {
+                    response += temp;
+                    System.out.println("hallo " + temp);
+                }
+                object = (JSONObject) new JSONTokener(response).nextValue();
+                JSONObject albums = (JSONObject)object.get("album");
+                JSONArray images = (JSONArray) albums.get("images");
+                JSONObject image = (JSONObject) images.get(0);
+                System.out.println("this is bullshit " + image.get("url"));
+                currentSong.setPictureUrl((String) image.get("url"));
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                Intent i = new Intent(getApplicationContext(), SongDisplay.class);
+                i.putExtra("songTitle", currentSong.getName());
+                i.putExtra("albumCover", currentSong.getPictureUrl());
+                startActivity(i);
+                System.out.println("I am done with async");
+                if (inStream != null) {
+                    try {
+                        // this will close the bReader as well
+                        inStream.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+            return null;
+        }
+    }
 
 }
