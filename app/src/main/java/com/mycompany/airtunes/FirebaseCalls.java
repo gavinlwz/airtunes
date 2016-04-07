@@ -176,7 +176,7 @@ public class FirebaseCalls {
 //        this.updateRoomSongs(newRoom);
 //
 //        newRoom.addMember("Another Wai!");
-//        this.updateRoomMembers(newRoom);
+//        this.adbers(newRoom);
 //
 //        newRoom.addMember("Wai 2!");
 //        this.updateRoomMembers(newRoom);
@@ -332,9 +332,8 @@ public class FirebaseCalls {
     public void updateUserSongs(User user) {
         Firebase updateRef = this.userRef.child(user.getUsername()).child("favSongs");
         updateRef.setValue(user.getSongs());
-        //Map<String, Object> info = new HashMap<String, Object> ();
-        //info.put("favSongs", user.getSongs());
-        //updateRef.updateChildren(info);
+        Map<String, Object> info = new HashMap<String, Object> ();
+        info.put("favSongs", user.getSongs());
     }
 
 

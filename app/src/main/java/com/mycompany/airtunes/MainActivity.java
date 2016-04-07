@@ -175,58 +175,16 @@ public class MainActivity extends Activity implements
         AuthenticationClient.clearCookies(view.getContext());
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        Log.d("goodness", "graciousme");
-        String code = "";
 
-
-        // Check if result comes from the correct activity
-        if (requestCode == REQUEST_CODE) {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
-            if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                access_token = response.getAccessToken();
-                System.out.println("codeeeeeeee " + response.getCode());
-                code = response.getCode();
-
-                api.setAccessToken(access_token);
-
-                System.out.println("access_token " + access_token);
-                Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
-
-                Spotify.getPlayer(playerConfig, this, new Player.InitializationObserver() {
-                    @Override
-                    public void onInitialized(Player player) {
-                        mPlayer = player;
-                        mPlayer.addConnectionStateCallback(MainActivity.this);
-                        mPlayer.addPlayerNotificationCallback(MainActivity.this);
-                        //mPlayer.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V");
-
-                    }
-
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        Log.e("MainActivity", "Could not initialize player: " + throwable.getMessage());
-                    }
-                });
-            }
-            final CurrentUserRequest request = api.getMe().build();
-
-            try {
-                final User user = request.get();
-
-                System.out.println("Display name: " + user.getDisplayName());
-                System.out.println("Email: " + user.getEmail());
-
-
-                System.out.println("This account is a " + user.getProduct() + " account");
-            } catch (Exception e) {
-                System.out.println("Something went wrong!" + e.getMessage());
-            }
-        }
-    }*/
+    public void onViewMyProfileClick(View view) {
+        Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
+        i.putExtra("fullName", fullName);
+        i.putExtra("accountType", accountType);
+        i.putExtra("profilePic", profilePic);
+        // i.putExtra("username", username);
+        i.putExtra("id", id);
+        startActivity(i);
+    }
 
     @Override
     public void onLoggedIn() { Log.d("MainActivity", "User logged in"); }
@@ -330,21 +288,19 @@ public class MainActivity extends Activity implements
             //    System.out.println("my profile pic is " + profilePic);
 
 
-//
-//                if (accountType.equals("premium")) {
-//                    Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-//                    i.putExtra("fullName", fullName);
-//                    i.putExtra("accountType", accountType);
-//                    i.putExtra("profilePic", profilePic);
-//                   // i.putExtra("username", username);
-//                    i.putExtra("id", id);
-//                    startActivity(i);
-//                } else {
-//                    Intent i = new Intent(getApplicationContext(), PremiumRedirectActivity.class);
-//                    startActivity(i);
-//
-//                }
 
+                if (accountType.equals("premium")) {
+                    /*Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
+                    i.putExtra("fullName", fullName);
+                    i.putExtra("accountType", accountType);
+                    i.putExtra("profilePic", profilePic);
+                   // i.putExtra("username", username);
+                    i.putExtra("id", id);
+                    startActivity(i);*/
+                } else {
+                    Intent i = new Intent(getApplicationContext(), PremiumRedirectActivity.class);
+                    startActivity(i);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

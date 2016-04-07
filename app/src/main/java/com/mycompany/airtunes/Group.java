@@ -48,7 +48,10 @@ public class Group implements Serializable {
     }
 
     public void addMember(String name) {
-        this.memberNames.add(name);
+        if (!memberNames.contains(name)) {
+            this.memberNames.add(name);
+
+        }
     }
 
     public void removeMember(String name) {

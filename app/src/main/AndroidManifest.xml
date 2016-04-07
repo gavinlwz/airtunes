@@ -44,7 +44,10 @@
             android:label="@string/title_activity_search_user" />
         <activity
             android:name=".SongDisplay"
-            android:label="@string/title_activity_song_display"></activity>
+            android:label="@string/title_activity_song_display" />
+        <activity
+            android:name=".FavoriteSongsDisplay"
+            android:label="@string/title_activity_favorite_songs_display"></activity>
     </application>
 
 </manifest>

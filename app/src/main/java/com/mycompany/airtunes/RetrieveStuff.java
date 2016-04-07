@@ -182,6 +182,9 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
                 Track track = t.getTrack();
                 System.out.println("track name = " + track.getName());
                 Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
+                if (PlaylistActivity.currentSong == null) {
+                    PlaylistActivity.currentSong = song;
+                }
                 PlaylistActivity.model.addSong(song);
                 PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                 PlaylistActivity.songNames.add(track.getName());

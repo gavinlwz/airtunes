@@ -52,8 +52,8 @@ public class PlaylistActivity extends ActionBarActivity {
     public static Group model;
     public static FirebaseCalls fb;
     boolean firstTimePlayButtonPressed = true;
-    Song currentSong;
-    User me;
+    static Song currentSong;
+    static User me;
 
     ToggleButton toggleButton;
     Handler mHandler;
@@ -218,6 +218,8 @@ public class PlaylistActivity extends ActionBarActivity {
             //fb.testGroup = model;
             fb.updateRoomMembers(model);
             System.out.println(model.getMemberNames());
+
+
         }
     }
 
@@ -268,6 +270,7 @@ public class PlaylistActivity extends ActionBarActivity {
             MainActivity.mPlayer.skipToNext();
         }
 
+
     }
 
     public void onSetShuffleButtonClick(View view) {
@@ -289,7 +292,6 @@ public class PlaylistActivity extends ActionBarActivity {
         new RetrieveStuff().execute(query);
 
 
-
         //ListView lv = (ListView) findViewById(R.id.listView);
 //        lv.requestLayout();
 
@@ -297,12 +299,15 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onFavoriteButtonClick(View view) {
+        System.out.println("FAVORITE SONG WAS CLICKED BITCHHHH");
+
         if (currentSong != null && me != null) {
             System.out.println("CURRENT SONG = " + currentSong);
             System.out.println("CURRENT USER = " + me);
             //fb.users.get(me.getUsername()).addSongs(currentSong);
             me.addSongs(currentSong);
             fb.updateUserSongs(me);
+            System.out.println(me.favSongs);
         }
     }
 
