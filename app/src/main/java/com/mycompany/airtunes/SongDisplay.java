@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class SongDisplay extends ActionBarActivity {
     String songTitle = "";
     String albumCover = "";
     String artistName = "";
+    public static FirebaseCalls fb = FirebaseCalls.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,24 @@ public class SongDisplay extends ActionBarActivity {
         tv = (TextView) findViewById(R.id.artistName);
         tv.setText(artistName);
 
+    }
+
+    public void onFavoriteButtonClick(View view) {
+        System.out.println("FAVORITE SONG WAS CLICKED BITCHHHH");
+
+        //fb.users.get(me.getUsername()).addSongs(currentSong);
+        Song currentSong = null;
+        for (Song song : PlaylistActivity.model.getSongs()) {
+            System.out.println(song.getName());
+            System.out.println(songTitle);
+            if (song.getName().equals(songTitle)) {
+                currentSong = song;
+                System.out.println(currentSong);
+            }
+        }
+        PlaylistActivity.me.addSongs(currentSong);
+        fb.updateUserSongs(PlaylistActivity.me);
+        System.out.println("Favorite songs are now: " + PlaylistActivity.me.favSongs);
 
     }
 

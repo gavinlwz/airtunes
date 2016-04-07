@@ -43,5 +43,14 @@
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         />
+    <ImageButton android:id="@+id/favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/favoriteoff"
+        android:background="#00ffffff"
+        android:onClick="onFavoriteButtonClick"
+        android:layout_below="@id/artistName"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
