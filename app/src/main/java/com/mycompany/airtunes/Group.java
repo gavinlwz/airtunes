@@ -99,6 +99,10 @@ public class Group implements Serializable {
         isPrivate = p;
     }
 
+    public void changeDj(String newDj) {
+        this.owner = newDj;
+    }
+
 
 
 

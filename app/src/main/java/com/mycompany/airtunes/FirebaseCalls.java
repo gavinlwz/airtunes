@@ -294,6 +294,13 @@ public class FirebaseCalls {
         updateRoomRef.updateChildren(info);
     }
 
+    public void updateDj(Group group) {
+        Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
+        Map<String, Object> info = new HashMap<String, Object> ();
+        info.put("owner", group.getOwner());
+        updateRoomRef.updateChildren(info);
+    }
+
     public void updateRoomSongs(Group group) {
         Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("songs");
         updateRoomRef.setValue(group.getSongs());

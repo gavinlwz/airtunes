@@ -153,11 +153,31 @@ public class PlaylistActivity extends ActionBarActivity {
         System.out.println("The username of account holder is: " + me.getUsername());
         System.out.println("The owner is " + model.getOwner());
 
-//        if (me.getUsername().equals(model.getOwner())) {
+        if (me.getUsername().equals(model.getOwner())) {
             model.addMember(query);
-            fb.testGroup = model;
+            //fb.testGroup = model;
             fb.updateRoomMembers(model);
-       // }
+            System.out.println(model.getMemberNames());
+        }
+    }
+
+    public void onChangeDjButtonClick(View view) {
+        SearchView search = (SearchView) findViewById(R.id.searchForUser);
+        String query = search.getQuery() + "";
+        System.out.println("The username of account holder is: " + me.getUsername());
+        System.out.println("The owner is " + model.getOwner());
+
+        if (me.getUsername().equals(model.getOwner())) {
+            if (model.getMemberNames().contains(query)) {
+                model.changeDj(query);
+                fb.updateDj(model);
+                System.out.println(model.getMemberNames());
+                System.out.println("New Dj is: " + model.getOwner());
+            }
+
+        }
+
+
     }
     public void onPlayButtonClick(View view) {
         System.out.println("play button clicked");

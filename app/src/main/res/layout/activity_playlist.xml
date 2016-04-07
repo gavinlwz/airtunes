@@ -118,11 +118,23 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:background="@mipmap/button_create"
         android:id="@+id/addPerson"
-        android:onClick="onInviteButtonClick"/>
+        android:onClick="onInviteButtonClick"
+        android:layout_below="@+id/listView"
+        android:layout_alignRight="@+id/listView"
+        android:layout_alignEnd="@+id/listView" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/changeDjButton"
+        android:onClick="onChangeDjButtonClick"
+        android:layout_below="@+id/addPerson"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/addPerson"
+        android:layout_alignStart="@+id/addPerson" />
 
     <SearchView
         android:layout_width="wrap_content"
