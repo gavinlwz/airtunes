@@ -115,6 +115,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     if (s.getName().equals(songName)) {
                         model.removeSong(s);
                         fb.updateRoomSongs(model);
+                        return true;
                     }
                 }
                 return true;
