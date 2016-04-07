@@ -2,7 +2,8 @@ package com.mycompany.airtunes;
 
 
 import android.app.Activity;
-
+import android.os.Handler;
+import android.util.Log;
 
 import android.app.Activity;
 import android.os.*;
@@ -39,6 +40,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
+
 public class SearchGroupActivity extends Activity {
 
     SearchController sc;
@@ -73,6 +75,7 @@ public class SearchGroupActivity extends Activity {
                 String groupName = (String) grouplist.getItemAtPosition(position);
                 System.out.println("Clicked on: " + groupName);
                 Group group = fb.groups.get(groupName);
+                System.out.println("Transitioning with group :" +  group );
                 transition(group);
             }
         });
@@ -80,7 +83,6 @@ public class SearchGroupActivity extends Activity {
         //Firebase stuff
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-        fb.test();
 
         mHandler = new Handler();
         this.startRepeatingTask();
@@ -98,7 +100,6 @@ public class SearchGroupActivity extends Activity {
             } finally {
                 // 100% guarantee that this always happens, even if
                 // your update method throws an exception
-                System.out.println("Runninggggg");
                 mHandler.postDelayed(mStatusChecker, 4000);
             }
         }
