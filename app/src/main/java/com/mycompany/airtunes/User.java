@@ -23,7 +23,7 @@ public class User {
 
     private String password;
     private String username;
-    private ArrayList<Song> favSongs;
+    ArrayList<Song> favSongs;
 
 
 //    public User(String firstName, String lastName, String username) {

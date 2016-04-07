@@ -7,4 +7,6 @@
     <string name="title_activity_premium_redirect">PremiumRedirectActivity</string>
     <string name="title_activity_user_search_result">UserSearchResultActivity</string>
     <string name="title_activity_search_user">SearchUserActivity</string>
+    <string name="title_activity_song_display">SongDisplay</string>
+    <string name="title_activity_favorite_songs_display">FavoriteSongsDisplay</string>
 </resources>

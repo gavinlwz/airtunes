@@ -26,10 +26,52 @@
     <Button
         android:layout_width="200dp"
         android:layout_height="40dp"
+        android:text="Logout"
+        android:id="@+id/favSongsButton"
+        android:onClick="viewFavSongs"
+         />
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="40dp"
         android:text="Search"
         android:id="@+id/searchUserButton"
         android:onClick="launchSearch"
         android:layout_below="@+id/profilePic" />
+
+    <TextView
+        android:id="@+id/groupTagView"
+        android:text="Click to search or create group: "
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffffff"
+        android:layout_alignParentTop="true"
+        android:layout_below="@id/searchUserButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/groupTagView"
+        android:id="@+id/enterGroup"
+        android:onClick="onGoToGroupButtonClick" />
+
+    <TextView
+        android:id="@+id/userTagView"
+        android:text="Click to search for a user profile: "
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffffff"
+        android:layout_below="@id/enterGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/userTagView"
+        android:id="@+id/goToUserProfile"
+        android:onClick="onGoToProfileButtonClick"/>
 
 
     <TextView
@@ -37,7 +79,7 @@
         android:layout_height="115dp"
         android:text="Privacy:"
         android:id="@+id/privacy"
-        android:layout_below="@+id/searchUserButton"
+        android:layout_below="@+id/goToUserProfile"
         />
 
     <ToggleButton

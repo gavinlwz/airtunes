@@ -102,6 +102,24 @@ public class UserProfileActivity extends ActionBarActivity {
 
     }
 
+    public void onGoToGroupButtonClick(View view) {
+        Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
+        startActivity(i);
+    }
+
+    public void onGoToProfileButtonClick(View view) {
+        Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
+        startActivity(i);
+    }
+
+    public void viewFavSongs(View v) {
+        MainActivity.logout(v);
+        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
+        startActivity(i);
+
+    }
+
+
 
 
 
