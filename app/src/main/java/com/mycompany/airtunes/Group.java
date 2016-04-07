@@ -28,7 +28,10 @@ public class Group implements Serializable {
 
     // TODO: Akash Change song to actual Song objects
     // TODO: Arvind Pass the user object from login to constructor
-    public Group() {};
+    public Group() {
+        songNames = new ArrayList<String>();
+    };
+
     public Group(String groupName, String owner, boolean isPrivate) {
         this.groupName = groupName;
 
@@ -58,13 +61,14 @@ public class Group implements Serializable {
     }
     public void addSong(Song song) {
         this.songs.add(song);
-        addSong(song.getName());
+        this.songNames.add(song.getName());
     }
 
     public void removeSong(String song) {this.songNames.remove(song); }
     public void removeSong(Song song) {
         this.songs.remove(song);
-        removeSong(song.getName());
+        this.songNames.remove(song.getName());
+
     }
 
     public List<Song> getSongs() {
@@ -94,6 +98,8 @@ public class Group implements Serializable {
     public void setIsPrivate(boolean p) {
         isPrivate = p;
     }
+
+
 
 
 

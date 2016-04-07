@@ -73,15 +73,23 @@ public class FirebaseCalls {
                 System.out.println(dataSnapshot.getValue());
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        System.out.println(snapshot);
-                        String groupName = snapshot.getKey();
+                    System.out.println(snapshot);
+                    String groupName = snapshot.getKey();
+
+                    try {
                         Group group = snapshot.getValue(Group.class);
+                        System.out.println(group);
+                        System.out.println("HURRAY GROUP ADDED");
                         groups.put(groupName, group);
-                        System.out.println("Adding group to gruops: " + groupName);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+
                     }
-
-
+                    System.out.println("Adding group to gruops: " + groupName);
                 }
+
+
+            }
 
 
             @Override

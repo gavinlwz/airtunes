@@ -33,6 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
@@ -78,7 +79,12 @@ public class PlaylistActivity extends ActionBarActivity {
         playlist = (ListView) findViewById(R.id.listView);
         //queue = new ArrayList<Track>();
        // queueSongs = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, model.getSongNames());
+        List<String> songNames = new ArrayList<String>();
+        for (Song s : model.getSongs()) {
+            songNames.add(s.getName());
+        }
+        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, songNames);
+        System.out.println("Getting song names yo " + model.getSongNames());
         playlist.setAdapter(queueAdapter);
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,

@@ -153,6 +153,7 @@ public class SearchGroupActivity extends Activity {
             toast.show();
         } else {
             Group g = new Group(groupName, fb.currentUser.getUsername(), false);
+            fb.groups.put(groupName, g);
             fb.createRoom(g);
             transition(g);
             System.out.println("Created group");
