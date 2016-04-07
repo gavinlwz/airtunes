@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements
     private static final String REDIRECT_URI = "airtunes-login://callback";
     //private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     private static final int REQUEST_CODE = 1337;
-    private static String access_token;
+    public static String access_token;
     private static String refresh_token;
     private final String USER_AGENT = "Mozilla/5.0";
 
@@ -79,7 +79,7 @@ public class MainActivity extends Activity implements
     public static String id;
     FirebaseCalls fb;
 
-    private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
+    //private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
 
     public static Player mPlayer;
 
@@ -136,7 +136,9 @@ public class MainActivity extends Activity implements
             System.out.println("I am in the request code response");
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
+                System.out.println("setting access token");
                 access_token = response.getAccessToken();
+
                 new RetrieveFeedTask().execute();
                 api.setAccessToken(access_token);
                 Config playerConfig = new Config(this, response.getAccessToken(), CLIENT_ID);
@@ -303,8 +305,13 @@ public class MainActivity extends Activity implements
                 profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
                 username = (String) object.get("email");
                 id = (String) object.get("id");
+
                 //User currentUser = new User("name", "id");
-                User currentUser = new User(fullName, id);
+               // User currentUser = new User(fullName, id);
+
+                User currentUser = new User(username, id);
+                //User currentUser = new User(fullName, id);
+
                 int count = 0;
                 for (String u : fb.users.keySet()) {
                     if (u.equals(id)) {

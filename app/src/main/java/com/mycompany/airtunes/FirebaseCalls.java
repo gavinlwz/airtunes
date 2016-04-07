@@ -73,15 +73,23 @@ public class FirebaseCalls {
                 System.out.println(dataSnapshot.getValue());
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        System.out.println(snapshot);
-                        String groupName = snapshot.getKey();
+                    System.out.println(snapshot);
+                    String groupName = snapshot.getKey();
+
+                    try {
                         Group group = snapshot.getValue(Group.class);
+                        System.out.println(group);
+                        System.out.println("HURRAY GROUP ADDED");
                         groups.put(groupName, group);
-                        System.out.println("Adding group to gruops: " + groupName);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+
                     }
-
-
+                    System.out.println("Adding group to gruops: " + groupName);
                 }
+
+
+            }
 
 
             @Override
@@ -179,45 +187,45 @@ public class FirebaseCalls {
 //        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
 //    }
 
-    public void test() {
-        // Testing code
-
-        // Members
-
-
-        User one = new User("Wai", "Wu");
-        this.createUser(one);
-
-
-        //one.addSongs(new Track());
-        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
-        this.updateUserSongs(one);
-
-        // Rooms
-        Group newRoom = new Group("groupName1", "groupOwner1", true);
-        this.createRoom(newRoom);
-
-
-        newRoom.addSong("song 1");
-        this.updateRoomSongs(newRoom);
-
-        newRoom.addSong("song 2");
-        this.updateRoomSongs(newRoom);
-
-        newRoom.removeSong("song 1");
-        this.updateRoomSongs(newRoom);
-
-        newRoom.addMember("Another Wai!");
-        this.updateRoomMembers(newRoom);
-
-        newRoom.addMember("Wai 2!");
-        this.updateRoomMembers(newRoom);
-
-        newRoom.removeMember("Another Wai!");
-        this.updateRoomMembers(newRoom);
-
-        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
-    }
+//    public void test() {
+//        // Testing code
+//
+//        // Members
+//
+//
+//        User one = new User("Wai", "Wu");
+//        this.createUser(one);
+//
+//
+//        //one.addSongs(new Track());
+//        one.addSongs(new Song("lajksdhakjshd", "Hello Dohee Song", "dohee", null));
+//        this.updateUserSongs(one);
+//
+//        // Rooms
+//        Group newRoom = new Group("groupName1", "groupOwner1", true);
+//        this.createRoom(newRoom);
+//
+//
+//        newRoom.addSong("song 1");
+//        this.updateRoomSongs(newRoom);
+//
+//        newRoom.addSong("song 2");
+//        this.updateRoomSongs(newRoom);
+//
+//        newRoom.removeSong("song 1");
+//        this.updateRoomSongs(newRoom);
+//
+//        newRoom.addMember("Another Wai!");
+//        this.updateRoomMembers(newRoom);
+//
+//        newRoom.addMember("Wai 2!");
+//        this.updateRoomMembers(newRoom);
+//
+//        newRoom.removeMember("Another Wai!");
+//        this.updateRoomMembers(newRoom);
+//
+//        System.out.println("dfasfsaad sfds fasdf dsfas user size is: " + users.size());
+//    }
 
 
 // Update Remote
@@ -286,9 +294,19 @@ public class FirebaseCalls {
         updateRoomRef.updateChildren(info);
     }
 
+    public void updateDj(Group group) {
+        Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
+        Map<String, Object> info = new HashMap<String, Object> ();
+        info.put("owner", group.getOwner());
+        updateRoomRef.updateChildren(info);
+    }
+
     public void updateRoomSongs(Group group) {
         Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("songs");
         updateRoomRef.setValue(group.getSongs());
+//        if (group.getSongs() == null) {
+//
+//        }
 
 //        Map<String, Object> songInfo = new HashMap<String, Object> ();
 //        songInfo.put("songs", group.getSongs());
