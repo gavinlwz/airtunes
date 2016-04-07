@@ -2,7 +2,8 @@ package com.mycompany.airtunes;
 
 
 import android.app.Activity;
-
+import android.os.Handler;
+import android.util.Log;
 
 import android.app.Activity;
 import android.os.*;
@@ -37,6 +38,7 @@ import com.wrapper.spotify.models.Track;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 
 
 public class SearchGroupActivity extends Activity {
@@ -98,7 +100,6 @@ public class SearchGroupActivity extends Activity {
             } finally {
                 // 100% guarantee that this always happens, even if
                 // your update method throws an exception
-                System.out.println("Runninggggg");
                 mHandler.postDelayed(mStatusChecker, 4000);
             }
         }

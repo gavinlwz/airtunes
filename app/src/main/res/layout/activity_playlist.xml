@@ -124,6 +124,19 @@
         android:layout_below="@+id/listView"
         android:layout_alignRight="@+id/listView"
         android:layout_alignEnd="@+id/listView" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/button_create"
+        android:id="@+id/shuffleSong"
+        android:onClick="onSetShuffleButtonClick"
+        android:layout_below="@+id/listView"
+        android:layout_alignRight="@+id/listView"
+        android:layout_toLeftOf="@+id/addPerson"
+        android:layout_alignEnd="@+id/listView" />
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

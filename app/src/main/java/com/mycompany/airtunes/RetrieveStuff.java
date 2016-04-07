@@ -52,6 +52,9 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
                 Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
                 PlaylistActivity.model.addSong(song);
                 PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
+                PlaylistActivity.songNames.add(track.getName());
+//                PlaylistActivity.queueAdapter.notifyDataSetChanged();
+
                 //PlaylistActivity.queueSongs.add(track.getName());
 
                 MainActivity.mPlayer.queue(track.getUri());
@@ -70,7 +73,8 @@ class RetrieveStuff extends AsyncTask<String, Void, Track> {
 
 
         return track;
-    } 
+    }
+
 
 
 

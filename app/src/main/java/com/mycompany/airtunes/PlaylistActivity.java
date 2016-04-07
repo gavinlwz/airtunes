@@ -2,6 +2,8 @@ package com.mycompany.airtunes;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.util.Log;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,6 +56,9 @@ public class PlaylistActivity extends ActionBarActivity {
     User me;
 
     ToggleButton toggleButton;
+    Handler mHandler;
+
+    public static List<String> songNames;
 
 
     @Override
@@ -62,11 +67,17 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
+        songNames = new ArrayList<String>();
         //fb.test();
+
         me = fb.currentUser;
         fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
         //me = fb.users.get(fb.currentUser.getUsername());
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+
+        //Wai code for the auto update of playlist
+
+
 
         //Wai's Code on Receiving Groups
 
@@ -82,13 +93,14 @@ public class PlaylistActivity extends ActionBarActivity {
         playlist = (ListView) findViewById(R.id.listView);
         //queue = new ArrayList<Track>();
         // queueSongs = new ArrayList<String>();
-        List<String> songNames = new ArrayList<String>();
         System.out.println("Model is : " + model);
+//        songNames.clear();
         for (Song s : model.getSongs()) {
             songNames.add(s.getName());
         }
 
-        queueAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songNames);
+        queueAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, songNames);
 //        System.out.println("Getting song names yo " + model.getSongNames());
         playlist.setAdapter(queueAdapter);
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -115,12 +127,19 @@ public class PlaylistActivity extends ActionBarActivity {
                     if (s.getName().equals(songName)) {
                         model.removeSong(s);
                         fb.updateRoomSongs(model);
+                        songNames.remove(s.getName());
                         return true;
                     }
                 }
                 return true;
             }
         });
+
+
+        mHandler = new Handler();
+        startRepeatingTask();
+
+
 
 
 //        for (String song : model.songNames) {
@@ -165,6 +184,28 @@ public class PlaylistActivity extends ActionBarActivity {
 //        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    // To update the playlist
+    Runnable mStatusChecker =
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        queueAdapter.notifyDataSetChanged(); //this function can change value of mInterval.
+                    } finally {
+                        // 100% guarantee that this always happens, even if
+                        // your update method throws an exception
+                        mHandler.postDelayed(mStatusChecker, 1000);
+                    }
+                }
+            };
+
+
+//    void updatePlaylist() {
+//        runOnUiThread();
+//    }
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
 
     public void onInviteButtonClick(View view) {
         SearchView search = (SearchView) findViewById(R.id.searchForUser);
@@ -205,6 +246,7 @@ public class PlaylistActivity extends ActionBarActivity {
             System.out.println("KAJSDHKALSDHJASD");
             play = !play;
             if (play) {
+                System.out.println("Plyaing track: ");
                 MainActivity.mPlayer.resume();
                 if (firstTimePlayButtonPressed) {
                     firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
@@ -228,9 +270,10 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
-    public void onShuffleButtonClick(View view) {
+    public void onSetShuffleButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
             isShuffling = !isShuffling;
+            System.out.println("Setting the player to shuffling mode");
             MainActivity.mPlayer.setShuffle(isShuffling);
         }
     }
@@ -239,6 +282,8 @@ public class PlaylistActivity extends ActionBarActivity {
         SearchView search = (SearchView) findViewById(R.id.songSearchView);
         String query = search.getQuery() + "";
         new RetrieveStuff().execute(query);
+
+
 
         //ListView lv = (ListView) findViewById(R.id.listView);
 //        lv.requestLayout();
