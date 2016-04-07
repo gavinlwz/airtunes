@@ -300,11 +300,11 @@ public class MainActivity extends Activity implements
                 }
 
                 accountType = (String) object.get("product");
-               // profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
+                profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
                 username = (String) object.get("email");
                 id = (String) object.get("id");
-                User currentUser = new User("name", "id");
-                //User currentUser = new User(fullName, id);
+                //User currentUser = new User("name", "id");
+                User currentUser = new User(fullName, id);
                 int count = 0;
                 for (String u : fb.users.keySet()) {
                     if (u.equals(id)) {
