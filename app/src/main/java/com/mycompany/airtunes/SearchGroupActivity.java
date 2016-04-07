@@ -73,6 +73,7 @@ public class SearchGroupActivity extends Activity {
                 String groupName = (String) grouplist.getItemAtPosition(position);
                 System.out.println("Clicked on: " + groupName);
                 Group group = fb.groups.get(groupName);
+                System.out.println("Transitioning with group :" +  group );
                 transition(group);
             }
         });
@@ -80,7 +81,6 @@ public class SearchGroupActivity extends Activity {
         //Firebase stuff
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-        fb.test();
 
         mHandler = new Handler();
         this.startRepeatingTask();

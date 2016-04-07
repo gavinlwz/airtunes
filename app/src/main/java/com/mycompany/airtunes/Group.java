@@ -60,18 +60,24 @@ public class Group implements Serializable {
         this.songNames.add(song);
     }
     public void addSong(Song song) {
+        if (this.songs == null) {
+            this.songs = new ArrayList<Song>();
+        }
         this.songs.add(song);
         this.songNames.add(song.getName());
     }
 
-    public void removeSong(String song) {this.songNames.remove(song); }
     public void removeSong(Song song) {
+        System.out.println("Removing song from model: " + song);
         this.songs.remove(song);
         this.songNames.remove(song.getName());
 
     }
 
     public List<Song> getSongs() {
+        if (songs == null) {
+            this.songs = new ArrayList<Song>();
+        }
         return songs;
     }
 

@@ -1,6 +1,7 @@
 package com.mycompany.airtunes;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.mycompany.airtunes.R;
 import com.wrapper.spotify.methods.TrackSearchRequest;
 import com.wrapper.spotify.models.Page;
@@ -51,7 +55,6 @@ public class PlaylistActivity extends ActionBarActivity {
 
     ToggleButton toggleButton;
 
-    // Properties for non-song attributes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,20 +74,22 @@ public class PlaylistActivity extends ActionBarActivity {
         //model = new Group("Why", "Wai");
         System.out.println("Group name received is: " + model.groupName);
         // Update Room information
-        ((TextView)findViewById(R.id.ownerView)).setText(model.owner);
+        ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
         fb.updateRoomMembers(model);
 
         playlist = (ListView) findViewById(R.id.listView);
         //queue = new ArrayList<Track>();
-       // queueSongs = new ArrayList<String>();
+        // queueSongs = new ArrayList<String>();
         List<String> songNames = new ArrayList<String>();
+        System.out.println("Model is : " + model);
         for (Song s : model.getSongs()) {
             songNames.add(s.getName());
         }
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, songNames);
-        System.out.println("Getting song names yo " + model.getSongNames());
+
+        queueAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songNames);
+//        System.out.println("Getting song names yo " + model.getSongNames());
         playlist.setAdapter(queueAdapter);
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -97,11 +102,24 @@ public class PlaylistActivity extends ActionBarActivity {
                     }
                 }
                 new RetrieveSong().execute();
-
-
             }
         });
 
+        playlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                String songName = (String) playlist.getItemAtPosition(position);
+                System.out.println("Long Clicked on: " + songName);
+                for (Song s : model.getSongs()) {
+                    System.out.println("Song in model is: " + s.getName());
+                    if (s.getName().equals(songName)) {
+                        model.removeSong(s);
+                        fb.updateRoomSongs(model);
+                    }
+                }
+                return true;
+            }
+        });
 
 
 //        for (String song : model.songNames) {
@@ -113,12 +131,8 @@ public class PlaylistActivity extends ActionBarActivity {
 //        }
 
 
-
 //        new RetrieveStuff().execute("jesus take the wheel");
 //        new RetrieveStuff().execute("happy pharrel");
-
-
-
 
 
         //MainActivity.mPlayer.play(queue.get(0).getUri());
@@ -145,7 +159,11 @@ public class PlaylistActivity extends ActionBarActivity {
 //                }
 //            }
 //        }, 10000);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
 
     public void onInviteButtonClick(View view) {
         SearchView search = (SearchView) findViewById(R.id.searchForUser);
@@ -179,6 +197,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
     }
+
     public void onPlayButtonClick(View view) {
         System.out.println("play button clicked");
         if (me.getUsername().equals(model.getOwner())) {
@@ -198,7 +217,7 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onToggleStar(View view) {
-        
+
     }
 
     public void onNextButtonClick(View view) {
@@ -231,7 +250,7 @@ public class PlaylistActivity extends ActionBarActivity {
             System.out.println("CURRENT SONG = " + currentSong);
             System.out.println("CURRENT USER = " + me);
             //fb.users.get(me.getUsername()).addSongs(currentSong);
-           me.addSongs(currentSong);
+            me.addSongs(currentSong);
             fb.updateUserSongs(me);
         }
     }
@@ -246,7 +265,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
         private Exception exception;
 
-        protected void onPreExecute() { }
+        protected void onPreExecute() {
+        }
 
         protected String doInBackground(Void... urls) {
             // Do some validation here
@@ -287,7 +307,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     System.out.println("hallo " + temp);
                 }
                 object = (JSONObject) new JSONTokener(response).nextValue();
-                JSONObject albums = (JSONObject)object.get("album");
+                JSONObject albums = (JSONObject) object.get("album");
                 JSONArray images = (JSONArray) albums.get("images");
                 JSONObject image = (JSONObject) images.get(0);
                 System.out.println("this is bullshit " + image.get("url"));
