@@ -2,6 +2,7 @@ package com.mycompany.airtunes;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.os.AsyncTask;
@@ -22,6 +23,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mycompany.airtunes.R;
+import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.wrapper.spotify.methods.TrackSearchRequest;
 import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Track;
@@ -41,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
@@ -48,6 +53,7 @@ public class PlaylistActivity extends ActionBarActivity {
     //public static ArrayList<String> queueSongs;
     boolean play = false;
     boolean isShuffling = false;
+   // boolean isPaused = true;
     ListView playlist;
     Exception mException = null;
     public static Group model;
@@ -55,11 +61,17 @@ public class PlaylistActivity extends ActionBarActivity {
     boolean firstTimePlayButtonPressed = true;
     static Song currentSong;
     static User me;
+    Timer timer;
 
     ToggleButton toggleButton;
     Handler mHandler;
 
     public static List<String> songNames;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -77,7 +89,6 @@ public class PlaylistActivity extends ActionBarActivity {
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
         //Wai code for the auto update of playlist
-
 
 
         //Wai's Code on Receiving Groups
@@ -136,11 +147,34 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
+        timer = new Timer();
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//               MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
+//                   @Override
+//                   public void onPlayerState(PlayerState playerState) {
+//                       if (!playerState.playing && !play) {
+//
+//                           if (model.getSongs().size() > 0) {
+//                               MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+//                               play = !play;
+//                           }
+//                       }
+//                   }
+//               });
+////                if (firstTimePlayButtonPressed) {
+////                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
+////                    if (model.getSongs().size() > 0) {
+////                        MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+////                    }
+////
+////                }
+//            }
+//        }, 1000, 1000);
 
         mHandler = new Handler();
         startRepeatingTask();
-
-
 
 
 //        for (String song : model.songNames) {
@@ -183,6 +217,9 @@ public class PlaylistActivity extends ActionBarActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
 //        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // To update the playlist
@@ -201,7 +238,7 @@ public class PlaylistActivity extends ActionBarActivity {
             };
 
 
-//    void updatePlaylist() {
+    //    void updatePlaylist() {
 //        runOnUiThread();
 //    }
     void startRepeatingTask() {
@@ -279,7 +316,7 @@ public class PlaylistActivity extends ActionBarActivity {
             isShuffling = !isShuffling;
             System.out.println("Setting the player to shuffling mode");
             MainActivity.mPlayer.setShuffle(isShuffling);
-            
+
 
         }
     }
@@ -348,10 +385,50 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
-    public void onRandomButtonClick (View view) {
+    public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
         new RetrieveStuff().execute(query);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Playlist Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.mycompany.airtunes/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Playlist Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.mycompany.airtunes/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     class RetrieveSong extends AsyncTask<Void, Void, String> {

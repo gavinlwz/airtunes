@@ -84,7 +84,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
 
                     //PlaylistActivity.queueSongs.add(track.getName());
 
-                    MainActivity.mPlayer.queue(track.getUri());
+                    //MainActivity.mPlayer.queue(track.getUri());
 
 
                     if (track.isExplicit()) {
@@ -189,7 +189,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
                 PlaylistActivity.model.addSong(song);
                 PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                 PlaylistActivity.songNames.add(track.getName());
-                MainActivity.mPlayer.queue(track.getUri());
+               // MainActivity.mPlayer.queue(track.getUri());
             } catch (Exception e) {
                 System.out.println(e);
             }
