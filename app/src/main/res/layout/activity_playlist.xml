@@ -55,7 +55,7 @@
 
     <SearchView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:id="@+id/songSearchView"
         android:layout_below="@id/ownerTagView"
         android:background="#87cefa"
@@ -63,8 +63,8 @@
         android:layout_alignParentLeft="true" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
         android:layout_below="@id/songSearchView"
         android:id="@+id/addButton"
         android:onClick="onAddSongButtonClick"/>
@@ -106,83 +106,79 @@
         android:id="@+id/nextButton"
         android:onClick="onNextButtonClick"/>
 
-    <ImageButton android:id="@+id/favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/favoriteoff"
-        android:background="#00ffffff"
-        android:onClick="onFavoriteButtonClick"
-        android:layout_toRightOf="@id/nextButton"
-        android:layout_alignParentBottom="true" />
+    <!--<ImageButton android:id="@+id/favorite"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@mipmap/favoriteoff"-->
+        <!--android:background="#00ffffff"-->
+        <!--android:onClick="onFavoriteButtonClick"-->
+        <!--android:layout_toRightOf="@id/nextButton"-->
+        <!--android:layout_alignParentBottom="true" />-->
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/button_create"
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="35dp"
+        android:text="Add Person"
         android:id="@+id/addPerson"
         android:onClick="onInviteButtonClick"
-        android:layout_below="@+id/listView"
-        android:layout_alignRight="@+id/listView"
-        android:layout_alignEnd="@+id/listView" />
+        android:layout_above="@+id/changeDjButton"
+        android:layout_alignParentRight="true"/>
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/button_create"
+        android:background="@mipmap/random"
         android:id="@+id/randomSong"
         android:onClick="onRandomButtonClick"
-        android:layout_below="@+id/listView"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/shuffleSong" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/button_create"
+        android:background="@mipmap/leave"
         android:id="@+id/leaveRoom"
         android:onClick="onLeaveRoomButtonClick"
-        android:layout_below="@+id/listView"
+        android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/randomSong" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@mipmap/button_create"
+        android:background="@mipmap/shuffle"
         android:id="@+id/shuffleSong"
         android:onClick="onSetShuffleButtonClick"
-        android:layout_below="@+id/listView"
-        android:layout_alignLeft="@+id/listView"
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/nextButton"/>
 
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="35dp"
         android:id="@+id/changeDjButton"
+        android:text="Change DJ"
+        android:layout_above="@+id/leaveRoom"
         android:onClick="onChangeDjButtonClick"
-        android:layout_below="@+id/addPerson"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/addPerson"
-        android:layout_alignStart="@+id/addPerson" />
+        android:layout_alignParentRight="true" />
 
     <SearchView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="60dp"
         android:id="@+id/searchForUser"
+        android:layout_above="@+id/shuffleSong"
+        android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@id/addPerson"
         android:background="#87cefa"
-        android:minWidth="100dp"
-        />
+        android:minWidth="100dp" />
+
     <Button
-        android:layout_width="170dp"
+        android:layout_width="140dp"
         android:layout_height="35dp"
-        android:text="My Favorite Songs"
+        android:text="Add From Favs"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/songSearchView"
         android:id="@+id/favSongsButton"
         android:onClick="viewFavSongs"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/randomSong"
-        android:layout_toEndOf="@+id/randomSong" />
+        android:layout_toRightOf="@+id/addButton" />
 
 </RelativeLayout>
