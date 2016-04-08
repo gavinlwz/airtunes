@@ -271,8 +271,12 @@ public class MainActivity extends Activity implements
 
                 int count = 0;
                 for (String u : fb.users.keySet()) {
+                    System.out.println("the id I'm searching for is dafuq: " + id);
                     if (u.equals(id)) {
                         count = 1;
+                        System.out.println("this was reached omfg");
+                        currentUser = fb.users.get(id);
+                        System.out.println("current user is now: " + currentUser.favSongs + currentUser.getFirstName());
                         break;
                     }
                 }

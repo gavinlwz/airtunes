@@ -54,6 +54,10 @@ public class FirebaseCalls {
                     System.out.println(snapshot);
                     String username = snapshot.getKey();
                     User user = snapshot.getValue(User.class);
+                    System.out.println(user.getName());
+                    System.out.println(user.favSongs);
+                    System.out.println(user.getId());
+
                     users.put(username, user);
                     System.out.println("Adding user to users");
                 }
@@ -233,6 +237,7 @@ public class FirebaseCalls {
     public void createRoom(Group group) {
         // TODO: Check if there is existing room name
         final Firebase newRoomRef = roomRef.child(group.getGroupName());
+
         newRoomRef.setValue(group, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -292,6 +297,15 @@ public class FirebaseCalls {
         Map<String, Object> info = new HashMap<String, Object> ();
         info.put("memberNames", group.getMemberNames());
         updateRoomRef.updateChildren(info);
+    }
+
+    public void removeRoom(String groupName) {
+        final Firebase newRoomRef = roomRef.child(groupName);
+        newRoomRef.setValue(null);
+     //  Map<String, Object> info = new HashMap<String, Object> ();
+//        info.remove(groupName);
+//        info.put("rooms", groups);
+//        updateRoomRef.updateChildren(info);
     }
 
     public void updateDj(Group group) {

@@ -40,6 +40,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
@@ -313,6 +314,37 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onPrivacyButtonClick(View view) {
         model.setIsPrivate(!model.isPrivate);
+    }
+
+    public void onLeaveRoomButtonClick(View view) {
+        //check if user is a DJ, if so transfer DJ rights
+        // check if user is last user in group, if so we need to disable the room
+        // disabling the room involves: 1. delete the room from list of rooms 2. deleting songs from the room.
+        System.out.println(me.getUsername());
+        if (model.getMemberNames().contains(me.getUsername())) {
+            model.removeMember(me.getUsername());
+            fb.updateRoomMembers(model);
+            System.out.println("ROOM SIZE = " + model.getMemberNames().size());
+            if (model.getMemberNames().size() == 0) {
+                fb.groups.remove(model.getGroupName());
+                fb.removeRoom(model.getGroupName());
+                System.out.println("removing room");
+                finish();
+                return;
+            }
+            if (model.getOwner().equals(fb.currentUser.getUsername())) {
+                reassignDj();
+
+
+            }
+        }
+
+        finish();
+    }
+
+    public void reassignDj() {
+        model.changeDj(model.getMemberNames().get(0));
+
     }
 
     public void onRandomButtonClick (View view) {

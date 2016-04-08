@@ -93,5 +93,16 @@ public class User {
 
     public ArrayList<Song> getSongs() { return favSongs; }
 
+    public ArrayList<Song> getFavSongs() {
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<Song>();
+        }
+        return this.favSongs;
+    }
+
+    public void setFavSongs(ArrayList<Song> favSongs) {
+        this.favSongs = favSongs;
+    }
+
 
 }

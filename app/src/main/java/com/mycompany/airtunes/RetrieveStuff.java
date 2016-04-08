@@ -172,6 +172,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
 //                        urlConnection.disconnect();
 //                    }
 //                }
+
                 System.out.println("refreshed token");
                 final PlaylistTracksRequest ptrequest = MainActivity.api.getPlaylistTracks(p.getOwner().getId(), p.getId()).build();
                 System.out.println("success");
