@@ -65,7 +65,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
                 System.out.println("Something went wrong!" + e.getMessage());
             }
             Track track = new Track();
-            if (trackSearchResult.getItems().size() > 0) {
+            if (trackSearchResult.getItems()!=null && trackSearchResult.getItems().size() > 0) {
 
                 //final TrackRequest request = MainActivity.api.getTrack("0eGsygTp906u18L0Oimnem").build();
                 String[] uri = trackSearchResult.getItems().get(0).getUri().split(":");

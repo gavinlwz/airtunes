@@ -164,7 +164,6 @@ public class UserProfileActivity extends ActionBarActivity {
     }
 
     public void viewFavSongs(View v) {
-        MainActivity.logout(v);
         Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
         startActivity(i);
     }

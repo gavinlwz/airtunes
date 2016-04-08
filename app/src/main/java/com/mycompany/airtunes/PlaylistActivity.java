@@ -166,36 +166,44 @@ public class PlaylistActivity extends ActionBarActivity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+
                 MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
                    @Override
                    public void onPlayerState(PlayerState playerState) {
                        //System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
-                       if (!playerState.playing) {
-                            if (play && isPaused && !firstTimePlayButtonPressed) {
-                                MainActivity.mPlayer.resume();
-                                isPaused = false;
-                                return;
-                            }
-
-                           if (model.getSongs().size() > 0) {
-                               if (firstTimePlayButtonPressed) {
-                                   firstTimePlayButtonPressed = false;
-                               }
-                               if (me.getUsername().equals(model.getOwner())) {
-                                   MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                                   model.removeSong(model.getSongs().get(0));
-                                   play = true;
+                       if (me.getUsername().equals(model.getOwner())) {
+                           if (!playerState.playing) {
+                               if (play && isPaused && !firstTimePlayButtonPressed) {
+                                   MainActivity.mPlayer.resume();
+                                   isPaused = false;
+                                   return;
                                }
 
-                               return;
-                           }
-                       } else {
-                           if (play && isPaused) {
-                               MainActivity.mPlayer.pause();
-                               play = false;
-                               return;
+                               if (model.getSongs().size() > 0) {
+
+                                   if (!isPaused) {
+                                       if (firstTimePlayButtonPressed) {
+                                           firstTimePlayButtonPressed = false;
+                                       }
+                                       MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                                       model.removeSong(model.getSongs().get(0));
+                                       play = true;
+                                       return;
+                                   }
+
+
+
+
+                               }
+                           } else {
+                               if (play && isPaused) {
+                                   MainActivity.mPlayer.pause();
+                                   play = false;
+                                   return;
+                               }
                            }
                        }
+
                    }
                });
             }
@@ -376,8 +384,15 @@ public class PlaylistActivity extends ActionBarActivity {
         if (me.getUsername().equals(model.getOwner())) {
             //MainActivity.mPlayer.skipToNext();
             if (model.getSongs().size() > 0) {
+                System.out.println("NEXT");
                 MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
                 model.removeSong(model.getSongs().get(0));
+                if (isPaused) {
+                    isPaused = false;
+                }
+                if (!play) {
+                    play = true;
+                }
             }
 
         }
@@ -451,6 +466,7 @@ public class PlaylistActivity extends ActionBarActivity {
                 fb.removeRoom(model.getGroupName());
                 fb.updateRoomAsRemoved(model);
                 System.out.println("removing room");
+
                 finish();
                 return;
             }
@@ -471,10 +487,18 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
+
+
     public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
         new RetrieveStuff().execute(query);
+    }
+
+    public void viewFavSongs(View v) {
+        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
+        i.putExtra("Group", model);
+        startActivity(i);
     }
 
 
