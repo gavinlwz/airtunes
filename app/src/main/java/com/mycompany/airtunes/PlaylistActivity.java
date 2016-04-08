@@ -153,36 +153,40 @@ public class PlaylistActivity extends ActionBarActivity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+
                 MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
                    @Override
                    public void onPlayerState(PlayerState playerState) {
                        //System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
-                       if (!playerState.playing) {
-                            if (play && isPaused && !firstTimePlayButtonPressed) {
-                                MainActivity.mPlayer.resume();
-                                isPaused = false;
-                                return;
-                            }
-
-                           if (model.getSongs().size() > 0) {
-                               if (firstTimePlayButtonPressed) {
-                                   firstTimePlayButtonPressed = false;
+                       if (me.getUsername().equals(model.getOwner())) {
+                           if (!playerState.playing) {
+                               if (play && isPaused && !firstTimePlayButtonPressed) {
+                                   MainActivity.mPlayer.resume();
+                                   isPaused = false;
+                                   return;
                                }
-                               if (me.getUsername().equals(model.getOwner())) {
+
+                               if (model.getSongs().size() > 0) {
+                                   if (firstTimePlayButtonPressed) {
+                                       firstTimePlayButtonPressed = false;
+                                   }
+
                                    MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
                                    model.removeSong(model.getSongs().get(0));
                                    play = true;
-                               }
 
-                               return;
-                           }
-                       } else {
-                           if (play && isPaused) {
-                               MainActivity.mPlayer.pause();
-                               play = false;
-                               return;
+
+                                   return;
+                               }
+                           } else {
+                               if (play && isPaused) {
+                                   MainActivity.mPlayer.pause();
+                                   play = false;
+                                   return;
+                               }
                            }
                        }
+
                    }
                });
             }
@@ -432,6 +436,7 @@ public class PlaylistActivity extends ActionBarActivity {
                 fb.groups.remove(model.getGroupName());
                 fb.removeRoom(model.getGroupName());
                 System.out.println("removing room");
+
                 finish();
                 return;
             }
