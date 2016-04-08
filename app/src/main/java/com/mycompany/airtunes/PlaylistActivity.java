@@ -180,16 +180,20 @@ public class PlaylistActivity extends ActionBarActivity {
                                }
 
                                if (model.getSongs().size() > 0) {
-                                   if (firstTimePlayButtonPressed) {
-                                       firstTimePlayButtonPressed = false;
+
+                                   if (!isPaused) {
+                                       if (firstTimePlayButtonPressed) {
+                                           firstTimePlayButtonPressed = false;
+                                       }
+                                       MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                                       model.removeSong(model.getSongs().get(0));
+                                       play = true;
+                                       return;
                                    }
 
-                                   MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                                   model.removeSong(model.getSongs().get(0));
-                                   play = true;
 
 
-                                   return;
+
                                }
                            } else {
                                if (play && isPaused) {
@@ -377,8 +381,15 @@ public class PlaylistActivity extends ActionBarActivity {
         if (me.getUsername().equals(model.getOwner())) {
             //MainActivity.mPlayer.skipToNext();
             if (model.getSongs().size() > 0) {
+                System.out.println("NEXT");
                 MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
                 model.removeSong(model.getSongs().get(0));
+                if (isPaused) {
+                    isPaused = false;
+                }
+                if (!play) {
+                    play = true;
+                }
             }
 
         }
