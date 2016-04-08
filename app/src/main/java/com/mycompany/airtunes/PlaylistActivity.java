@@ -156,7 +156,7 @@ public class PlaylistActivity extends ActionBarActivity {
                 MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
                    @Override
                    public void onPlayerState(PlayerState playerState) {
-                       System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
+                       //System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
                        if (!playerState.playing) {
                             if (play && isPaused && !firstTimePlayButtonPressed) {
                                 MainActivity.mPlayer.resume();
