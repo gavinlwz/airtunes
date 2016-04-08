@@ -122,8 +122,6 @@ public class SongDisplay extends ActionBarActivity {
             ImageView imageView = (ImageView) findViewById(R.id.albumCover);
             System.out.println(bitMap);
             imageView.setImageBitmap(bitMap);
-
-
         }
     }
 

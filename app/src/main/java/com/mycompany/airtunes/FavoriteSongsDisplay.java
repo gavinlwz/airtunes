@@ -18,6 +18,7 @@ public class FavoriteSongsDisplay extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_songs_display);
+
         List<String> favSongs = new ArrayList<String>();
         for (Song song : me.favSongs) {
             favSongs.add(song.getName());
