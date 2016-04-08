@@ -281,7 +281,10 @@ public class PlaylistActivity extends ActionBarActivity {
                 @Override
                 public void run() {
                     try {
+                        Group updatedGroup = fb.groups.get(model.getGroupName());
+                        songNames = updatedGroup.getSongNames();
                         queueAdapter.notifyDataSetChanged(); //this function can change value of mInterval.
+
                     } finally {
                         // 100% guarantee that this always happens, even if
                         // your update method throws an exception
@@ -446,6 +449,7 @@ public class PlaylistActivity extends ActionBarActivity {
             if (model.getMemberNames().size() == 0) {
                 fb.groups.remove(model.getGroupName());
                 fb.removeRoom(model.getGroupName());
+                fb.updateRoomAsRemoved(model);
                 System.out.println("removing room");
                 finish();
                 return;

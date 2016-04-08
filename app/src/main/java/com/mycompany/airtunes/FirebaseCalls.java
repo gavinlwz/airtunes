@@ -292,6 +292,11 @@ public class FirebaseCalls {
 
     }
 
+    public void updateRoomAsRemoved(Group group) {
+        Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
+        updateRoomRef = null;
+    }
+
     public void updateRoomMembers(Group group) {
        Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
         Map<String, Object> info = new HashMap<String, Object> ();
