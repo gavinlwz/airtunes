@@ -296,6 +296,7 @@ public class FirebaseCalls {
        Firebase updateRoomRef = this.roomRef.child(group.getGroupName());
         Map<String, Object> info = new HashMap<String, Object> ();
         info.put("memberNames", group.getMemberNames());
+        info.put("owner", group.getOwner());
         updateRoomRef.updateChildren(info);
     }
 
