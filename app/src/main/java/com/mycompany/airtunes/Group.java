@@ -119,6 +119,7 @@ public class Group implements Serializable {
 
     public void changeDj(String newDj) {
         this.owner = newDj;
+
     }
 
 

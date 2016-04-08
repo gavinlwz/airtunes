@@ -88,7 +88,13 @@ public class User {
 
 
     public void addSongs(Song song) {
+
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<Song>();
+        }
+
         favSongs.add(song);
+
     }
 
     public void removeSongs(Song song) {
@@ -105,6 +111,11 @@ public class User {
     }
 
     public void setFavSongs(ArrayList<Song> favSongs) {
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<Song>();
+        }
+
+
         this.favSongs = favSongs;
     }
 
