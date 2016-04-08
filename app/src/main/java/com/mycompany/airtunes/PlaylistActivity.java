@@ -52,6 +52,8 @@ public class PlaylistActivity extends ActionBarActivity {
     //public static ArrayList<Track> queue;
     //public static ArrayList<String> queueSongs;
     boolean play = false;
+    boolean isPaused = false;
+
     boolean isShuffling = false;
    // boolean isPaused = true;
     ListView playlist;
@@ -71,7 +73,7 @@ public class PlaylistActivity extends ActionBarActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+    //private GoogleApiClient client;
 
 
     @Override
@@ -148,12 +150,47 @@ public class PlaylistActivity extends ActionBarActivity {
         });
 
         timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
+                   @Override
+                   public void onPlayerState(PlayerState playerState) {
+                       System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
+                       if (!playerState.playing) {
+                            if (play && isPaused && !firstTimePlayButtonPressed) {
+                                MainActivity.mPlayer.resume();
+                                isPaused = false;
+                                return;
+                            }
+
+                           if (model.getSongs().size() > 0) {
+                               if (firstTimePlayButtonPressed) {
+                                   firstTimePlayButtonPressed = false;
+                               }
+                               MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                               model.removeSong(model.getSongs().get(0));
+                               play = true;
+                               return;
+                           }
+                       } else {
+                           if (play && isPaused) {
+                               MainActivity.mPlayer.pause();
+                               play = false;
+                               return;
+                           }
+                       }
+                   }
+               });
+            }
+        }, 1000, 1000);
 //        timer.scheduleAtFixedRate(new TimerTask() {
 //            @Override
 //            public void run() {
 //               MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
 //                   @Override
 //                   public void onPlayerState(PlayerState playerState) {
+//                      // System.out.println("IS THE PLAYER PLAYING????")
 //                       if (!playerState.playing && !play) {
 //
 //                           if (model.getSongs().size() > 0) {
@@ -219,7 +256,7 @@ public class PlaylistActivity extends ActionBarActivity {
 //        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+       // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // To update the playlist
@@ -281,22 +318,29 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onPlayButtonClick(View view) {
-        System.out.println("play button clicked");
-        if (me.getUsername().equals(model.getOwner())) {
-            System.out.println("KAJSDHKALSDHJASD");
-            play = !play;
-            if (play) {
-                System.out.println("Plyaing track: ");
-                MainActivity.mPlayer.resume();
-                if (firstTimePlayButtonPressed) {
-                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
-                    MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                }
+        play = true;
+        //isPaused = false;
+//        System.out.println("play button clicked");
+//        if (me.getUsername().equals(model.getOwner())) {
+//            System.out.println("KAJSDHKALSDHJASD");
+//            play = !play;
+//            if (play) {
+//                System.out.println("Plyaing track: ");
+//                MainActivity.mPlayer.resume();
+//                if (firstTimePlayButtonPressed) {
+//                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
+//                    MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+//                }
+//
+//            } else {
+//                MainActivity.mPlayer.pause();
+//            }
+//        }
+    }
 
-            } else {
-                MainActivity.mPlayer.pause();
-            }
-        }
+    public void onPauseButtonClick(View view) {
+        isPaused = true;
+        //play = false;
     }
 
     public void onToggleStar(View view) {
@@ -305,7 +349,12 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onNextButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
-            MainActivity.mPlayer.skipToNext();
+            //MainActivity.mPlayer.skipToNext();
+            if (model.getSongs().size() > 0) {
+                MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                model.removeSong(model.getSongs().get(0));
+            }
+
         }
 
 
@@ -391,45 +440,6 @@ public class PlaylistActivity extends ActionBarActivity {
         new RetrieveStuff().execute(query);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Playlist Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.mycompany.airtunes/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Playlist Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.mycompany.airtunes/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
 
     class RetrieveSong extends AsyncTask<Void, Void, String> {
 

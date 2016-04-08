@@ -95,7 +95,7 @@
         android:layout_toRightOf="@id/playButton"
         android:background="@mipmap/pause"
         android:id="@+id/pauseButton"
-        android:onClick="onPlayButtonClick"/>
+        android:onClick="onPauseButtonClick"/>
 
     <ImageButton
         android:layout_width="wrap_content"
