@@ -279,6 +279,7 @@ public class PlaylistActivity extends ActionBarActivity {
             isShuffling = !isShuffling;
             System.out.println("Setting the player to shuffling mode");
             MainActivity.mPlayer.setShuffle(isShuffling);
+            
 
         }
     }
