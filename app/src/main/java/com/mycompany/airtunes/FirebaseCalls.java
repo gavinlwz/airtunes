@@ -29,8 +29,6 @@ public class FirebaseCalls {
 
     Group testGroup;
 
-
-
     private static final FirebaseCalls dataHolder = new FirebaseCalls();
     public static FirebaseCalls getInstance() { return dataHolder; }
 
@@ -91,21 +89,13 @@ public class FirebaseCalls {
                     }
                     System.out.println("Adding group to gruops: " + groupName);
                 }
-
-
             }
-
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-
-
-
-
-
 
 //        // Add event listener for rooms
 //        // So when room is added
@@ -135,14 +125,7 @@ public class FirebaseCalls {
 //
 //            }
 //        });
-
-
-
-
-
-
     }
-
 
 //    public void test() {
 //        // Testing code
@@ -287,9 +270,6 @@ public class FirebaseCalls {
 
             }
         });
-
-
-
     }
 
     public void updateRoomMembers(Group group) {

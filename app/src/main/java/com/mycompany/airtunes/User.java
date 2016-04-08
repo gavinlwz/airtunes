@@ -41,7 +41,7 @@ public class User {
         this.privacy = false;
     }
 
-    public User (String name, String username) {
+    public User(String name, String username) {
         this.name = name;
         this.username = username;
         this.favSongs = new ArrayList<>();
@@ -103,6 +103,5 @@ public class User {
     public void setFavSongs(ArrayList<Song> favSongs) {
         this.favSongs = favSongs;
     }
-
 
 }

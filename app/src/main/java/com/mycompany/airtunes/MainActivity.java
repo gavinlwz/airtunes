@@ -180,7 +180,7 @@ public class MainActivity extends Activity implements
         i.putExtra("fullName", fullName);
         i.putExtra("accountType", accountType);
         i.putExtra("profilePic", profilePic);
-        // i.putExtra("username", username);
+        i.putExtra("username", username);
         i.putExtra("id", id);
         startActivity(i);
     }
@@ -259,9 +259,11 @@ public class MainActivity extends Activity implements
                 }
 
                 accountType = (String) object.get("product");
-                profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
+        //        profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
                 username = (String) object.get("email");
                 id = (String) object.get("id");
+                System.out.println(username);
+                System.out.println(id);
 
                 //User currentUser = new User("name", "id");
                // User currentUser = new User(fullName, id);
@@ -284,6 +286,7 @@ public class MainActivity extends Activity implements
                     fb.createUser(currentUser);
                 }
                 fb.currentUser = currentUser;
+                System.out.println("---------------Current user is " + fb.currentUser.getName());
 
 
                 System.out.println("my full name is " + fullName);
