@@ -450,10 +450,18 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
+
+
     public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
         new RetrieveStuff().execute(query);
+    }
+
+    public void viewFavSongs(View v) {
+        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
+        i.putExtra("Group", model);
+        startActivity(i);
     }
 
 

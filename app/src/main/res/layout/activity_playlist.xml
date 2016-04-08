@@ -175,5 +175,14 @@
         android:background="#87cefa"
         android:minWidth="100dp"
         />
+    <Button
+        android:layout_width="170dp"
+        android:layout_height="35dp"
+        android:text="My Favorite Songs"
+        android:id="@+id/favSongsButton"
+        android:onClick="viewFavSongs"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/randomSong"
+        android:layout_toEndOf="@+id/randomSong" />
 
 </RelativeLayout>
