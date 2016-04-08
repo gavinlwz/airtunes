@@ -1,6 +1,5 @@
 package com.mycompany.airtunes;
 
-
 import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
@@ -39,8 +38,6 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-
-
 public class SearchGroupActivity extends Activity {
 
     SearchController sc;
@@ -61,7 +58,7 @@ public class SearchGroupActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.searchlayout);
+        setContentView(R.layout.activity_search_group);
         sc = new SearchController();
 
 
@@ -169,9 +166,6 @@ public class SearchGroupActivity extends Activity {
 //        fb.updateRoom(group);
 //    }
 
-
-
-
     // Request code to create new Activity
     public static final int SearchButtonActivity_ID = 1;
 
@@ -179,9 +173,6 @@ public class SearchGroupActivity extends Activity {
         queueAdapter.clear();
         queueAdapter.notifyDataSetChanged();
         String search = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
-
-
-
        boolean contains = sc.searchGroup(search, fb.groups);
         if (!contains) {
             System.out.println("Group not found!");
@@ -196,8 +187,6 @@ public class SearchGroupActivity extends Activity {
             System.out.println("groups have been found");
 
         }
-
-
 //        Log.d("Message: ", "Group found: " + group.groupName);
 //
 //        Intent goToRoom = new Intent(this, PlaylistActivity.class);
@@ -232,8 +221,5 @@ public class SearchGroupActivity extends Activity {
             toast.show();
             return;
         }
-
     }
-
-
 }

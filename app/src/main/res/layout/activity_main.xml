@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/goToUserProfile"
+        android:text="My Profile"
         android:id="@+id/viewMyProfile"
         android:onClick="onViewMyProfileClick"/>
 

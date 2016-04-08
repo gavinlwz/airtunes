@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#ff000000"
+    tools:context="com.mycompany.airtunes.SearchGroupActivity">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/searchView"
+        android:text="2"
+        android:id="@+id/searchButton"
+        android:background="@mipmap/button_search"
+        android:layout_below="@+id/searchView"
+        android:onClick="onSearchButtonClick"
+        android:nestedScrollingEnabled="true" />
+
+    <ImageButton
+        style="?android:attr/buttonStyleSmall"
+        android:adjustViewBounds="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:id="@+id/createButton"
+        android:background="@mipmap/button_create"
+        android:layout_below="@+id/searchView"
+        android:layout_alignRight="@+id/searchView"
+        android:layout_alignEnd="@+id/searchView"
+        android:onClick="onCreateButtonClick"/>
+
+    <SearchView
+        android:layout_width="227dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchView"
+        android:layout_gravity="center_vertical"
+        android:background="#87cefa"
+        android:minWidth="100dp"
+        android:gravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listOfGroups"
+        android:dividerHeight="1px"
+        android:layout_below="@id/createButton"
+        android:layout_alignParentLeft="true"
+        android:divider="#00bfff"
+        android:background="#87cefa" />
+
+</RelativeLayout>
