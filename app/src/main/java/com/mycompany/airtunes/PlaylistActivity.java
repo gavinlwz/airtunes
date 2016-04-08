@@ -1,5 +1,6 @@
 package com.mycompany.airtunes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
@@ -134,6 +136,17 @@ public class PlaylistActivity extends ActionBarActivity {
         playlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
+                if (!me.getUsername().equals(model.getOwner())) {
+                    System.out.println("Cannot delete song because not owner");
+                    Context context = getApplicationContext();
+                    CharSequence text = "You need to be owner to delete song";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                    return true;
+                }
                 String songName = (String) playlist.getItemAtPosition(position);
                 System.out.println("Long Clicked on: " + songName);
                 for (Song s : model.getSongs()) {
@@ -268,7 +281,10 @@ public class PlaylistActivity extends ActionBarActivity {
                 @Override
                 public void run() {
                     try {
+                        Group updatedGroup = fb.groups.get(model.getGroupName());
+                        songNames = updatedGroup.getSongNames();
                         queueAdapter.notifyDataSetChanged(); //this function can change value of mInterval.
+
                     } finally {
                         // 100% guarantee that this always happens, even if
                         // your update method throws an exception
@@ -424,6 +440,8 @@ public class PlaylistActivity extends ActionBarActivity {
         // check if user is last user in group, if so we need to disable the room
         // disabling the room involves: 1. delete the room from list of rooms 2. deleting songs from the room.
         System.out.println(me.getUsername());
+        MainActivity.mPlayer.pause();
+
         if (model.getMemberNames().contains(me.getUsername())) {
             model.removeMember(me.getUsername());
             fb.updateRoomMembers(model);
@@ -431,6 +449,7 @@ public class PlaylistActivity extends ActionBarActivity {
             if (model.getMemberNames().size() == 0) {
                 fb.groups.remove(model.getGroupName());
                 fb.removeRoom(model.getGroupName());
+                fb.updateRoomAsRemoved(model);
                 System.out.println("removing room");
                 finish();
                 return;
@@ -446,7 +465,9 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void reassignDj() {
+        System.out.println("model.getMemberNames().get(0)" + model.getMemberNames().get(0));
         model.changeDj(model.getMemberNames().get(0));
+        fb.updateRoomMembers(model);
 
     }
 

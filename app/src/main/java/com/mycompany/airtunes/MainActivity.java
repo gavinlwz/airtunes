@@ -260,7 +260,8 @@ public class MainActivity extends Activity implements
                 }
 
                 accountType = (String) object.get("product");
-        //        profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
+                //profilePic = ((JSONArray) object.get("images")).getJSONObject(0).getString("url");
+
                 username = (String) object.get("email");
                 id = (String) object.get("id");
                 System.out.println(username);

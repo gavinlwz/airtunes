@@ -18,12 +18,13 @@ public class User {
    // String identity;
     String name;
 
-    private int id;
+    private String id;
     private boolean privacy;
 
     private String password;
     private String username;
     ArrayList<Song> favSongs;
+    private Group currentRoom;
 
 
 //    public User(String firstName, String lastName, String username) {
@@ -33,7 +34,7 @@ public class User {
 //        this.favSongs = new ArrayList<>();
 //    }
 
-    public User(String firstName, String lastName, String username, int id) {
+    public User(String firstName, String lastName, String username, String id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.favSongs = new ArrayList<>();
@@ -53,6 +54,9 @@ public class User {
     public User() {};
 
 
+    public Group getCurrentRoom() {
+        return this.currentRoom;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -64,7 +68,7 @@ public class User {
 
     public String getName() { return name; }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -84,7 +88,13 @@ public class User {
 
 
     public void addSongs(Song song) {
+
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<Song>();
+        }
+
         favSongs.add(song);
+
     }
 
     public void removeSongs(Song song) {
@@ -101,6 +111,11 @@ public class User {
     }
 
     public void setFavSongs(ArrayList<Song> favSongs) {
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<Song>();
+        }
+
+
         this.favSongs = favSongs;
     }
 
