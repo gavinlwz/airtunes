@@ -54,6 +54,10 @@ public class FirebaseCalls {
                     System.out.println(snapshot);
                     String username = snapshot.getKey();
                     User user = snapshot.getValue(User.class);
+                    System.out.println(user.getName());
+                    System.out.println(user.favSongs);
+                    System.out.println(user.getId());
+
                     users.put(username, user);
                     System.out.println("Adding user to users");
                 }
