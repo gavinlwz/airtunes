@@ -233,6 +233,7 @@ public class FirebaseCalls {
     public void createRoom(Group group) {
         // TODO: Check if there is existing room name
         final Firebase newRoomRef = roomRef.child(group.getGroupName());
+
         newRoomRef.setValue(group, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
@@ -292,6 +293,15 @@ public class FirebaseCalls {
         Map<String, Object> info = new HashMap<String, Object> ();
         info.put("memberNames", group.getMemberNames());
         updateRoomRef.updateChildren(info);
+    }
+
+    public void removeRoom(String groupName) {
+        final Firebase newRoomRef = roomRef.child(groupName);
+        newRoomRef.setValue(null);
+     //  Map<String, Object> info = new HashMap<String, Object> ();
+//        info.remove(groupName);
+//        info.put("rooms", groups);
+//        updateRoomRef.updateChildren(info);
     }
 
     public void updateDj(Group group) {
