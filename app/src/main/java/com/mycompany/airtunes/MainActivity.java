@@ -137,6 +137,7 @@ public class MainActivity extends Activity implements
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
                 System.out.println("setting access token");
                 access_token = response.getAccessToken();
+                System.out.println("ACCESS TOKEN = " + access_token);
 
                 new RetrieveFeedTask().execute();
                 api.setAccessToken(access_token);

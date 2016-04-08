@@ -84,7 +84,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
 
                     //PlaylistActivity.queueSongs.add(track.getName());
 
-                    MainActivity.mPlayer.queue(track.getUri());
+                    //MainActivity.mPlayer.queue(track.getUri());
 
 
                     if (track.isExplicit()) {
@@ -127,7 +127,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
                 builder.setScopes(new String[]{"user-read-private", "streaming", "user-read-birthdate", "user-read-email", "user-read-private", "playlist-modify-private"});
                 AuthenticationRequest request = builder.build();
 
-                MainActivity.api.setAccessToken("BQDzXIddV1mXZyGIbSiC2LZM43iGpsTlT-KYgk-n7zXy85YeOXVZqPoWG3gBYRmjoYiYrKFIGD2KBKui0EVJoYS1qQPRsbf7kNoKXlw6_oJ3NpKbR5f3Ih_ygiDJ_DrxWGfUM-kBZEqQjN0FeVM");
+                //MainActivity.api.setAccessToken("BQDzXIddV1mXZyGIbSiC2LZM43iGpsTlT-KYgk-n7zXy85YeOXVZqPoWG3gBYRmjoYiYrKFIGD2KBKui0EVJoYS1qQPRsbf7kNoKXlw6_oJ3NpKbR5f3Ih_ygiDJ_DrxWGfUM-kBZEqQjN0FeVM");
 //                HttpURLConnection urlConnection = null;
 //                URL url = null;
 //                JSONObject object = null;
@@ -189,7 +189,7 @@ class RetrieveStuff extends AsyncTask<String, Void, String> {
                 PlaylistActivity.model.addSong(song);
                 PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                 PlaylistActivity.songNames.add(track.getName());
-                MainActivity.mPlayer.queue(track.getUri());
+               // MainActivity.mPlayer.queue(track.getUri());
             } catch (Exception e) {
                 System.out.println(e);
             }

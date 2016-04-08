@@ -2,6 +2,7 @@ package com.mycompany.airtunes;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.os.AsyncTask;
@@ -22,6 +23,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mycompany.airtunes.R;
+import com.spotify.sdk.android.player.PlayerState;
+import com.spotify.sdk.android.player.PlayerStateCallback;
 import com.wrapper.spotify.methods.TrackSearchRequest;
 import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.Track;
@@ -41,13 +44,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
     //public static ArrayList<Track> queue;
     //public static ArrayList<String> queueSongs;
     boolean play = false;
+    boolean isPaused = false;
+
     boolean isShuffling = false;
+   // boolean isPaused = true;
     ListView playlist;
     Exception mException = null;
     public static Group model;
@@ -55,11 +63,17 @@ public class PlaylistActivity extends ActionBarActivity {
     boolean firstTimePlayButtonPressed = true;
     static Song currentSong;
     static User me;
+    Timer timer;
 
     ToggleButton toggleButton;
     Handler mHandler;
 
     public static List<String> songNames;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    //private GoogleApiClient client;
 
 
     @Override
@@ -77,7 +91,6 @@ public class PlaylistActivity extends ActionBarActivity {
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
         //Wai code for the auto update of playlist
-
 
 
         //Wai's Code on Receiving Groups
@@ -136,11 +149,72 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
+                   @Override
+                   public void onPlayerState(PlayerState playerState) {
+                       //System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
+                       if (!playerState.playing) {
+                            if (play && isPaused && !firstTimePlayButtonPressed) {
+                                MainActivity.mPlayer.resume();
+                                isPaused = false;
+                                return;
+                            }
+
+                           if (model.getSongs().size() > 0) {
+                               if (firstTimePlayButtonPressed) {
+                                   firstTimePlayButtonPressed = false;
+                               }
+                               if (me.getUsername().equals(model.getOwner())) {
+                                   MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                                   model.removeSong(model.getSongs().get(0));
+                                   play = true;
+                               }
+
+                               return;
+                           }
+                       } else {
+                           if (play && isPaused) {
+                               MainActivity.mPlayer.pause();
+                               play = false;
+                               return;
+                           }
+                       }
+                   }
+               });
+            }
+        }, 1000, 1000);
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//               MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
+//                   @Override
+//                   public void onPlayerState(PlayerState playerState) {
+//                      // System.out.println("IS THE PLAYER PLAYING????")
+//                       if (!playerState.playing && !play) {
+//
+//                           if (model.getSongs().size() > 0) {
+//                               MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+//                               play = !play;
+//                           }
+//                       }
+//                   }
+//               });
+////                if (firstTimePlayButtonPressed) {
+////                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
+////                    if (model.getSongs().size() > 0) {
+////                        MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+////                    }
+////
+////                }
+//            }
+//        }, 1000, 1000);
 
         mHandler = new Handler();
         startRepeatingTask();
-
-
 
 
 //        for (String song : model.songNames) {
@@ -183,6 +257,9 @@ public class PlaylistActivity extends ActionBarActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
 //        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+       // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // To update the playlist
@@ -201,7 +278,7 @@ public class PlaylistActivity extends ActionBarActivity {
             };
 
 
-//    void updatePlaylist() {
+    //    void updatePlaylist() {
 //        runOnUiThread();
 //    }
     void startRepeatingTask() {
@@ -244,22 +321,35 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onPlayButtonClick(View view) {
-        System.out.println("play button clicked");
         if (me.getUsername().equals(model.getOwner())) {
-            System.out.println("KAJSDHKALSDHJASD");
-            play = !play;
-            if (play) {
-                System.out.println("Plyaing track: ");
-                MainActivity.mPlayer.resume();
-                if (firstTimePlayButtonPressed) {
-                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
-                    MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                }
-
-            } else {
-                MainActivity.mPlayer.pause();
-            }
+            play = true;
         }
+
+        //isPaused = false;
+//        System.out.println("play button clicked");
+//        if (me.getUsername().equals(model.getOwner())) {
+//            System.out.println("KAJSDHKALSDHJASD");
+//            play = !play;
+//            if (play) {
+//                System.out.println("Plyaing track: ");
+//                MainActivity.mPlayer.resume();
+//                if (firstTimePlayButtonPressed) {
+//                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
+//                    MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+//                }
+//
+//            } else {
+//                MainActivity.mPlayer.pause();
+//            }
+//        }
+    }
+
+    public void onPauseButtonClick(View view) {
+        if (me.getUsername().equals(model.getOwner())) {
+            isPaused = true;
+        }
+
+        //play = false;
     }
 
     public void onToggleStar(View view) {
@@ -268,7 +358,12 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onNextButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
-            MainActivity.mPlayer.skipToNext();
+            //MainActivity.mPlayer.skipToNext();
+            if (model.getSongs().size() > 0) {
+                MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                model.removeSong(model.getSongs().get(0));
+            }
+
         }
 
 
@@ -276,9 +371,17 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onSetShuffleButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
-            isShuffling = !isShuffling;
-            System.out.println("Setting the player to shuffling mode");
-            MainActivity.mPlayer.setShuffle(isShuffling);
+//            isShuffling = !isShuffling;
+//            System.out.println("Setting the player to shuffling mode");
+//            MainActivity.mPlayer.setShuffle(isShuffling);
+            if (model.getSongs().size() > 1) {
+                Random r = new Random();
+                int n = r.nextInt(model.getSongs().size());
+                Song s = model.getSongs().get(n);
+                model.removeSong(s);
+                model.addSong(s, 0);
+            }
+
 
         }
     }
@@ -347,11 +450,12 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
-    public void onRandomButtonClick (View view) {
+    public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
         new RetrieveStuff().execute(query);
     }
+
 
     class RetrieveSong extends AsyncTask<Void, Void, String> {
 
