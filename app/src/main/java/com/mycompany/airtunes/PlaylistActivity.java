@@ -168,9 +168,12 @@ public class PlaylistActivity extends ActionBarActivity {
                                if (firstTimePlayButtonPressed) {
                                    firstTimePlayButtonPressed = false;
                                }
-                               MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                               model.removeSong(model.getSongs().get(0));
-                               play = true;
+                               if (me.getUsername().equals(model.getOwner())) {
+                                   MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                                   model.removeSong(model.getSongs().get(0));
+                                   play = true;
+                               }
+
                                return;
                            }
                        } else {
@@ -318,7 +321,10 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onPlayButtonClick(View view) {
-        play = true;
+        if (me.getUsername().equals(model.getOwner())) {
+            play = true;
+        }
+
         //isPaused = false;
 //        System.out.println("play button clicked");
 //        if (me.getUsername().equals(model.getOwner())) {
@@ -339,7 +345,10 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void onPauseButtonClick(View view) {
-        isPaused = true;
+        if (me.getUsername().equals(model.getOwner())) {
+            isPaused = true;
+        }
+
         //play = false;
     }
 
@@ -362,9 +371,16 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onSetShuffleButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
-            isShuffling = !isShuffling;
-            System.out.println("Setting the player to shuffling mode");
-            MainActivity.mPlayer.setShuffle(isShuffling);
+//            isShuffling = !isShuffling;
+//            System.out.println("Setting the player to shuffling mode");
+//            MainActivity.mPlayer.setShuffle(isShuffling);
+            if (model.getSongs().size() > 1) {
+                Random r = new Random();
+                int n = r.nextInt(model.getSongs().size());
+                Song s = model.getSongs().get(n);
+                model.removeSong(s);
+                model.addSong(s, 0);
+            }
 
 
         }
