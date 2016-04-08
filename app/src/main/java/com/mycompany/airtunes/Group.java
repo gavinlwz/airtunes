@@ -58,7 +58,16 @@ public class Group implements Serializable {
         this.memberNames.remove(name);
 
     }
-
+    public void addSong(Song song, int index) {
+        if (this.songs == null) {
+            this.songs = new ArrayList<Song>();
+        }
+        if (this.songNames == null) {
+            this.songNames = new ArrayList<String>();
+        }
+        this.songs.add(index, song);
+        this.songNames.add(song.getName());
+    }
     public void addSong(String song) {
         this.songNames.add(song);
     }
