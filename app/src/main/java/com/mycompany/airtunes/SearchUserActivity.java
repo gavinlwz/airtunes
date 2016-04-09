@@ -95,8 +95,7 @@ public class SearchUserActivity extends ActionBarActivity {
             int duration = Toast.LENGTH_SHORT;
 
             Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
-            i.putExtra("firstName", user.getFirstName());
-            i.putExtra("lastName", user.getLastName());
+            i.putExtra("firstName", user.getName());
             i.putExtra("privacy", user.getPrivacy());
             startActivity(i);
 

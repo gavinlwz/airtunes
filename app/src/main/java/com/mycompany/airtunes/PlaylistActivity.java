@@ -2,15 +2,10 @@ package com.mycompany.airtunes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,15 +16,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.mycompany.airtunes.R;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
-import com.wrapper.spotify.methods.TrackSearchRequest;
-import com.wrapper.spotify.models.Page;
-import com.wrapper.spotify.models.Track;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,11 +27,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -239,7 +225,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
 //        for (String song : model.songNames) {
-//            new RetrieveStuff().execute(song);
+//            new RetrieveSongs().execute(song);
 //        }
 //
 //        for (String s : queueSongs) {
@@ -247,8 +233,8 @@ public class PlaylistActivity extends ActionBarActivity {
 //        }
 
 
-//        new RetrieveStuff().execute("jesus take the wheel");
-//        new RetrieveStuff().execute("happy pharrel");
+//        new RetrieveSongs().execute("jesus take the wheel");
+//        new RetrieveSongs().execute("happy pharrel");
 
 
         //MainActivity.mPlayer.play(queue.get(0).getUri());
@@ -291,6 +277,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     try {
                         Group updatedGroup = fb.groups.get(model.getGroupName());
                         songNames = updatedGroup.getSongNames();
+                        System.out.println("Number of songs in list is: " + songNames.size());
                         queueAdapter.notifyDataSetChanged(); //this function can change value of mInterval.
 
                     } finally {
@@ -424,7 +411,7 @@ public class PlaylistActivity extends ActionBarActivity {
         String[] query = new String[2];
         query[0] = query1;
         query[1] = query2;
-        new RetrieveStuff().execute(query);
+        new RetrieveSongs().execute(query);
 
 
         //ListView lv = (ListView) findViewById(R.id.listView);
@@ -492,11 +479,11 @@ public class PlaylistActivity extends ActionBarActivity {
     public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
-        new RetrieveStuff().execute(query);
+        new RetrieveSongs().execute(query);
     }
 
     public void viewFavSongs(View v) {
-        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
+        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
         i.putExtra("Group", model);
         startActivity(i);
     }
@@ -558,7 +545,7 @@ public class PlaylistActivity extends ActionBarActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                Intent i = new Intent(getApplicationContext(), SongDisplay.class);
+                Intent i = new Intent(getApplicationContext(), SongDisplayActivity.class);
                 i.putExtra("songTitle", currentSong.getName());
                 i.putExtra("albumCover", currentSong.getPictureUrl());
                 i.putExtra("artistName", currentSong.getArtist());

@@ -34,7 +34,7 @@ import java.util.Random;
 /**
  * Created by akashsubramanian on 3/4/16.
  */
-class RetrieveStuff extends AsyncTask<String, Void, String> {
+class RetrieveSongs extends AsyncTask<String, Void, String> {
 
     private Exception exception;
 

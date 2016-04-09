@@ -30,7 +30,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SongDisplay extends ActionBarActivity {
+public class SongDisplayActivity extends ActionBarActivity {
     String songTitle = "";
     String albumCover = "";
     String artistName = "";

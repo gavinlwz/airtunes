@@ -12,7 +12,7 @@ import com.mycompany.airtunes.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteSongsDisplay extends ActionBarActivity {
+public class FavoriteSongsDisplayActivity extends ActionBarActivity {
     FirebaseCalls fb = FirebaseCalls.getInstance();
     User me = fb.currentUser;
 

@@ -19,12 +19,11 @@ public class UserSearchResultActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String firstName = extras.getString("firstName");
-            String lastName = extras.getString("lastName");
             privacy = extras.getBoolean("privacy");
             if (privacy == true) {
-                fullName = firstName + " " + lastName.charAt(0);
+                fullName = firstName + " " + firstName.charAt(0);
             } else {
-                fullName = firstName + " " + lastName;
+                fullName = firstName;
 
             }
 

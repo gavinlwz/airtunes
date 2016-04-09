@@ -6,29 +6,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.view.inputmethod.EditorInfo;
 
 import com.firebase.client.Firebase;
-import com.mycompany.airtunes.R;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import android.widget.Button;
 import android.provider.MediaStore;
@@ -164,7 +151,7 @@ public class UserProfileActivity extends ActionBarActivity {
     }
 
     public void viewFavSongs(View v) {
-        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
+        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
         startActivity(i);
     }
 
