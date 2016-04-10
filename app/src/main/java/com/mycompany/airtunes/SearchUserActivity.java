@@ -25,7 +25,7 @@ public class SearchUserActivity extends ActionBarActivity {
     }
 
 
-    // Search for User
+=    // Search for User
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
         User user = sc.searchUser(search, fb.users);
@@ -38,8 +38,9 @@ public class SearchUserActivity extends ActionBarActivity {
             return;
         } else {
 
-            // If user found, transit to UserSearchResultActivity
 
+
+            // If user found, transit to UserSearchResultActivity
             CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
             Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
             i.putExtra("firstName", user.getFirstName());
