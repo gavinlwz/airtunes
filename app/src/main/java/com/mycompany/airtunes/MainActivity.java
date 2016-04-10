@@ -2,20 +2,12 @@ package com.mycompany.airtunes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.SettableFuture;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -26,22 +18,7 @@ import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
 import com.wrapper.spotify.Api;
-import com.wrapper.spotify.methods.AlbumRequest;
-import com.wrapper.spotify.methods.CurrentUserRequest;
-import com.wrapper.spotify.methods.TrackRequest;
-import com.wrapper.spotify.methods.authentication.ClientCredentialsGrantRequest;
-import com.wrapper.spotify.models.Album;
-import com.wrapper.spotify.models.AuthorizationCodeCredentials;
-import com.wrapper.spotify.models.ClientCredentials;
-import com.wrapper.spotify.models.Image;
-import com.wrapper.spotify.methods.TrackRequest;
-import com.wrapper.spotify.models.Track;
-//import com.wrapper.spotify.models.User;
-import com.mycompany.airtunes.User;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -49,19 +26,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
 public class MainActivity extends Activity implements
         PlayerNotificationCallback, ConnectionStateCallback {
-
     // TODO: Replace with your client ID
     private static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
     // TODO: Replace with your redirect URI

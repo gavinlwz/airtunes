@@ -2,56 +2,28 @@ package com.mycompany.airtunes;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 
-import android.app.Activity;
-import android.os.*;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-
 import com.firebase.client.Firebase;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.mycompany.airtunes.FirebaseCalls;
-import com.mycompany.airtunes.Group;
-import com.mycompany.airtunes.PlaylistActivity;
-import com.mycompany.airtunes.R;
-import com.mycompany.airtunes.SearchController;
-import com.mycompany.airtunes.User;
-import com.wrapper.spotify.models.Playlist;
-import com.wrapper.spotify.models.Track;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SearchGroupActivity extends Activity {
-
+    public static final int SearchButtonActivity_ID = 1; //request code to create new Activity
     SearchController sc;
     public static ArrayAdapter<String> queueAdapter;
     public static ArrayList<String> groupNames;
     ListView grouplist;
-    //FirebaseCalls fb;
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-
     FirebaseCalls fb;
 
     Handler mHandler;
@@ -59,44 +31,38 @@ public class SearchGroupActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_group);
+
         sc = new SearchController();
-
-
         grouplist = (ListView) findViewById(R.id.listOfGroups);
-        groupNames = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, groupNames);
+        groupNames = new ArrayList<>();
+        queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
         grouplist.setAdapter(queueAdapter);
         grouplist.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String groupName = (String) grouplist.getItemAtPosition(position);
-                System.out.println("Clicked on: " + groupName);
+                //System.out.println("Clicked on: " + groupName);
                 Group group = fb.groups.get(groupName);
-                System.out.println("Transitioning with group :" +  group );
+                //System.out.println("Transitioning with group :" +  group );
                 transition(group);
             }
         });
 
-        //Firebase stuff
+        //firebase
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
 
         mHandler = new Handler();
         this.startRepeatingTask();
-
-
-
     }
 
-    //WC COde
+    //WC code
     Runnable mStatusChecker = new Runnable() {
         @Override
         public void run() {
             try {
-                updateStatus(); //this function can change value of mInterval.
+                updateStatus(); //this function can change value of mInterval
             } finally {
-                // 100% guarantee that this always happens, even if
-                // your update method throws an exception
+                //even if update method throws an exception, this will happen
                 mHandler.postDelayed(mStatusChecker, 4000);
             }
         }
@@ -110,18 +76,12 @@ public class SearchGroupActivity extends Activity {
     void updateStatus() {
         if (fb.testGroup != null) {
             System.out.println("FB test group not null");
-//            if (testGroup.getMemberNames().contains(fb.currentUser.getUsername())) {
             Intent goToRoom = new Intent(this, PlaylistActivity.class);
             goToRoom.putExtra("Group", fb.testGroup);
             fb.testGroup = null;
             startActivityForResult(goToRoom, SearchButtonActivity_ID);
-            //}
-
         }
-
     }
-
-
 
     public void transition(Group group) {
         Intent goToRoom = new Intent(this, PlaylistActivity.class);
@@ -130,18 +90,10 @@ public class SearchGroupActivity extends Activity {
     }
 
 
-    // Add group
+    //add new group
     public void onCreateButtonClick(View view) {
-//        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-//        System.out.println("New Group name is: " + groupName);
-//        //Firebase stuff
-//        Group newRoom = fb.groups.get(groupName);
-//        fb.createRoom(newRoom);
-//        //sc.addGroup(groupName, fb.currentUser.getUsername());
-//        transition(newRoom);
-//        System.out.println("Created group");
-        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
 
+        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
         if (fb.groups.containsKey(groupName)) {
             Context context = getApplicationContext();
             CharSequence text = "A group with that name already exists!";
@@ -156,19 +108,11 @@ public class SearchGroupActivity extends Activity {
             transition(g);
             System.out.println("Created group");
         }
-
-
-
     }
 
-//    //Firebase test
-//    public void testUpdateRoom(Group group) {
-//        fb.updateRoom(group);
-//    }
 
-    // Request code to create new Activity
-    public static final int SearchButtonActivity_ID = 1;
 
+    //search for existing group
     public void onSearchButtonClick(View view) {
         queueAdapter.clear();
         queueAdapter.notifyDataSetChanged();
@@ -187,29 +131,20 @@ public class SearchGroupActivity extends Activity {
             System.out.println("groups have been found");
 
         }
-//        Log.d("Message: ", "Group found: " + group.groupName);
-//
-//        Intent goToRoom = new Intent(this, PlaylistActivity.class);
-//        goToRoom.putExtra("Group", group);
-//        startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
         User user = sc.searchUser(search, fb.users);
-        if (user == null) {
-            System.out.println("User not found!");
-            Context context = getApplicationContext();
-            CharSequence text = "User not found!";
-            int duration = Toast.LENGTH_SHORT;
+        Context context = getApplicationContext();
 
-            Toast toast = Toast.makeText(context, text, duration);
+        if (user == null) {
+            //System.out.println("User not found!");
+            Toast toast = Toast.makeText(context, "User not found!", Toast.LENGTH_SHORT);
             toast.show();
             return;
         } else {
-            Context context = getApplicationContext();
             CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
-            int duration = Toast.LENGTH_SHORT;
 
             Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
             i.putExtra("firstName", user.getFirstName());
@@ -217,7 +152,7 @@ public class SearchGroupActivity extends Activity {
             i.putExtra("privacy", user.getPrivacy());
             startActivity(i);
 
-            Toast toast = Toast.makeText(context, text, duration);
+            Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
             toast.show();
             return;
         }

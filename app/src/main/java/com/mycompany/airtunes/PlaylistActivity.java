@@ -2,15 +2,10 @@ package com.mycompany.airtunes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +39,8 @@ public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
     boolean play = false;
     boolean isPaused = false;
+
+    boolean isShuffling = false;
 
     ListView playlist;
     public static Group model;
@@ -186,6 +183,51 @@ public class PlaylistActivity extends ActionBarActivity {
         mHandler = new Handler();
         startRepeatingTask();
 
+
+
+//        for (String song : model.songNames) {
+//            new RetrieveSongs().execute(song);
+//        }
+//
+//        for (String s : queueSongs) {
+//            System.out.println("Song in queue: " + s);
+//        }
+
+
+//        new RetrieveSongs().execute("jesus take the wheel");
+//        new RetrieveSongs().execute("happy pharrel");
+
+
+        //MainActivity.mPlayer.play(queue.get(0).getUri());
+        //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
+//        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();
+//        Log.d(getClass().getName(), "" + request);
+//
+//        try {
+//            final Page<Track> trackSearchResult = request.get();
+//            System.out.println("I got " + trackSearchResult.getTotal() + " results!");
+//        } catch (Exception e) {
+//            System.out.println("Something went wrong!" + e.getMessage());
+//        }
+
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Do something after 5s = 5000ms
+//                //buttons[inew][jnew].setBackgroundColor(Color.BLACK);
+//                if (queue.size() != 0) {
+//                    System.out.println(queue.get(0).getUri());
+//                    MainActivity.mPlayer.play(queue.get(0).getUri());
+//                }
+//            }
+//        }, 10000);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+       // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // To update the playlist
@@ -196,6 +238,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     try {
                         Group updatedGroup = fb.groups.get(model.getGroupName());
                         songNames = updatedGroup.getSongNames();
+                        System.out.println("Number of songs in list is: " + songNames.size());
                         queueAdapter.notifyDataSetChanged(); //this function can change value of mInterval.
 
                     } finally {
@@ -329,7 +372,7 @@ public class PlaylistActivity extends ActionBarActivity {
         String[] query = new String[2];
         query[0] = query1;
         query[1] = query2;
-        new RetrieveStuff().execute(query);
+        new RetrieveSongs().execute(query);
 
 
         //ListView lv = (ListView) findViewById(R.id.listView);
@@ -397,11 +440,11 @@ public class PlaylistActivity extends ActionBarActivity {
     public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
-        new RetrieveStuff().execute(query);
+        new RetrieveSongs().execute(query);
     }
 
     public void viewFavSongs(View v) {
-        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplay.class);
+        Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
         i.putExtra("Group", model);
         startActivity(i);
     }
@@ -463,7 +506,7 @@ public class PlaylistActivity extends ActionBarActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                Intent i = new Intent(getApplicationContext(), SongDisplay.class);
+                Intent i = new Intent(getApplicationContext(), SongDisplayActivity.class);
                 i.putExtra("songTitle", currentSong.getName());
                 i.putExtra("albumCover", currentSong.getPictureUrl());
                 i.putExtra("artistName", currentSong.getArtist());
