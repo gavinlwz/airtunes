@@ -21,15 +21,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.firebase.client.Firebase;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.mycompany.airtunes.R;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
-import com.wrapper.spotify.methods.TrackSearchRequest;
-import com.wrapper.spotify.models.Page;
-import com.wrapper.spotify.models.Track;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,11 +32,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -51,15 +42,10 @@ import java.util.TimerTask;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
-    //public static ArrayList<Track> queue;
-    //public static ArrayList<String> queueSongs;
     boolean play = false;
     boolean isPaused = false;
 
-    boolean isShuffling = false;
-   // boolean isPaused = true;
     ListView playlist;
-    Exception mException = null;
     public static Group model;
     public static FirebaseCalls fb;
     boolean firstTimePlayButtonPressed = true;
@@ -71,11 +57,6 @@ public class PlaylistActivity extends ActionBarActivity {
     Handler mHandler;
 
     public static List<String> songNames;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    //private GoogleApiClient client;
 
 
     @Override
@@ -85,39 +66,29 @@ public class PlaylistActivity extends ActionBarActivity {
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
         songNames = new ArrayList<String>();
-        //fb.test();
 
+        //Update user information
         me = fb.currentUser;
         fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
-        //me = fb.users.get(fb.currentUser.getUsername());
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
-        //Wai code for the auto update of playlist
-
-
-        //Wai's Code on Receiving Groups
-
-        model = (Group) getIntent().getSerializableExtra("Group");
-        //model = new Group("Why", "Wai");
-        System.out.println("Group name received is: " + model.groupName);
         // Update Room information
+        model = (Group) getIntent().getSerializableExtra("Group");
+        System.out.println("Group name received is: " + model.groupName);
         ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
         fb.updateRoomMembers(model);
 
+
+        //Update view with list of current songs in room
         playlist = (ListView) findViewById(R.id.listView);
-        //queue = new ArrayList<Track>();
-        // queueSongs = new ArrayList<String>();
         System.out.println("Model is : " + model);
-//        songNames.clear();
         for (Song s : model.getSongs()) {
             songNames.add(s.getName());
         }
-
         queueAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, songNames);
-//        System.out.println("Getting song names yo " + model.getSongNames());
         playlist.setAdapter(queueAdapter);
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -133,6 +104,7 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
+        //Logic for deleting songs from playlist on long click
         playlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
@@ -162,6 +134,7 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
+        //Auto-refreshes view to dynamically add/delete songs
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -208,79 +181,11 @@ public class PlaylistActivity extends ActionBarActivity {
                });
             }
         }, 1000, 1000);
-//        timer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//               MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
-//                   @Override
-//                   public void onPlayerState(PlayerState playerState) {
-//                      // System.out.println("IS THE PLAYER PLAYING????")
-//                       if (!playerState.playing && !play) {
-//
-//                           if (model.getSongs().size() > 0) {
-//                               MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-//                               play = !play;
-//                           }
-//                       }
-//                   }
-//               });
-////                if (firstTimePlayButtonPressed) {
-////                    firstTimePlayButtonPressed = !firstTimePlayButtonPressed;
-////                    if (model.getSongs().size() > 0) {
-////                        MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-////                    }
-////
-////                }
-//            }
-//        }, 1000, 1000);
+
 
         mHandler = new Handler();
         startRepeatingTask();
 
-
-//        for (String song : model.songNames) {
-//            new RetrieveStuff().execute(song);
-//        }
-//
-//        for (String s : queueSongs) {
-//            System.out.println("Song in queue: " + s);
-//        }
-
-
-//        new RetrieveStuff().execute("jesus take the wheel");
-//        new RetrieveStuff().execute("happy pharrel");
-
-
-        //MainActivity.mPlayer.play(queue.get(0).getUri());
-        //makeApiRequest("https://api.spotify.com/v1/search?q=hello%20adele&limit=1&market=US&type=track");
-//        final TrackSearchRequest request = MainActivity.api.searchTracks("Mr. Brightside").market("US").build();
-//        Log.d(getClass().getName(), "" + request);
-//
-//        try {
-//            final Page<Track> trackSearchResult = request.get();
-//            System.out.println("I got " + trackSearchResult.getTotal() + " results!");
-//        } catch (Exception e) {
-//            System.out.println("Something went wrong!" + e.getMessage());
-//        }
-
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Do something after 5s = 5000ms
-//                //buttons[inew][jnew].setBackgroundColor(Color.BLACK);
-//                if (queue.size() != 0) {
-//                    System.out.println(queue.get(0).getUri());
-//                    MainActivity.mPlayer.play(queue.get(0).getUri());
-//                }
-//            }
-//        }, 10000);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-       // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // To update the playlist
