@@ -50,7 +50,6 @@ public class SongDisplayActivity extends ActionBarActivity {
     }
 
     public void onFavoriteButtonClick(View view) {
-        //fb.users.get(me.getUsername()).addSongs(currentSong);
         Song currentSong = null;
         for (Song song : PlaylistActivity.model.getSongs()) {
             //System.out.println(song.getName());

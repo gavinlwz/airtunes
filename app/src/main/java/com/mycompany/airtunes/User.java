@@ -43,7 +43,6 @@ public class User {
         this.name = name;
         this.username = username;
         this.favSongs = new ArrayList<>();
-        //this.identity = id;
     }
 
     /**

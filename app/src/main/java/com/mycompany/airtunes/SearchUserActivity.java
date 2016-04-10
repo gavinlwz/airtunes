@@ -25,6 +25,13 @@ public class SearchUserActivity extends ActionBarActivity {
         fb = FirebaseCalls.getInstance();
     }
 
+    public void transition(Group group) {
+        Intent goToRoom = new Intent(this, PlaylistActivity.class);
+        goToRoom.putExtra("Group", group);
+        startActivityForResult(goToRoom, SearchButtonActivity_ID);
+    }
+
+    //searching for a user
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
         User user = sc.searchUser(search, fb.users);

@@ -76,13 +76,10 @@ public class SearchGroupActivity extends Activity {
     void updateStatus() {
         if (fb.testGroup != null) {
             System.out.println("FB test group not null");
-//            if (testGroup.getMemberNames().contains(fb.currentUser.getUsername())) {
             Intent goToRoom = new Intent(this, PlaylistActivity.class);
             goToRoom.putExtra("Group", fb.testGroup);
             fb.testGroup = null;
             startActivityForResult(goToRoom, SearchButtonActivity_ID);
-            //}
-
         }
     }
 
@@ -95,14 +92,7 @@ public class SearchGroupActivity extends Activity {
 
     //add new group
     public void onCreateButtonClick(View view) {
-//        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-//        System.out.println("New Group name is: " + groupName);
-//        //Firebase stuff
-//        Group newRoom = fb.groups.get(groupName);
-//        fb.createRoom(newRoom);
-//        //sc.addGroup(groupName, fb.currentUser.getUsername());
-//        transition(newRoom);
-//        System.out.println("Created group");
+
         String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
         if (fb.groups.containsKey(groupName)) {
             Context context = getApplicationContext();
@@ -120,11 +110,9 @@ public class SearchGroupActivity extends Activity {
         }
     }
 
-//    //Firebase test
-//    public void testUpdateRoom(Group group) {
-//        fb.updateRoom(group);
-//    }
 
+
+    //search for existing group
     public void onSearchButtonClick(View view) {
         queueAdapter.clear();
         queueAdapter.notifyDataSetChanged();
@@ -143,11 +131,6 @@ public class SearchGroupActivity extends Activity {
             System.out.println("groups have been found");
 
         }
-//        Log.d("Message: ", "Group found: " + group.groupName);
-//
-//        Intent goToRoom = new Intent(this, PlaylistActivity.class);
-//        goToRoom.putExtra("Group", group);
-//        startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
     public void onSearchUserClick(View view) {

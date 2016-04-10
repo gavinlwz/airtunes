@@ -57,7 +57,6 @@ public class UserProfileActivity extends ActionBarActivity {
             username = extras.getString("username");
             id = extras.getString("id");
         }
-
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(MainActivity.fullName);
 
