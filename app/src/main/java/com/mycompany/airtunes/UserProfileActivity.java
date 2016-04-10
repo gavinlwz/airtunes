@@ -21,10 +21,11 @@ import android.widget.Button;
 import android.provider.MediaStore;
 
 public class UserProfileActivity extends ActionBarActivity {
+    private static final int RESULT_LOAD_IMAGE = 1;
     private String fullName;
-    private String username; // this is the spotify user uri
-    private String accountType;
-    private String profilePic;
+    private String username; //spotify user uri
+    private String accountType; //premium account
+    private String profilePic; //url grabbed from facebook
     String id;
     private Drawable drawable;
 
@@ -39,14 +40,10 @@ public class UserProfileActivity extends ActionBarActivity {
     ImageView picture;
     Button upload;
 
-    private static final int RESULT_LOAD_IMAGE = 1;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
 
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
@@ -60,11 +57,9 @@ public class UserProfileActivity extends ActionBarActivity {
             username = extras.getString("username");
             id = extras.getString("id");
         }
-            //me = new User(fullName, username, id);
 
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(MainActivity.fullName);
-
 
         new RetrieveFeedTask().execute();
 
@@ -84,24 +79,7 @@ public class UserProfileActivity extends ActionBarActivity {
 
         picture = (ImageView) findViewById(R.id.uploadProfilePic);
         upload = (Button) findViewById(R.id.uploadProfilePicButton);
-
-       // picture.setOnClickListener(this);
-
-//        editText = (EditText) findViewById(R.id.username);
-//        textView = (TextView) findViewById(R.id.textuser);
-//        textView.setText(editText.getText());
-//        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                boolean handled = false;
-//                if (i == EditorInfo.IME_ACTION_SEND) {
-//
-//                }
-//                return handled;
-//            }
-//        });
     }
-
 
     public void changeUsername(View v) {
         editText = (EditText) findViewById(R.id.username);
@@ -122,7 +100,6 @@ public class UserProfileActivity extends ActionBarActivity {
             picture.setImageURI(img);
         }
     }
-
 
     public void launchSearch(View v) {
         Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
@@ -155,30 +132,19 @@ public class UserProfileActivity extends ActionBarActivity {
         startActivity(i);
     }
 
-
-
-
-
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
-
         private Exception exception;
 
-        protected void onPreExecute() {
-
-        }
+        protected void onPreExecute() { }
 
         protected String doInBackground(Void... urls) {
             // Do some validation here
-
-
             try {
                 URL url = null;
                 url = new URL(MainActivity.profilePic);
                 InputStream content = (InputStream)url.getContent();
                 Drawable d = Drawable.createFromStream(content , "src");
                 drawable = d;
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -190,5 +156,4 @@ public class UserProfileActivity extends ActionBarActivity {
             iv.setImageDrawable(drawable);
         }
     }
-
 }

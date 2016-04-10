@@ -41,9 +41,7 @@ public class PlaylistActivity extends ActionBarActivity {
     //public static ArrayList<String> queueSongs;
     boolean play = false;
     boolean isPaused = false;
-
     boolean isShuffling = false;
-   // boolean isPaused = true;
     ListView playlist;
     Exception mException = null;
     public static Group model;
@@ -57,12 +55,6 @@ public class PlaylistActivity extends ActionBarActivity {
     Handler mHandler;
 
     public static List<String> songNames;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    //private GoogleApiClient client;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

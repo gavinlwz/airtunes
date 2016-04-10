@@ -3,20 +3,28 @@ package com.mycompany.airtunes;
 import java.io.Serializable;
 
 /**
- * Created by akashsubramanian on 3/24/16.
- */
+ * Song class to represent a song object -- depicted mainly by its uniform resource identifier
+ * */
 public class Song implements Serializable {
-    String uri;
-    String name;
-    String artist;
-    String pictureUrl;
+    String uri; //unique identifier of song
+    String name; //title of song
+    String artist; //artist of song
+    String pictureUrl; //url to song cover
 
+    /**
+     * @param uri String
+     * */
     public Song(String uri) {
         this.uri = uri;
     }
-    public Song() {
 
-    };
+    /**
+     * constructor setting instance variables to inital values
+     * @param uri String identifier of song
+     * @param name String name of song
+     * @param artist String artist of song
+     * @param pictureUrl String url of song album cover
+     * */
     public Song(String uri, String name, String artist, String pictureUrl) {
         this.uri = uri;
         this.name = name;
@@ -24,38 +32,26 @@ public class Song implements Serializable {
         this.pictureUrl = pictureUrl;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
+    /*
+    * ==========================================
+    * ==========================================
+    * GETTER AND SETTER FUNCTIONS FOR THIS CLASS
+    * ==========================================
+    * ==========================================
+    * */
+    public String getUri() { return uri; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setUri(String uri) { this.uri = uri; }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
+    public String getName() { return name; }
 
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public String getUri() {
-        return uri;
-    }
+    public String getArtist() { return artist; }
 
-    public String getName() {
-       return name;
-    }
+    public void setArtist(String artist) { this.artist = artist; }
 
-    public String getArtist() {
-        return artist;
-    }
+    public String getPictureUrl() { return pictureUrl; }
 
-    public String getPictureUrl() {
-        return pictureUrl;
-    }
-
-
-
+    public void setPictureUrl(String pictureUrl) { this.pictureUrl = pictureUrl; }
 }

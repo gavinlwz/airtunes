@@ -7,47 +7,48 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.mycompany.airtunes.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity class that allows a premium user to view their favorite songs on their user profile
+ * */
 public class FavoriteSongsDisplayActivity extends ActionBarActivity {
     FirebaseCalls fb = FirebaseCalls.getInstance();
     User me = fb.currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite_songs_display);
 
-        List<String> favSongs = new ArrayList<String>();
+        //copy favorite songs to a new list
+        List<String> favSongs = new ArrayList<>();
         for (Song song : me.favSongs) {
             favSongs.add(song.getName());
         }
 
+        //checking if we pass in any data from our activity
         Bundle extras = getIntent().getExtras();
+        ArrayAdapter<String> queueAdapter;
         if (extras == null) {
-            ArrayAdapter<String> queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, favSongs);
-            System.out.println("Getting song names yo " + favSongs);
+            queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, favSongs);
+            //System.out.println("Getting song names yo " + favSongs);
             ListView playlist = (ListView) findViewById(R.id.favSongsListView);
             playlist.setAdapter(queueAdapter);
         } else {
             final Group model = (Group) getIntent().getSerializableExtra("Group");
-            //model = new Group("Why", "Wai");
-            System.out.println("Group name received is: " + model.groupName);
-            ArrayAdapter<String> queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, favSongs);
-            System.out.println("Getting song names yo " + favSongs);
+            //System.out.println("Group name received is: " + model.groupName);
+            queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, favSongs);
+            //System.out.println("Getting song names yo " + favSongs);
             final ListView playlist = (ListView) findViewById(R.id.favSongsListView);
             playlist.setAdapter(queueAdapter);
             playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String songName = (String) playlist.getItemAtPosition(position);
-                    System.out.println("Clicked on: " + songName);
+                    //System.out.println("Clicked on: " + songName);
                     Song currentSong = null;
-                    for (Song s : fb.currentUser.favSongs) {
+                    for (Song s : me.favSongs) {
                         if (s.getName().equals(songName)) {
                             currentSong = s;
                         }
@@ -57,9 +58,5 @@ public class FavoriteSongsDisplayActivity extends ActionBarActivity {
                 }
             });
         }
-
-
-
     }
-
 }
