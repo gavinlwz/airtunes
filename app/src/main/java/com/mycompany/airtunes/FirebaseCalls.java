@@ -39,25 +39,18 @@ public class FirebaseCalls {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println("Data in firebase has changed, updated data is");
-                System.out.println(dataSnapshot.getValue());
-
+//                System.out.println(dataSnapshot.getValue());
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    System.out.println(snapshot);
+//                    System.out.println(snapshot);
                     String username = snapshot.getKey();
                     User user = snapshot.getValue(User.class);
-                    System.out.println(user.getName());
-                    System.out.println(user.favSongs);
-                    System.out.println(user.getId());
-
                     users.put(username, user);
-                    System.out.println("Adding user to users");
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
+//                System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
 
@@ -65,29 +58,23 @@ public class FirebaseCalls {
         roomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println("Data in firebase has changed, updated data is");
-                System.out.println(dataSnapshot.getValue());
-
+//                System.out.println(dataSnapshot.getValue());
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    System.out.println(snapshot);
+//                    System.out.println(snapshot);
                     String groupName = snapshot.getKey();
-
                     try {
                         Group group = snapshot.getValue(Group.class);
-                        System.out.println(group);
-                        System.out.println("HURRAY GROUP ADDED");
                         groups.put(groupName, group);
                     } catch(Exception e) {
                         e.printStackTrace();
 
                     }
-                    System.out.println("Adding group to gruops: " + groupName);
                 }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
+//                System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
     }
@@ -104,57 +91,24 @@ public class FirebaseCalls {
      * @param group Group
      * */
     public void createRoom(Group group) {
-        // TODO: Check if there is existing room name
         final Firebase newRoomRef = roomRef.child(group.getGroupName());
+
+        // Create new room in firebase
         newRoomRef.setValue(group, new Firebase.CompletionListener() {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-                    System.out.println("Room could not be saved. " + firebaseError.getMessage());
+//                    System.out.println("Room could not be saved. " + firebaseError.getMessage());
                 } else {
-                    System.out.println("New room saved successfully w ID: " + newRoomRef.getKey());
+//                    System.out.println("New room saved successfully w ID: " + newRoomRef.getKey());
                 }
             }
         });
 
-        newRoomRef.addChildEventListener(new ChildEventListener() {
-
-            // Event
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) { }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                System.out.println("--------------------Child has been changed ------------------");
-                System.out.println(dataSnapshot);
-                System.out.println(s);
-                //TODO: Hard coded
-                testGroup = groups.get("testing");
-                Object listOfMembers = dataSnapshot.child("memberNames").getValue();
-                String roomName = dataSnapshot.getKey();
-//                inviteRoom = roomName;
-                System.out.println("Members in invited room:  " + roomName + " are : " + listOfMembers);
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
     }
 
     /**
+     * Remove the room from firebase
      * @param group Group
      * */
     public void updateRoomAsRemoved(Group group) {
@@ -163,6 +117,7 @@ public class FirebaseCalls {
     }
 
     /**
+     * Update the members in the room
      * @param group Group
      * */
     public void updateRoomMembers(Group group) {
@@ -215,9 +170,9 @@ public class FirebaseCalls {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-                    System.out.println("User could not be saved. " + firebaseError.getMessage());
+//                    System.out.println("User could not be saved. " + firebaseError.getMessage());
                 } else {
-                    System.out.println("User saved successfully  with ID: ");
+//                    System.out.println("User saved successfully  with ID: ");
                 }
             }
         });
@@ -234,7 +189,4 @@ public class FirebaseCalls {
         info.put("favSongs", user.getSongs());
     }
 
-    // Favorite lists
-    public void createFavoriteList(ArrayList<String> songs) { }
-    public void updateSongList(ArrayList<String> songs) { }
 }
