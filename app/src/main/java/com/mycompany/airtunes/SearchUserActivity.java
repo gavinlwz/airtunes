@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 
 public class SearchUserActivity extends ActionBarActivity {
-    public static final int SearchButtonActivity_ID = 1; //request code to create new Activity
     SearchController sc;
     FirebaseCalls fb;
 
@@ -25,26 +24,21 @@ public class SearchUserActivity extends ActionBarActivity {
         fb = FirebaseCalls.getInstance();
     }
 
-    public void transition(Group group) {
-        Intent goToRoom = new Intent(this, PlaylistActivity.class);
-        goToRoom.putExtra("Group", group);
-        startActivityForResult(goToRoom, SearchButtonActivity_ID);
-    }
 
-    //searching for a user
+    //Handles logic for user search
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
         User user = sc.searchUser(search, fb.users);
         Context context = getApplicationContext();
 
         if (user == null) {
-            //System.out.println("User not found!");
             Toast toast = Toast.makeText(context, "User not found!", Toast.LENGTH_SHORT);
             toast.show();
             return;
         } else {
             CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
 
+            //takes you to profile of found user
             Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
             i.putExtra("firstName", user.getName());
             i.putExtra("privacy", user.getPrivacy());

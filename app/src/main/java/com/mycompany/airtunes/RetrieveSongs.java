@@ -80,8 +80,8 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                 //System.out.println("playlist id = " + p.getId());
                 //System.out.println("playlist uri = " + p.getUri());
                 AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
-                        MainActivity.clientId, AuthenticationResponse.Type.TOKEN,
-                        MainActivity.redirectURI);
+                        MainActivity.CLIENT_ID, AuthenticationResponse.Type.TOKEN,
+                        MainActivity.REDIRECT_URI);
                 builder.setScopes(new String[]{"user-read-private", "streaming",
                         "user-read-birthdate", "user-read-email", "user-read-private",
                         "playlist-modify-private"});

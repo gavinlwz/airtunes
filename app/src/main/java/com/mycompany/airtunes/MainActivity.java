@@ -32,10 +32,10 @@ import java.net.URL;
 
 public class MainActivity extends Activity implements
         PlayerNotificationCallback, ConnectionStateCallback {
-    private static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
-    private static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
-    private static final String REDIRECT_URI = "airtunes-login://callback";
-    private static final int REQUEST_CODE = 1337;
+    static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
+    static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
+    static final String REDIRECT_URI = "airtunes-login://callback";
+    static final int REQUEST_CODE = 1337;
     public static String access_token;
     public static String fullName;
     public static String accountType;
