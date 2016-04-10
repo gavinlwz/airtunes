@@ -83,9 +83,6 @@ public class SearchGroupActivity extends Activity {
 
         mHandler = new Handler();
         this.startRepeatingTask();
-
-
-
     }
 
     //WC COde
@@ -110,15 +107,11 @@ public class SearchGroupActivity extends Activity {
     void updateStatus() {
         if (fb.testGroup != null) {
             System.out.println("FB test group not null");
-//            if (testGroup.getMemberNames().contains(fb.currentUser.getUsername())) {
             Intent goToRoom = new Intent(this, PlaylistActivity.class);
             goToRoom.putExtra("Group", fb.testGroup);
             fb.testGroup = null;
             startActivityForResult(goToRoom, SearchButtonActivity_ID);
-            //}
-
         }
-
     }
 
 
@@ -132,14 +125,7 @@ public class SearchGroupActivity extends Activity {
 
     // Add group
     public void onCreateButtonClick(View view) {
-//        String groupName = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-//        System.out.println("New Group name is: " + groupName);
-//        //Firebase stuff
-//        Group newRoom = fb.groups.get(groupName);
-//        fb.createRoom(newRoom);
-//        //sc.addGroup(groupName, fb.currentUser.getUsername());
-//        transition(newRoom);
-//        System.out.println("Created group");
+
         String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
 
         if (fb.groups.containsKey(groupName)) {
@@ -157,18 +143,13 @@ public class SearchGroupActivity extends Activity {
             System.out.println("Created group");
         }
 
-
-
     }
 
-//    //Firebase test
-//    public void testUpdateRoom(Group group) {
-//        fb.updateRoom(group);
-//    }
 
     // Request code to create new Activity
     public static final int SearchButtonActivity_ID = 1;
 
+    //search for existing group
     public void onSearchButtonClick(View view) {
         queueAdapter.clear();
         queueAdapter.notifyDataSetChanged();
@@ -187,39 +168,6 @@ public class SearchGroupActivity extends Activity {
             System.out.println("groups have been found");
 
         }
-//        Log.d("Message: ", "Group found: " + group.groupName);
-//
-//        Intent goToRoom = new Intent(this, PlaylistActivity.class);
-//        goToRoom.putExtra("Group", group);
-//        startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
-    public void onSearchUserClick(View view) {
-        String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-        User user = sc.searchUser(search, fb.users);
-        if (user == null) {
-            System.out.println("User not found!");
-            Context context = getApplicationContext();
-            CharSequence text = "User not found!";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            return;
-        } else {
-            Context context = getApplicationContext();
-            CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
-            int duration = Toast.LENGTH_SHORT;
-
-            Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
-            i.putExtra("firstName", user.getFirstName());
-            i.putExtra("lastName", user.getLastName());
-            i.putExtra("privacy", user.getPrivacy());
-            startActivity(i);
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-            return;
-        }
-    }
 }

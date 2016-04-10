@@ -38,22 +38,6 @@ public class SearchUserActivity extends ActionBarActivity {
         sc = new SearchController();
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-
-        /*playlist = (ListView) findViewById(R.id.listOfGroups);
-        queueSongs = new ArrayList<String>();
-        queueAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, queueSongs);
-        playlist.setAdapter(queueAdapter);
-        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                String groupName = (String) playlist.getItemAtPosition(position);
-                System.out.println("Clicked on: " + groupName);
-                Group group = sc.groups.get(groupName);
-                transition(group);
-            }
-        });*/
-
-
     }
 
     public void transition(Group group) {
@@ -63,20 +47,12 @@ public class SearchUserActivity extends ActionBarActivity {
     }
 
 
-//    // Add group
-//    public void onCreateButtonClick(View view) {
-//        String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
-//        sc.addGroup(groupName, fb.currentUser);
-//        transition(sc.groups.get(groupName));
-//        System.out.println("Created group");
-//    }
-
 
 
     // Request code to create new Activity
     public static final int SearchButtonActivity_ID = 1;
 
-
+    //searching for a user
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
         User user = sc.searchUser(search, fb.users);

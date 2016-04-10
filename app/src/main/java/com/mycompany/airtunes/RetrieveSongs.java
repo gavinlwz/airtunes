@@ -40,8 +40,6 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
 
 
     protected String doInBackground(String... query) {
-        // Syste("kajsdhkajhsd", "QUERY = "+query);
-        //System.out.println("QUERY = " + query);
 
         for (String s : query) {
             System.out.println(s);
@@ -58,9 +56,7 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
             try {
                 trackSearchResult = requestquery.get();
                 System.out.println("I got " + trackSearchResult.getTotal() + " results!");
-//            for (Track item : trackSearchResult.getItems()) {
-//                System.out.println(item.getUri());
-//            }
+
             } catch (Exception e) {
                 System.out.println("Something went wrong!" + e.getMessage());
             }
@@ -75,16 +71,12 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                     track.setUri(trackSearchResult.getItems().get(0).getUri());
                     System.out.println("Retrieved track " + track.getName());
                     System.out.println("Its popularity is " + track.getPopularity());
-                    //PlaylistActivity.queue.add(track);
+
                     Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
                     PlaylistActivity.model.addSong(song);
                     PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                     PlaylistActivity.songNames.add(track.getName());
-//                PlaylistActivity.queueAdapter.notifyDataSetChanged();
 
-                    //PlaylistActivity.queueSongs.add(track.getName());
-
-                    //MainActivity.mPlayer.queue(track.getUri());
 
 
                     if (track.isExplicit()) {
@@ -100,11 +92,6 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
 
         if (query[query.length - 1].equals("random")) {
             System.out.println("Generating random song");
-//            StringBuilder songName = new StringBuilder();
-//            for (int i = 0; i < query.length-1; i++) {
-//                String q = query[i];
-//                songName.append(q);
-//            }
 
             final FeaturedPlaylistsRequest fprequest = MainActivity.api.getFeaturedPlaylists().country("US").build();
             try {
@@ -126,53 +113,6 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                         MainActivity.redirectURI);
                 builder.setScopes(new String[]{"user-read-private", "streaming", "user-read-birthdate", "user-read-email", "user-read-private", "playlist-modify-private"});
                 AuthenticationRequest request = builder.build();
-
-                //MainActivity.api.setAccessToken("BQDzXIddV1mXZyGIbSiC2LZM43iGpsTlT-KYgk-n7zXy85YeOXVZqPoWG3gBYRmjoYiYrKFIGD2KBKui0EVJoYS1qQPRsbf7kNoKXlw6_oJ3NpKbR5f3Ih_ygiDJ_DrxWGfUM-kBZEqQjN0FeVM");
-//                HttpURLConnection urlConnection = null;
-//                URL url = null;
-//                JSONObject object = null;
-//                InputStream inStream = null;
-//                try {
-//                    url = new URL("https://accounts.spotify.com/authorize/?client_id=" +
-//                            MainActivity.clientId + "&response_type=code&redirect_uri=" + MainActivity.redirectURI);
-//
-//                    urlConnection = (HttpURLConnection) url.openConnection();
-//                    urlConnection.setRequestMethod("GET");
-//                    urlConnection.setDoOutput(false);
-//                    urlConnection.setDoInput(true);
-//                    urlConnection.connect();
-//                    inStream = urlConnection.getInputStream();
-//                    BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
-//                    String temp, response = "";
-//                    while ((temp = bReader.readLine()) != null) {
-//                        response += temp;
-//                       // System.out.println("hallo " + temp);
-//                    }
-//                    object = (JSONObject) new JSONTokener(response).nextValue();
-//
-//
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                } catch (ProtocolException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    System.out.println("I am done with async");
-//                    if (inStream != null) {
-//                        try {
-//                            // this will close the bReader as well
-//                            inStream.close();
-//                        } catch (IOException ignored) {
-//                        }
-//                    }
-//                    if (urlConnection != null) {
-//                        urlConnection.disconnect();
-//                    }
-//                }
-
                 System.out.println("refreshed token");
                 final PlaylistTracksRequest ptrequest = MainActivity.api.getPlaylistTracks(p.getOwner().getId(), p.getId()).build();
                 System.out.println("success");
@@ -193,8 +133,6 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
             } catch (Exception e) {
                 System.out.println(e);
             }
-
-
         }
 
 

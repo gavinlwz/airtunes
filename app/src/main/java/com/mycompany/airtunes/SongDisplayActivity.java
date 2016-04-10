@@ -64,9 +64,6 @@ public class SongDisplayActivity extends ActionBarActivity {
     }
 
     public void onFavoriteButtonClick(View view) {
-        System.out.println("FAVORITE SONG WAS CLICKED BITCHHHH");
-
-        //fb.users.get(me.getUsername()).addSongs(currentSong);
         Song currentSong = null;
         for (Song song : PlaylistActivity.model.getSongs()) {
             System.out.println(song.getName());
@@ -117,8 +114,6 @@ public class SongDisplayActivity extends ActionBarActivity {
         }
 
         protected void onPostExecute(Void hallo) {
-            System.out.println("fuckers");
-
             ImageView imageView = (ImageView) findViewById(R.id.albumCover);
             System.out.println(bitMap);
             imageView.setImageBitmap(bitMap);

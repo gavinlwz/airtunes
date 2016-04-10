@@ -60,8 +60,6 @@ public class UserProfileActivity extends ActionBarActivity {
             username = extras.getString("username");
             id = extras.getString("id");
         }
-            //me = new User(fullName, username, id);
-
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(MainActivity.fullName);
 
@@ -84,22 +82,6 @@ public class UserProfileActivity extends ActionBarActivity {
 
         picture = (ImageView) findViewById(R.id.uploadProfilePic);
         upload = (Button) findViewById(R.id.uploadProfilePicButton);
-
-       // picture.setOnClickListener(this);
-
-//        editText = (EditText) findViewById(R.id.username);
-//        textView = (TextView) findViewById(R.id.textuser);
-//        textView.setText(editText.getText());
-//        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                boolean handled = false;
-//                if (i == EditorInfo.IME_ACTION_SEND) {
-//
-//                }
-//                return handled;
-//            }
-//        });
     }
 
 

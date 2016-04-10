@@ -15,7 +15,7 @@ public class User {
     private String lastName;
 
 
-   // String identity;
+
     String name;
 
     private String id;
@@ -25,14 +25,6 @@ public class User {
     private String username;
     ArrayList<Song> favSongs;
     private Group currentRoom;
-
-
-//    public User(String firstName, String lastName, String username) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.username = username;
-//        this.favSongs = new ArrayList<>();
-//    }
 
     public User(String firstName, String lastName, String username, String id) {
         this.firstName = firstName;
@@ -46,7 +38,6 @@ public class User {
         this.name = name;
         this.username = username;
         this.favSongs = new ArrayList<>();
-        //this.identity = id;
     }
 
 
