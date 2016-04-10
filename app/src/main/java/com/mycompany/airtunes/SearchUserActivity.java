@@ -25,22 +25,26 @@ public class SearchUserActivity extends ActionBarActivity {
     }
 
 
-    //Handles logic for user search
+=    // Search for User
     public void onSearchUserClick(View view) {
         String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
         User user = sc.searchUser(search, fb.users);
         Context context = getApplicationContext();
 
         if (user == null) {
+            // If user not found, show alert
             Toast toast = Toast.makeText(context, "User not found!", Toast.LENGTH_SHORT);
             toast.show();
             return;
         } else {
-            CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
 
-            //takes you to profile of found user
+
+
+            // If user found, transit to UserSearchResultActivity
+            CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
             Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
-            i.putExtra("firstName", user.getName());
+            i.putExtra("firstName", user.getFirstName());
+            i.putExtra("lastName", user.getLastName());
             i.putExtra("privacy", user.getPrivacy());
             startActivity(i);
 
@@ -49,4 +53,5 @@ public class SearchUserActivity extends ActionBarActivity {
             return;
         }
     }
+
 }

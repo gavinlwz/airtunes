@@ -32,50 +32,52 @@ public class SearchGroupActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_group);
 
+        // Sets up logic and view for table of groups
         sc = new SearchController();
         grouplist = (ListView) findViewById(R.id.listOfGroups);
         groupNames = new ArrayList<>();
+
+        // Set up queueAdapater backer for the table view
         queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
         grouplist.setAdapter(queueAdapter);
         grouplist.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String groupName = (String) grouplist.getItemAtPosition(position);
-                //System.out.println("Clicked on: " + groupName);
                 Group group = fb.groups.get(groupName);
-                //System.out.println("Transitioning with group :" +  group );
                 transition(group);
             }
         });
 
-        //firebase
+        // Set up Firebase context
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
 
+        // Set up event listners
         mHandler = new Handler();
         this.startRepeatingTask();
     }
 
-    //WC code
-    Runnable mStatusChecker = new Runnable() {
+    // Starts checking for invites sent from the DJ of a private group
+    Runnable inviteChecker = new Runnable() {
         @Override
         public void run() {
             try {
-                updateStatus(); //this function can change value of mInterval
+                goToGroupInvitedTo(); //this function can change value of mInterval
             } finally {
                 //even if update method throws an exception, this will happen
-                mHandler.postDelayed(mStatusChecker, 4000);
+                mHandler.postDelayed(inviteChecker, 4000);
             }
         }
     };
 
-
+    // Runs the invitation checker
     void startRepeatingTask() {
-        mStatusChecker.run();
+        inviteChecker.run();
     }
 
-    void updateStatus() {
+    // Transitions to the room that User is invited to
+    void goToGroupInvitedTo() {
         if (fb.testGroup != null) {
-            System.out.println("FB test group not null");
             Intent goToRoom = new Intent(this, PlaylistActivity.class);
             goToRoom.putExtra("Group", fb.testGroup);
             fb.testGroup = null;
@@ -83,43 +85,49 @@ public class SearchGroupActivity extends Activity {
         }
     }
 
+    // Transitions to new group
     public void transition(Group group) {
         Intent goToRoom = new Intent(this, PlaylistActivity.class);
         goToRoom.putExtra("Group", group);
         startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
-
-    //add new group
+    // Create new group
     public void onCreateButtonClick(View view) {
 
         String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
         if (fb.groups.containsKey(groupName)) {
+            // Show alert that group already exists if the names are the same
+
             Context context = getApplicationContext();
             CharSequence text = "A group with that name already exists!";
             int duration = Toast.LENGTH_SHORT;
-
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
+
+            // Adds new group to firebase if no existing groups with same name found
             Group g = new Group(groupName, fb.currentUser.getUsername(), false);
+
+            // Update Firebase
             fb.groups.put(groupName, g);
             fb.createRoom(g);
+
+            // Transition to group page
             transition(g);
-            System.out.println("Created group");
         }
     }
 
-
-
-    //search for existing group
+    // Search for existing group
     public void onSearchButtonClick(View view) {
+        // Clear array of results
         queueAdapter.clear();
         queueAdapter.notifyDataSetChanged();
         String search = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
-       boolean contains = sc.searchGroup(search, fb.groups);
+        boolean contains = sc.searchGroup(search, fb.groups);
+
+        // Show alert if group is not found
         if (!contains) {
-            System.out.println("Group not found!");
             Context context = getApplicationContext();
             CharSequence text = "Group not found!";
             int duration = Toast.LENGTH_SHORT;
@@ -127,34 +135,8 @@ public class SearchGroupActivity extends Activity {
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
             return;
-        } else {
-            System.out.println("groups have been found");
-
         }
     }
 
-    public void onSearchUserClick(View view) {
-        String search = ((SearchView) findViewById(R.id.userSearch)).getQuery() + "";
-        User user = sc.searchUser(search, fb.users);
-        Context context = getApplicationContext();
 
-        if (user == null) {
-            //System.out.println("User not found!");
-            Toast toast = Toast.makeText(context, "User not found!", Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        } else {
-            CharSequence text = "User found: " + user.getFirstName() + " " + user.getLastName();
-
-            Intent i = new Intent(getApplicationContext(), UserSearchResultActivity.class);
-            i.putExtra("firstName", user.getFirstName());
-            i.putExtra("lastName", user.getLastName());
-            i.putExtra("privacy", user.getPrivacy());
-            startActivity(i);
-
-            Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
-    }
 }
