@@ -3,6 +3,7 @@ package com.mycompany.airtunes;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User class that represents user object with unique ID
@@ -12,12 +13,12 @@ public class User {
     private String firstName;
     private String lastName;
     String name;
-    private String id;
-    private boolean privacy;
-    private String password;
+    String id;
+    boolean privacy;
     private String username;
-    ArrayList<Song> favSongs;
-    private Group currentRoom;
+    List<Song> favSongs;
+
+    public User() {}
 
     /**
      * constructor setting initial values of the user
@@ -31,7 +32,7 @@ public class User {
         this.lastName = lastName;
         this.id = id;
         this.privacy = false;
-        this.favSongs = new ArrayList<>();
+        this.favSongs = new ArrayList<Song>();
     }
 
     /**
@@ -43,6 +44,8 @@ public class User {
         this.name = name;
         this.username = username;
         this.favSongs = new ArrayList<>();
+        this.firstName = "first";
+        this.lastName = "last";
     }
 
     /**
@@ -67,15 +70,6 @@ public class User {
      * */
     public void removeSongs(Song song) { favSongs.remove(song); }
 
-    /**
-     * @return list of user's favorite songs
-     * */
-    public ArrayList<Song> getFavSongs() {
-        if (this.favSongs == null) {
-            favSongs = new ArrayList<>();
-        }
-        return this.favSongs;
-    }
 
     /**
      * @param favSongs set of favorite songs
@@ -94,21 +88,25 @@ public class User {
     * ==========================================
     * ==========================================
     * */
-    public String getFirstName() { return firstName; }
-
-    public String getLastName() { return lastName; }
-
-    public Group getCurrentRoom() { return this.currentRoom; }
 
     public String getName() { return name; }
-
-    public String getId() { return id; }
 
     public boolean getPrivacy() { return privacy; }
 
     public String getUsername() { return username; }
 
-    public String getPassword() { return password; }
+    public List<Song> getFavSongs() {
+        return this.favSongs;
+    }
 
-    public ArrayList<Song> getSongs() { return favSongs; }
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+
+
 }

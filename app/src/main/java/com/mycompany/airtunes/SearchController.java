@@ -25,12 +25,18 @@ public class SearchController {
     }
 
     // Searches for users based on search keyword and returns User object
-    public User searchUser(String search, HashMap<String, User> users) {
-        if (users.containsKey(search)) {
-            User user = users.get(search);
-            return user;
-        } else {
-            return null;
+    public boolean searchUser(String search, HashMap<String, User> users) {
+        boolean contains = false;
+        for (String key : users.keySet()) {
+            if (key.contains(search)) {
+                User user = users.get(key);
+
+                SearchUserActivity.userNames.add(user.getUsername());
+                SearchUserActivity.queueAdapter.notifyDataSetChanged();
+                contains = true;
+
+            }
         }
+        return contains;
     }
 }

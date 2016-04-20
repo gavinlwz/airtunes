@@ -43,14 +43,20 @@ public class FirebaseCalls {
                 System.out.println(dataSnapshot.getValue());
 
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+
                     System.out.println(snapshot);
                     String username = snapshot.getKey();
-                    User user = snapshot.getValue(User.class);
-                    System.out.println(user.getName());
-                    System.out.println(user.favSongs);
-                    System.out.println(user.getId());
 
-                    users.put(username, user);
+                    try {
+                        User user = snapshot.getValue(User.class);
+                        System.out.println(user);
+                        System.out.println("HURRAY GROUP ADDED");
+                        users.put(username, user);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     System.out.println("Adding user to users");
                 }
             }
@@ -229,9 +235,9 @@ public class FirebaseCalls {
      * */
     public void updateUserSongs(User user) {
         Firebase updateRef = userRef.child(user.getUsername()).child("favSongs");
-        updateRef.setValue(user.getSongs());
+        updateRef.setValue(user.getFavSongs());
         Map<String, Object> info = new HashMap<> ();
-        info.put("favSongs", user.getSongs());
+        info.put("favSongs", user.getFavSongs());
     }
 
     // Favorite lists

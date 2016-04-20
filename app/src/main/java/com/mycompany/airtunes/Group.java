@@ -14,9 +14,9 @@ import java.io.Serializable;
 public class Group implements Serializable {
     String owner;
     String groupName;
-    List<String> memberNames; //members of group
-    List<String> songNames; //songs in the group playlist
-    List<Song> songs; //songs as Song objects
+    ArrayList<String> memberNames; //members of group
+    ArrayList<String> songNames; //songs in the group playlist
+    ArrayList<Song> songs; //songs as Song objects
     boolean isPrivate = false; //group initially set to private
 
     // TODO: Akash Change song to actual Song objects
@@ -25,7 +25,6 @@ public class Group implements Serializable {
      * ????????
      * */
     public Group() {
-        songNames = new ArrayList<>();
     }
 
     /**
@@ -37,9 +36,9 @@ public class Group implements Serializable {
     public Group(String groupName, String owner, boolean isPrivate) {
         this.owner = owner;
         this.groupName = groupName;
-        this.memberNames = new ArrayList<>();
-        this.songNames = new ArrayList<>();
-        this.songs = new ArrayList<>();
+        this.memberNames = new ArrayList<String>();
+        this.songNames = new ArrayList<String>();
+        this.songs = new ArrayList<Song>();
         this.isPrivate = isPrivate;
     }
 
@@ -94,7 +93,7 @@ public class Group implements Serializable {
             this.songs = new ArrayList<>();
         }
         this.songs.add(song);
-        this.songNames.add(song.getName());
+        //this.songNames.add(song.getName());
     }
 
     /**
@@ -102,6 +101,7 @@ public class Group implements Serializable {
      * @param song Song
      * */
     public void removeSong(Song song) {
+        if (this.songs == null) this.songs = new ArrayList<Song>();
         System.out.println("Removing song from model: " + song);
         this.songs.remove(song);
         this.songNames.remove(song.getName());
@@ -112,7 +112,7 @@ public class Group implements Serializable {
      * */
     public List<Song> getSongs() {
         if (songs == null) {
-            this.songs = new ArrayList<>();
+            this.songs = new ArrayList<Song>();
         }
         return songs;
     }
@@ -155,4 +155,28 @@ public class Group implements Serializable {
     public void changeToPrivate() {
         this.isPrivate = true;
     }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setMemberNames(ArrayList<String> memberNames) {
+        this.memberNames = memberNames;
+    }
+
+    public void setSongNames(ArrayList<String> songNames) {
+        this.songNames = songNames;
+    }
+
+    public void setSongs(ArrayList<Song> songs) {
+        this.songs = songs;
+    }
+
+
+
+
 }

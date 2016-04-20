@@ -9,6 +9,7 @@ import android.widget.TextView;
  * */
 public class UserSearchResultActivity extends ActionBarActivity {
     private String fullName;
+    private String userName;
     private boolean privacy;
 
     @Override
@@ -20,17 +21,23 @@ public class UserSearchResultActivity extends ActionBarActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String firstName = extras.getString("firstName");
+            String lastName = extras.getString("lastName");
+            userName = extras.getString("userName");
             privacy = extras.getBoolean("privacy");
             if (privacy == true) {
                 fullName = firstName + " " + firstName.charAt(0);
             } else {
-                fullName = firstName;
+                fullName = firstName + " " + lastName;
             }
         }
 
         TextView tv = (TextView) findViewById(R.id.fullName);
         tv.setText(fullName);
         tv = (TextView) findViewById(R.id.privacy);
-        tv.setText("" + privacy);
+        if (privacy) {
+            tv.setText("This profile is private!");
+        }
+        tv = (TextView) findViewById(R.id.userName);
+        tv.setText(userName);
     }
 }

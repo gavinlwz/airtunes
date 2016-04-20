@@ -24,7 +24,10 @@ public class FavoriteSongsDisplayActivity extends ActionBarActivity {
 
         //copy favorite songs to a new list
         List<String> favSongs = new ArrayList<>();
+        System.out.println("gotdamn " + me.getName());
+        System.out.println("myfavsongsare " + me.favSongs );
         for (Song song : me.favSongs) {
+            System.out.println("fuckinghell " + song.getName());
             favSongs.add(song.getName());
         }
 
@@ -33,7 +36,7 @@ public class FavoriteSongsDisplayActivity extends ActionBarActivity {
         ArrayAdapter<String> queueAdapter;
         if (extras == null) {
             queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, favSongs);
-            //System.out.println("Getting song names yo " + favSongs);
+            System.out.println("Getting song names yo " + favSongs);
             ListView playlist = (ListView) findViewById(R.id.favSongsListView);
             playlist.setAdapter(queueAdapter);
         } else {

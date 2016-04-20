@@ -11,6 +11,9 @@ public class Song implements Serializable {
     String artist; //artist of song
     String pictureUrl; //url to song cover
 
+    public Song() {
+
+    }
     /**
      * @param uri String
      * */

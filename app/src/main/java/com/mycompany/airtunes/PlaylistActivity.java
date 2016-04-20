@@ -55,6 +55,7 @@ public class PlaylistActivity extends ActionBarActivity {
     ToggleButton toggleButton;
     Handler mHandler;
 
+
     public static List<String> songNames;
 
 
@@ -105,7 +106,9 @@ public class PlaylistActivity extends ActionBarActivity {
         deleteSongs();
         refreshView();
         mHandler = new Handler();
-        startRepeatingTask();
+        m_Runnable.run();
+        mStatusChecker.run();
+
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -131,7 +134,7 @@ public class PlaylistActivity extends ActionBarActivity {
                                             firstTimePlayButtonPressed = false;
                                         }
                                         MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                                        model.removeSong(model.getSongs().get(0));
+                                        //model.removeSong(model.getSongs().get(0));
                                         play = true;
                                         return;
                                     }
@@ -156,17 +159,26 @@ public class PlaylistActivity extends ActionBarActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        Group updatedGroup = fb.groups.get(model.getGroupName());
-                        songNames = updatedGroup.getSongNames();
-                        //System.out.println("Number of songs in list is: " + songNames.size());
-                        queueAdapter.notifyDataSetChanged(); //this function can change value of mInterval.
+                    //Update user information
+                    me = fb.currentUser;
+                    fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+                    toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
-                    } finally {
-                        // 100% guarantee that this always happens, even if
-                        // your update method throws an exception
-                        mHandler.postDelayed(mStatusChecker, 1000);
-                    }
+                    //Update Room information
+                    model = (Group) getIntent().getSerializableExtra("Group");
+                    ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
+                    ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+                    model.addMember(me.getUsername());
+                    fb.updateRoomMembers(model);
+
+                    //Update view with list of current songs in room
+                    playlist = (ListView) findViewById(R.id.listView);
+
+                    queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
+                    playlist.setAdapter(queueAdapter);
+
+                    mHandler.postDelayed(mStatusChecker,1000);
+
                 }
             };
 
@@ -206,6 +218,18 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
     }
+
+    private final Runnable m_Runnable = new Runnable()
+    {
+        public void run()
+
+        {
+            Toast.makeText(PlaylistActivity.this,"in runnable",Toast.LENGTH_SHORT).show();
+
+            mHandler.postDelayed(m_Runnable,20000);
+        }
+
+    };
 
     //Invite user from search to join group
     public void onInviteButtonClick(View view) {
