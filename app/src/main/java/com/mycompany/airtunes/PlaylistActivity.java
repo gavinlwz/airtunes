@@ -65,6 +65,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     ToggleButton toggleButton;
     Handler mHandler;
+    static int counter = 0;
 
 
     public static List<String> songNames;
@@ -118,6 +119,37 @@ public class PlaylistActivity extends ActionBarActivity {
 
         //handle dynamically adding / deleting songs
         deleteSongs();
+<<<<<<< HEAD
+       // refreshView();
+        mHandler = new Handler();
+        //m_Runnable.run();
+        mStatusChecker.run();
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (counter == 0) {
+                    if (fb.groups.get(model.groupName) == null) {
+                        System.out.println("akatsuka");
+                        timer.cancel();
+                        timer.purge();
+                        finish();
+                        counter++;
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                    }
+
+                }
+
+
+            }
+        }, 1000, 1000);
+
+
+
+
+=======
         refreshView();
 
         // Add users in firebase to current users
@@ -128,24 +160,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
         // Handlers
         mHandler = new Handler();
-        m_Runnable.run();
-        // TODO: Combine under startRepeatingTasks
-//        mStatusChecker.run();
-
         refreshMembers();
-
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Do something after 5s = 5000ms
-//                startRepeatingTask();
-//
-//            }
-//        }, 10000);
-
-
-
+>>>>>>> cd46feb2f4ef9c45c1241bcad7240ecf34177701
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -154,39 +170,10 @@ public class PlaylistActivity extends ActionBarActivity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
-                    @Override
-                    public void onPlayerState(PlayerState playerState) {
-                        if (me.getUsername().equals(model.getOwner())) {
-                            if (!playerState.playing) {
-                                if (play && isPaused && !firstTimePlayButtonPressed) {
-                                    MainActivity.mPlayer.resume();
-                                    isPaused = false;
-                                    return;
-                                }
-                                if (model.getSongs().size() > 0) {
-
-                                    if (!isPaused) {
-                                        if (firstTimePlayButtonPressed) {
-                                            firstTimePlayButtonPressed = false;
-                                        }
-                                        MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                                        //model.removeSong(model.getSongs().get(0));
-                                        play = true;
-                                        return;
-                                    }
-                                }
-                            } else {
-                                if (play && isPaused) {
-                                    MainActivity.mPlayer.pause();
-                                    play = false;
-                                    return;
-                                }
-                            }
-                        }
-
-                    }
-                });
+                if (fb.groups.get(model.groupName) == null) {
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(i);
+                }
             }
         }, 1000, 1000);
     }
@@ -204,6 +191,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
     //To send user leave room notification
 
+
+    // ----- SECTION to do leave room notifications -------
     String toastMsg;
 
     public void refreshMembers() {
@@ -276,6 +265,7 @@ public class PlaylistActivity extends ActionBarActivity {
         }
     };
 
+
     //To update the playlist
     Runnable mStatusChecker =
             new Runnable() {
@@ -286,12 +276,15 @@ public class PlaylistActivity extends ActionBarActivity {
                     fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
                     toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
+<<<<<<< HEAD
+=======
                     //Update Room information
                     model = (Group) getIntent().getSerializableExtra("Group");
                     ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                     ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
 //                    model.addMember(me.getUsername());
 //                    fb.updateRoomMembers(model);
+>>>>>>> cd46feb2f4ef9c45c1241bcad7240ecf34177701
 
                     //Update view with list of current songs in room
                     playlist = (ListView) findViewById(R.id.listView);
@@ -346,46 +339,11 @@ public class PlaylistActivity extends ActionBarActivity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                if (fb.groups.get(model.groupName) == null) {
 
-                MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
-                   @Override
-                   public void onPlayerState(PlayerState playerState) {
-                       //System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
-                       if (me.getUsername().equals(model.getOwner())) {
-                           if (!playerState.playing) {
-                               if (play && isPaused && !firstTimePlayButtonPressed) {
-                                   MainActivity.mPlayer.resume();
-                                   isPaused = false;
-                                   return;
-                               }
-
-                               if (model.getSongs().size() > 0) {
-
-                                   if (!isPaused) {
-                                       if (firstTimePlayButtonPressed) {
-                                           firstTimePlayButtonPressed = false;
-                                       }
-                                       MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                                       model.removeSong(model.getSongs().get(0));
-                                       play = true;
-                                       return;
-                                   }
+                }
 
 
-
-
-                               }
-                           } else {
-                               if (play && isPaused) {
-                                   MainActivity.mPlayer.pause();
-                                   play = false;
-                                   return;
-                               }
-                           }
-                       }
-
-                   }
-               });
             }
         }, 1000, 1000);
 
@@ -398,14 +356,28 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     private final Runnable m_Runnable = new Runnable()
+
     {
         public void run()
 
         {
-            Toast.makeText(PlaylistActivity.this,"in runnable",Toast.LENGTH_SHORT).show();
+                Toast.makeText(PlaylistActivity.this, "fuck the po po", Toast.LENGTH_SHORT).show();
 
+                System.out.println("groupies " + fb.groups.get(model.groupName));
+                if (fb.groups.get(model.groupName) == null) {
+                    System.out.println("akatsuka");
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    mHandler.removeCallbacks(m_Runnable);
+                    startActivity(i);
+                    Thread.currentThread().interrupt();
+
+                }
+
+<<<<<<< HEAD
+=======
             mHandler.postDelayed(m_Runnable,20000);
 
+>>>>>>> cd46feb2f4ef9c45c1241bcad7240ecf34177701
         }
 
     };
@@ -604,6 +576,13 @@ public class PlaylistActivity extends ActionBarActivity {
         //System.out.println("model.getMemberNames().get(0)" + model.getMemberNames().get(0));
         model.changeDj(model.getMemberNames().get(0));
         fb.updateRoomMembers(model);
+
+    }
+
+    public void onDisband(View view) {
+        if (me.getUsername().equals(model.owner)) {
+            fb.removeRoom(model.groupName);
+        }
 
     }
 
