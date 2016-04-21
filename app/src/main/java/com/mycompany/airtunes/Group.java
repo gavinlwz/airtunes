@@ -37,6 +37,9 @@ public class Group implements Serializable {
         this.owner = owner;
         this.groupName = groupName;
         this.memberNames = new ArrayList<String>();
+        this.memberNames.add(owner);
+//        //TODO: remove
+//        this.memberNames.add("tahmid");
         this.songNames = new ArrayList<String>();
         this.songs = new ArrayList<Song>();
         this.isPrivate = isPrivate;

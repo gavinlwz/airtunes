@@ -69,7 +69,8 @@ public class FirebaseCalls {
         roomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                System.out.println(dataSnapshot.getValue());
+                System.out.println("* Room information is changing");
+                System.out.println(dataSnapshot.getValue());
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 //                    System.out.println(snapshot);
                     String groupName = snapshot.getKey();
@@ -144,8 +145,11 @@ public class FirebaseCalls {
      * @param groupName String
      * */
     public void removeRoom(String groupName) {
-        final Firebase newRoomRef = roomRef.child(groupName);
+        Firebase newRoomRef = roomRef.child(groupName);
+        System.out.println("Room ref removed is: " + newRoomRef.toString());
         newRoomRef.setValue(null);
+        groups.remove(groupName);
+        System.out.println("calling Removeroom in FB ");
     }
 
     /**

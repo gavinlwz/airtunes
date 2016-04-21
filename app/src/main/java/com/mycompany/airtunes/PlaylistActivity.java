@@ -46,7 +46,11 @@ public class PlaylistActivity extends ActionBarActivity {
     boolean play = false;
     boolean isPaused = false;
 
+    // WC added stuff
     public HashSet<String> currentUserNames;
+    public String groupName;
+
+
     ListView playlist;
     public static Group model;
     public static FirebaseCalls fb;
@@ -81,6 +85,8 @@ public class PlaylistActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
         fb.updateRoomMembers(model);
+        groupName = model.groupName;
+
 
 
         //Update view with list of current songs in room
@@ -112,7 +118,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
         // Add users in firebase to current users
         currentUserNames = new HashSet();
-        for (String name : fb.users.keySet()) {
+        for (String name : model.getMemberNames()) {
             currentUserNames.add(name);
         }
 
@@ -170,14 +176,37 @@ public class PlaylistActivity extends ActionBarActivity {
         }, 1000, 1000);
     }
 
+    //Random Adding user to group
+    Runnable adder =
+            new Runnable() {
+                @Override
+                public void run() {
+
+                    mHandler.postDelayed(adder,10000);
+
+                }
+            };
+
     //To send user leave room notification
     Runnable mMemberChecker =
             new Runnable() {
                 @Override
                 public void run() {
                     System.out.println("Member checker is running. ");
-                    if (fb.users.size() != currentUserNames.size()) {
-                        Set<String> serverNames = fb.users.keySet();
+                    Group remoteGroup = fb.groups.get(groupName);
+                    List<String> serverNames = remoteGroup.getMemberNames();
+//                    List<String> serverNames = model.getMemberNames();
+                    System.out.println("Number of members in model: " + serverNames);
+                    int serverSize = serverNames.size();
+                    int localSize = currentUserNames.size();
+
+                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
+                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
+
+//                    HashSet<String> testUserNames = new HashSet<String>();
+//                    testUserNames.add("ihugacownow");
+//                    testUserNames.add("tahmid");
+                    if (serverSize != currentUserNames.size()) {
                         for (String name : currentUserNames ) {
                             if (!serverNames.contains(name)) {
                                 currentUserNames.remove(name);
@@ -190,11 +219,15 @@ public class PlaylistActivity extends ActionBarActivity {
                                 Toast toast = Toast.makeText(context, text, duration);
                                 toast.show();
                                 System.out.println("--------------- fucker " + name + " has left the group -------");
+                                break;
 
                             }
 
                         }
                     }
+
+                    mHandler.postDelayed(mMemberChecker,5000);
+
 
                 }
             };
@@ -213,8 +246,8 @@ public class PlaylistActivity extends ActionBarActivity {
                     model = (Group) getIntent().getSerializableExtra("Group");
                     ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                     ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
-                    model.addMember(me.getUsername());
-                    fb.updateRoomMembers(model);
+//                    model.addMember(me.getUsername());
+//                    fb.updateRoomMembers(model);
 
                     //Update view with list of current songs in room
                     playlist = (ListView) findViewById(R.id.listView);
@@ -273,6 +306,7 @@ public class PlaylistActivity extends ActionBarActivity {
             Toast.makeText(PlaylistActivity.this,"in runnable",Toast.LENGTH_SHORT).show();
 
             mHandler.postDelayed(m_Runnable,20000);
+
         }
 
     };
@@ -405,7 +439,7 @@ public class PlaylistActivity extends ActionBarActivity {
             if (model.getMemberNames().size() == 0) {
                 fb.groups.remove(model.getGroupName());
                 fb.removeRoom(model.getGroupName());
-                fb.updateRoomAsRemoved(model);
+//                fb.updateRoomAsRemoved(model);
                 //System.out.println("removing room");
 
                 finish();
