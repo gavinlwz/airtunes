@@ -1,113 +1,113 @@
 package com.mycompany.airtunes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wrapper.spotify.models.Track;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by arvindraju on 3/4/16.
- */
+ * User class that represents user object with unique ID
+ * */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class User {
+public class User implements Serializable{
     private String firstName;
     private String lastName;
-
-
-
     String name;
-
-    private String id;
-    private boolean privacy;
-
-    private String password;
+    String id;
+    boolean privacy;
     private String username;
-    ArrayList<Song> favSongs;
-    private Group currentRoom;
+    List<Song> favSongs;
 
+    public User() {}
+
+    /**
+     * constructor setting initial values of the user
+     * @param firstName String
+     * @param lastName String
+     * @param username String
+     * @param id String
+     * */
     public User(String firstName, String lastName, String username, String id) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.favSongs = new ArrayList<>();
         this.id = id;
         this.privacy = false;
+        this.favSongs = new ArrayList<Song>();
     }
 
+    /**
+     * constructor setting only name and username
+     * @param name String
+     * @param username String
+     * */
     public User(String name, String username) {
         this.name = name;
         this.username = username;
         this.favSongs = new ArrayList<>();
+        this.firstName = "first";
+        this.lastName = "last";
     }
 
+    /**
+     * change privacy of user
+     * */
+    public void togglePrivacy() { privacy = !privacy; }
 
-
-    public User() {};
-
-
-    public Group getCurrentRoom() {
-        return this.currentRoom;
+    /**
+     * add new song to user's favorites list
+     * @param song Song
+     * */
+    public void addSongs(Song song) {
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<>();
+        }
+        favSongs.add(song);
     }
 
-    public String getFirstName() {
-        return firstName;
+    /**
+     * remove song from favorites list
+     * @param song Song
+     * */
+    public void removeSongs(Song song) { favSongs.remove(song); }
+
+
+    /**
+     * @param favSongs set of favorite songs
+     * */
+    public void setFavSongs(ArrayList<Song> favSongs) {
+        if (this.favSongs == null) {
+            favSongs = new ArrayList<>();
+        }
+        this.favSongs = favSongs;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
+    /*
+    * ==========================================
+    * ==========================================
+    * GETTER AND SETTER FUNCTIONS FOR THIS CLASS
+    * ==========================================
+    * ==========================================
+    * */
 
     public String getName() { return name; }
 
-    public String getId() {
-        return id;
-    }
-
-    public boolean getPrivacy() {
-        return privacy;
-    }
-
-    public void togglePrivacy() {
-        privacy = !privacy;
-    }
-
+    public boolean getPrivacy() { return privacy; }
 
     public String getUsername() { return username; }
 
-
-    public String getPassword() { return password; }
-
-
-    public void addSongs(Song song) {
-
-        if (this.favSongs == null) {
-            favSongs = new ArrayList<Song>();
-        }
-
-        favSongs.add(song);
-
-    }
-
-    public void removeSongs(Song song) {
-        favSongs.remove(song);
-    }
-
-    public ArrayList<Song> getSongs() { return favSongs; }
-
-    public ArrayList<Song> getFavSongs() {
-        if (this.favSongs == null) {
-            favSongs = new ArrayList<Song>();
-        }
+    public List<Song> getFavSongs() {
         return this.favSongs;
     }
 
-    public void setFavSongs(ArrayList<Song> favSongs) {
-        if (this.favSongs == null) {
-            favSongs = new ArrayList<Song>();
-        }
-
-
-        this.favSongs = favSongs;
+    public String getFirstName() {
+        return this.firstName;
     }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+
 
 }
