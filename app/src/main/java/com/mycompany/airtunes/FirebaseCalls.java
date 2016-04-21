@@ -49,7 +49,6 @@ public class FirebaseCalls {
                     try {
                         User user = snapshot.getValue(User.class);
                         System.out.println(user);
-                        System.out.println("HURRAY GROUP ADDED");
                         users.put(username, user);
 
                     } catch (Exception e) {
@@ -71,7 +70,8 @@ public class FirebaseCalls {
         roomRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                System.out.println(dataSnapshot.getValue());
+                System.out.println("* Room information is changing");
+                System.out.println(dataSnapshot.getValue());
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 //                    System.out.println(snapshot);
                     String groupName = snapshot.getKey();
@@ -149,7 +149,7 @@ public class FirebaseCalls {
         final Firebase newRoomRef = roomRef.child(groupName);
         newRoomRef.removeValue();
         groups.remove(groupName);
-
+        System.out.println("calling Removeroom in FB ");
     }
 
     /**
@@ -163,6 +163,11 @@ public class FirebaseCalls {
         updateRoomRef.updateChildren(info);
     }
 
+    public void updateRoomPg13(Group group) {
+        Firebase updateRoomRef = this.roomRef.child(group.getGroupName()).child("pg13");
+        updateRoomRef.setValue(group.isPG13);
+    }
+
     /**
      * update group's songs in playlist
      * @param group Group
@@ -170,6 +175,11 @@ public class FirebaseCalls {
     public void updateRoomSongs(Group group) {
         Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("songs");
         updateRoomRef.setValue(group.getSongs());
+    }
+
+    public void pullUserSongs(User user) {
+        Firebase updateRef = userRef.child(user.getUsername()).child("favSongs");
+        //updateRef.value
     }
 
     /*
