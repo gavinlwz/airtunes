@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -203,6 +204,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
     //To send user leave room notification
 
+    String toastMsg;
+
     public void refreshMembers() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -230,12 +233,9 @@ public class PlaylistActivity extends ActionBarActivity {
                                 currentUserNames.remove(name);
 
                                 // Show Toast
-                                Context context = getApplicationContext();
-                                CharSequence text = name + " has left the group";
-                                int duration = Toast.LENGTH_SHORT;
+                                toastMsg = name + " has left the group";
+                                mMemberHandler.obtainMessage(1).sendToTarget();
 
-                                Toast toast = Toast.makeText(context, text, duration);
-                                toast.show();
                                 System.out.println("--------------- fucker " + name + " has left the group -------");
                                 break;
 
@@ -247,14 +247,10 @@ public class PlaylistActivity extends ActionBarActivity {
                         for (String name : serverNames ) {
                             if (!currentUserNames.contains(name)) {
                                 currentUserNames.add(name);
+                                toastMsg = name + " has joined the group";
+                                mMemberHandler.obtainMessage(1).sendToTarget();
 
-                                // Show Toast
-                                Context context = getApplicationContext();
-                                CharSequence text = name + " has joined the group";
-                                int duration = Toast.LENGTH_SHORT;
 
-                                Toast toast = Toast.makeText(context, text, duration);
-                                toast.show();
                                 System.out.println("--------------- fucker " + name + " has joined the group -------");
                                 break;
 
@@ -266,6 +262,18 @@ public class PlaylistActivity extends ActionBarActivity {
                 }
             }, 2000, 4000);
     }
+
+    public Handler mMemberHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            // Show Toast
+            Context context = getApplicationContext();
+//            CharSequence text = msg + " has joined the group";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, toastMsg, duration);
+            toast.show();
+        }
+    };
 
     //To update the playlist
     Runnable mStatusChecker =
