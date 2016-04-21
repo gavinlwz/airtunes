@@ -72,6 +72,8 @@ public class FirebaseCalls {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 System.out.println("* Room information is changing");
                 System.out.println(dataSnapshot.getValue());
+                groups = null;
+                groups = new HashMap<String, Group>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 //                    System.out.println(snapshot);
                     String groupName = snapshot.getKey();
