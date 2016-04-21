@@ -48,7 +48,6 @@ public class FirebaseCalls {
                     try {
                         User user = snapshot.getValue(User.class);
                         System.out.println(user);
-                        System.out.println("HURRAY GROUP ADDED");
                         users.put(username, user);
 
                     } catch (Exception e) {

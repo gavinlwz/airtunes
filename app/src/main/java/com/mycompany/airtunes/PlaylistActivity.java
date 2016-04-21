@@ -30,8 +30,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +46,7 @@ public class PlaylistActivity extends ActionBarActivity {
     boolean play = false;
     boolean isPaused = false;
 
+    public HashSet<String> currentUserNames;
     ListView playlist;
     public static Group model;
     public static FirebaseCalls fb;
@@ -79,6 +82,7 @@ public class PlaylistActivity extends ActionBarActivity {
         model.addMember(me.getUsername());
         fb.updateRoomMembers(model);
 
+
         //Update view with list of current songs in room
         playlist = (ListView) findViewById(R.id.listView);
         System.out.println("Model is : " + model);
@@ -105,9 +109,21 @@ public class PlaylistActivity extends ActionBarActivity {
         //handle dynamically adding / deleting songs
         deleteSongs();
         refreshView();
+
+        // Add users in firebase to current users
+        currentUserNames = new HashSet();
+        for (String name : fb.users.keySet()) {
+            currentUserNames.add(name);
+        }
+
+        // Handlers
         mHandler = new Handler();
         m_Runnable.run();
-        mStatusChecker.run();
+        // TODO: Combine under startRepeatingTasks
+//        mStatusChecker.run();
+        startRepeatingTask();
+
+
 
     }
 
@@ -154,6 +170,35 @@ public class PlaylistActivity extends ActionBarActivity {
         }, 1000, 1000);
     }
 
+    //To send user leave room notification
+    Runnable mMemberChecker =
+            new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Member checker is running. ");
+                    if (fb.users.size() != currentUserNames.size()) {
+                        Set<String> serverNames = fb.users.keySet();
+                        for (String name : currentUserNames ) {
+                            if (!serverNames.contains(name)) {
+                                currentUserNames.remove(name);
+
+                                // Show Toast
+                                Context context = getApplicationContext();
+                                CharSequence text = name + " has left the group";
+                                int duration = Toast.LENGTH_SHORT;
+
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.show();
+                                System.out.println("--------------- fucker " + name + " has left the group -------");
+
+                            }
+
+                        }
+                    }
+
+                }
+            };
+
     //To update the playlist
     Runnable mStatusChecker =
             new Runnable() {
@@ -185,6 +230,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     void startRepeatingTask() {
         mStatusChecker.run();
+        mMemberChecker.run();
     }
 
     //Logic for deleting songs from playlist on long click
