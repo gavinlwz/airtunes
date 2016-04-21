@@ -476,7 +476,11 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
     public void onPg13ButtonClick(View view) {
-        model.setPG13(!model.isPG13);
+        if (me.getUsername().equals(model.getOwner())) {
+            model.setPG13(!model.isPG13);
+            fb.updateRoomPg13(model);
+        }
+        
     }
 
 
@@ -513,14 +517,19 @@ public class PlaylistActivity extends ActionBarActivity {
         if (!songs.isEmpty()) {
             if (model.isPG13 && songs.get(songs.size() - 1).isExplicit) {
                 model.removeSong(songs.get(songs.size() - 1));
+                MainActivity.mPlayer.pause();
+                MainActivity.mPlayer.clearQueue();
+                play = false;
+                isPaused=false;
+                currentSong = null;
                 makeToast("This song is explicit and cannot be added to playlist");
             }
         }
 
 
-//        queueAdapter.clear();
-//        queueAdapter.addAll(model.getSongNames());
-//        queueAdapter.notifyDataSetChanged();
+        queueAdapter.clear();
+        queueAdapter.addAll(model.getSongNames());
+        queueAdapter.notifyDataSetChanged();
 
 
 
