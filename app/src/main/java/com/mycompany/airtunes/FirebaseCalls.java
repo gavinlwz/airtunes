@@ -41,6 +41,8 @@ public class FirebaseCalls {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                System.out.println(dataSnapshot.getValue());
+                users = null;
+                users = new HashMap<String, User>();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
 
                     System.out.println(snapshot);
