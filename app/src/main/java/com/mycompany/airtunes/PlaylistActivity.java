@@ -208,7 +208,7 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    HashSet<String> testUserNames = new HashSet<String>();
 //                    testUserNames.add("ihugacownow");
 //                    testUserNames.add("tahmid");
-                    if (serverSize != currentUserNames.size()) {
+                    if (serverSize < currentUserNames.size()) {
                         for (String name : currentUserNames ) {
                             if (!serverNames.contains(name)) {
                                 currentUserNames.remove(name);
@@ -226,11 +226,26 @@ public class PlaylistActivity extends ActionBarActivity {
                             }
 
                         }
+                    } else if (serverSize > currentUserNames.size()) {
+                        for (String name : serverNames ) {
+                            if (!currentUserNames.contains(name)) {
+                                currentUserNames.add(name);
+
+                                // Show Toast
+                                Context context = getApplicationContext();
+                                CharSequence text = name + " has joined the group";
+                                int duration = Toast.LENGTH_SHORT;
+
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.show();
+                                System.out.println("--------------- fucker " + name + " has joined the group -------");
+                                break;
+
+                            }
+
+                        }
                     }
-
                     mHandler.postDelayed(mMemberChecker,5000);
-
-
                 }
             };
 
