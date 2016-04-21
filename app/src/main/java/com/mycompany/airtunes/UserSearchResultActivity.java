@@ -74,6 +74,7 @@ public class UserSearchResultActivity extends ActionBarActivity {
                                 i.putExtra("songTitle", currentSong.getName());
                                 i.putExtra("albumCover", currentSong.getPictureUrl());
                                 i.putExtra("artistName", currentSong.getArtist());
+                                i.putExtra("song", currentSong);
                                 startActivity(i);
                             }
                         }
