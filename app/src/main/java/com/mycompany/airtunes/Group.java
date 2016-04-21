@@ -159,6 +159,9 @@ public class Group implements Serializable {
     }
 
     public List<String> getMemberNames() {
+        if (memberNames == null) {
+            memberNames = new ArrayList<>();
+        }
         return memberNames;
     }
 
