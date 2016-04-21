@@ -6,10 +6,12 @@ import java.io.Serializable;
  * Song class to represent a song object -- depicted mainly by its uniform resource identifier
  * */
 public class Song implements Serializable {
+
     String uri; //unique identifier of song
     String name; //title of song
     String artist; //artist of song
     String pictureUrl; //url to song cover
+    boolean isExplicit; //explicity of song
 
     public Song() {
 
@@ -44,11 +46,24 @@ public class Song implements Serializable {
     * */
     public String getUri() { return uri; }
 
+    public void setExplicit(boolean e) {
+        this.isExplicit = e;
+    }
+
+    public boolean getExplicit() {
+        return this.isExplicit;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setUri(String uri) { this.uri = uri; }
+
 
     public String getName() { return name; }
 
-    public void setName(String name) { this.name = name; }
+
 
     public String getArtist() { return artist; }
 

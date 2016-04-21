@@ -36,6 +36,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Activity class that handles all logic for adding / deleting songs from playlist, adding
@@ -50,7 +51,8 @@ public class PlaylistActivity extends ActionBarActivity {
     public HashSet<String> currentUserNames;
     public String groupName;
 
-
+    boolean isShuffling = false;
+   // boolean isPaused = true;
     ListView playlist;
     public static Group model;
     public static FirebaseCalls fb;
@@ -296,6 +298,61 @@ public class PlaylistActivity extends ActionBarActivity {
                 return true;
             }
         });
+
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+                MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
+                   @Override
+                   public void onPlayerState(PlayerState playerState) {
+                       //System.out.println("IS THE PLAYER PLAYING????" + playerState.playing);
+                       if (me.getUsername().equals(model.getOwner())) {
+                           if (!playerState.playing) {
+                               if (play && isPaused && !firstTimePlayButtonPressed) {
+                                   MainActivity.mPlayer.resume();
+                                   isPaused = false;
+                                   return;
+                               }
+
+                               if (model.getSongs().size() > 0) {
+
+                                   if (!isPaused) {
+                                       if (firstTimePlayButtonPressed) {
+                                           firstTimePlayButtonPressed = false;
+                                       }
+                                       MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                                       model.removeSong(model.getSongs().get(0));
+                                       play = true;
+                                       return;
+                                   }
+
+
+
+
+                               }
+                           } else {
+                               if (play && isPaused) {
+                                   MainActivity.mPlayer.pause();
+                                   play = false;
+                                   return;
+                               }
+                           }
+                       }
+
+                   }
+               });
+            }
+        }, 1000, 1000);
+
+
+        mHandler = new Handler();
+        startRepeatingTask();
+
+
+
     }
 
     private final Runnable m_Runnable = new Runnable()
@@ -384,6 +441,12 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
+
+    public void onPg13ButtonClick(View view) {
+        model.setPG13(!model.isPG13);
+    }
+
+
     //Randomize selection of next song to create shuffling
     public void onSetShuffleButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
@@ -399,18 +462,48 @@ public class PlaylistActivity extends ActionBarActivity {
         }
     }
 
+
     //Query song from Spotify and add it to the view
-    public void onAddSongButtonClick(View view) {
+    public void onAddSongButtonClick(View view) throws ExecutionException, InterruptedException {
+
         SearchView search = (SearchView) findViewById(R.id.songSearchView);
         String query1 = search.getQuery() + "";
         String query2 = "track";
         String[] query = new String[2];
         query[0] = query1;
         query[1] = query2;
-        new RetrieveSongs().execute(query);
+
+        AsyncTask<String, Void, String> rs = new RetrieveSongs();
+        rs.execute(query);
+        rs.get();
+        List<Song> songs = model.getSongs();
+        if (!songs.isEmpty()) {
+            if (model.isPG13 && songs.get(songs.size() - 1).isExplicit) {
+                model.removeSong(songs.get(songs.size() - 1));
+                makeToast("This song is explicit and cannot be added to playlist");
+            }
+        }
+
+
+//        queueAdapter.clear();
+//        queueAdapter.addAll(model.getSongNames());
+//        queueAdapter.notifyDataSetChanged();
+
+
+
+
     }
 
+    public void makeToast(String text) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+
     //Favorite current song and add to user's "favorites" list
+
     public void onFavoriteButtonClick(View view) {
         if (currentSong != null && me != null) {
             me.addSongs(currentSong);

@@ -2,6 +2,7 @@ package com.mycompany.airtunes;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * User class that represents user object with unique ID
  * */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class User {
+public class User implements Serializable{
     private String firstName;
     private String lastName;
     String name;

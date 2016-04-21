@@ -12,12 +12,15 @@ import java.io.Serializable;
  * */
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Group implements Serializable {
+
+    boolean isPG13;
     String owner;
     String groupName;
     ArrayList<String> memberNames; //members of group
     ArrayList<String> songNames; //songs in the group playlist
     ArrayList<Song> songs; //songs as Song objects
     boolean isPrivate = false; //group initially set to private
+
 
     // TODO: Akash Change song to actual Song objects
     // TODO: Arvind Pass the user object from login to constructor
@@ -36,6 +39,7 @@ public class Group implements Serializable {
     public Group(String groupName, String owner, boolean isPrivate) {
         this.owner = owner;
         this.groupName = groupName;
+        this.isPG13 = true;
         this.memberNames = new ArrayList<String>();
         this.memberNames.add(owner);
 //        //TODO: remove
@@ -45,10 +49,21 @@ public class Group implements Serializable {
         this.isPrivate = isPrivate;
     }
 
+
+    public boolean getPG13() {
+        return isPG13;
+    }
+
+    public void setPG13(boolean kids) {
+        isPG13 = kids;
+    }
+
+
     /**
      * adds new member to group
      * @param name String
      * */
+
     public void addMember(String name) {
         if (!memberNames.contains(name)) {
             this.memberNames.add(name);
@@ -105,9 +120,13 @@ public class Group implements Serializable {
      * */
     public void removeSong(Song song) {
         if (this.songs == null) this.songs = new ArrayList<Song>();
-        System.out.println("Removing song from model: " + song);
-        this.songs.remove(song);
-        this.songNames.remove(song.getName());
+        if (this.songNames == null) this.songNames = new ArrayList<String>();
+        if (songs.size() > 0 && songNames.size() > 0) {
+            System.out.println("Removing song from model: " + song);
+            this.songs.remove(song);
+            this.songNames.remove(song.getName());
+        }
+
     }
 
     /**

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class SearchUserActivity extends ActionBarActivity {
@@ -59,6 +62,7 @@ public class SearchUserActivity extends ActionBarActivity {
         i.putExtra("lastName", user.getLastName());
         i.putExtra("privacy", user.getPrivacy());
         i.putExtra("userName", user.getUsername());
+        i.putExtra("user", user);
         startActivity(i);
     }
 
@@ -82,5 +86,6 @@ public class SearchUserActivity extends ActionBarActivity {
             return;
         }
     }
+
 
 }

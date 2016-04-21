@@ -22,12 +22,24 @@
         android:id="@+id/userName"
         android:layout_below="@+id/fullName" />
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="115dp"
         android:text="New Text"
         android:id="@+id/privacy"
         android:layout_below="@+id/userName" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:id="@+id/favs"
+        android:dividerHeight="1px"
+        android:layout_alignParentLeft="true"
+        android:visibility="invisible"
+        android:layout_below="@+id/privacy"
+        android:divider="#00bfff"
+        android:background="#87cefa" />
 
 
 
