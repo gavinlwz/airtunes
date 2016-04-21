@@ -160,6 +160,11 @@ public class FirebaseCalls {
         updateRoomRef.updateChildren(info);
     }
 
+    public void updateRoomPg13(Group group) {
+        Firebase updateRoomRef = this.roomRef.child(group.getGroupName()).child("pg13");
+        updateRoomRef.setValue(group.isPG13);
+    }
+
     /**
      * update group's songs in playlist
      * @param group Group

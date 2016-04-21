@@ -136,6 +136,15 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@mipmap/pg13"
+        android:id="@+id/pg13"
+        android:onClick="onPg13ButtonClick"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/leaveRoom" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@mipmap/shuffle"
         android:id="@+id/shuffleSong"
         android:onClick="onSetShuffleButtonClick"
