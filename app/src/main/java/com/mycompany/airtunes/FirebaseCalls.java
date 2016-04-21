@@ -5,6 +5,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.common.base.Function;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class FirebaseCalls {
                     try {
                         Group group = snapshot.getValue(Group.class);
                         groups.put(groupName, group);
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
 
                     }
@@ -145,9 +146,8 @@ public class FirebaseCalls {
      * @param groupName String
      * */
     public void removeRoom(String groupName) {
-        Firebase newRoomRef = roomRef.child(groupName);
-        System.out.println("Room ref removed is: " + newRoomRef.toString());
-        newRoomRef.setValue(null);
+        final Firebase newRoomRef = roomRef.child(groupName);
+        newRoomRef.removeValue();
         groups.remove(groupName);
         System.out.println("calling Removeroom in FB ");
     }

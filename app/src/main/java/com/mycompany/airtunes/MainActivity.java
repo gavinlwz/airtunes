@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        System.out.println("frings");
 
         // Set up Firebase
         Firebase.setAndroidContext(this);
