@@ -265,6 +265,7 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    mHandler.postDelayed(mMemberChecker,3000);
                 }
             }, 2000, 4000);
+
     }
 
     //To update the playlist
