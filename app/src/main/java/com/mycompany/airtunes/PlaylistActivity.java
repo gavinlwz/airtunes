@@ -48,7 +48,8 @@ public class PlaylistActivity extends ActionBarActivity {
     boolean isPaused = false;
 
     // WC added stuff
-    public HashSet<String> currentUserNames;
+    public HashSet<String> currentUserNames = new HashSet<String>();
+
     public String groupName;
 
     boolean isShuffling = false;
@@ -119,7 +120,6 @@ public class PlaylistActivity extends ActionBarActivity {
         refreshView();
 
         // Add users in firebase to current users
-        currentUserNames = new HashSet();
         for (String name : model.getMemberNames()) {
             currentUserNames.add(name);
         }
