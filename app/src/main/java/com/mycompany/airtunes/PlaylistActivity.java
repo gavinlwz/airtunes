@@ -30,8 +30,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +46,12 @@ public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
     boolean play = false;
     boolean isPaused = false;
+
+    // WC added stuff
+    public HashSet<String> currentUserNames = new HashSet<String>();
+
+    public String groupName;
+
     boolean isShuffling = false;
    // boolean isPaused = true;
     ListView playlist;
@@ -80,6 +88,9 @@ public class PlaylistActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
         fb.updateRoomMembers(model);
+        groupName = model.groupName;
+
+
 
         //Update view with list of current songs in room
         playlist = (ListView) findViewById(R.id.listView);
@@ -107,9 +118,20 @@ public class PlaylistActivity extends ActionBarActivity {
         //handle dynamically adding / deleting songs
         deleteSongs();
         refreshView();
+
+        // Add users in firebase to current users
+        for (String name : model.getMemberNames()) {
+            currentUserNames.add(name);
+        }
+
+        // Handlers
         mHandler = new Handler();
         m_Runnable.run();
-        mStatusChecker.run();
+        // TODO: Combine under startRepeatingTasks
+//        mStatusChecker.run();
+        startRepeatingTask();
+
+
 
     }
 
@@ -156,6 +178,62 @@ public class PlaylistActivity extends ActionBarActivity {
         }, 1000, 1000);
     }
 
+    //Random Adding user to group
+    Runnable adder =
+            new Runnable() {
+                @Override
+                public void run() {
+
+                    mHandler.postDelayed(adder,10000);
+
+                }
+            };
+
+    //To send user leave room notification
+    Runnable mMemberChecker =
+            new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Member checker is running. ");
+                    Group remoteGroup = fb.groups.get(groupName);
+                    List<String> serverNames = remoteGroup.getMemberNames();
+//                    List<String> serverNames = model.getMemberNames();
+                    System.out.println("Number of members in model: " + serverNames);
+                    int serverSize = serverNames.size();
+                    int localSize = currentUserNames.size();
+
+                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
+                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
+
+//                    HashSet<String> testUserNames = new HashSet<String>();
+//                    testUserNames.add("ihugacownow");
+//                    testUserNames.add("tahmid");
+                    if (serverSize != currentUserNames.size()) {
+                        for (String name : currentUserNames ) {
+                            if (!serverNames.contains(name)) {
+                                currentUserNames.remove(name);
+
+                                // Show Toast
+                                Context context = getApplicationContext();
+                                CharSequence text = name + " has left the group";
+                                int duration = Toast.LENGTH_SHORT;
+
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.show();
+                                System.out.println("--------------- fucker " + name + " has left the group -------");
+                                break;
+
+                            }
+
+                        }
+                    }
+
+                    mHandler.postDelayed(mMemberChecker,5000);
+
+
+                }
+            };
+
     //To update the playlist
     Runnable mStatusChecker =
             new Runnable() {
@@ -170,8 +248,8 @@ public class PlaylistActivity extends ActionBarActivity {
                     model = (Group) getIntent().getSerializableExtra("Group");
                     ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                     ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
-                    model.addMember(me.getUsername());
-                    fb.updateRoomMembers(model);
+//                    model.addMember(me.getUsername());
+//                    fb.updateRoomMembers(model);
 
                     //Update view with list of current songs in room
                     playlist = (ListView) findViewById(R.id.listView);
@@ -187,6 +265,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     void startRepeatingTask() {
         mStatusChecker.run();
+        mMemberChecker.run();
     }
 
     //Logic for deleting songs from playlist on long click
@@ -284,6 +363,7 @@ public class PlaylistActivity extends ActionBarActivity {
             Toast.makeText(PlaylistActivity.this,"in runnable",Toast.LENGTH_SHORT).show();
 
             mHandler.postDelayed(m_Runnable,20000);
+
         }
 
     };
@@ -461,7 +541,7 @@ public class PlaylistActivity extends ActionBarActivity {
             if (model.getMemberNames().size() == 0) {
                 fb.groups.remove(model.getGroupName());
                 fb.removeRoom(model.getGroupName());
-                fb.updateRoomAsRemoved(model);
+//                fb.updateRoomAsRemoved(model);
                 //System.out.println("removing room");
 
                 finish();
