@@ -145,9 +145,6 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         }, 1000, 1000);
 
-
-        refreshView();
-
         // Add users in firebase to current users
         for (String name : model.getMemberNames()) {
             System.out.println("Adding user to currentUserNames");
@@ -155,7 +152,6 @@ public class PlaylistActivity extends ActionBarActivity {
         }
 
         // Handlers
-        mHandler = new Handler();
         refreshMembers();
     }
 
