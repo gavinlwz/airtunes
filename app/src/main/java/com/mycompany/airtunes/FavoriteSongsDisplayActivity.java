@@ -15,7 +15,7 @@ import java.util.List;
  * */
 public class FavoriteSongsDisplayActivity extends ActionBarActivity {
     FirebaseCalls fb = FirebaseCalls.getInstance();
-    User me = fb.currentUser;
+    User me = fb.users.get(fb.currentUser.getUsername());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

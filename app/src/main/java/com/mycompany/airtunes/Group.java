@@ -117,6 +117,7 @@ public class Group implements Serializable {
      * */
     public void removeSong(Song song) {
         if (this.songs == null) this.songs = new ArrayList<Song>();
+        if (this.songNames == null) this.songNames = new ArrayList<String>();
         if (songs.size() > 0 && songNames.size() > 0) {
             System.out.println("Removing song from model: " + song);
             this.songs.remove(song);

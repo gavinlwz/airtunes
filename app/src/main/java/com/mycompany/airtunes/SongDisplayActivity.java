@@ -60,6 +60,7 @@ public class SongDisplayActivity extends ActionBarActivity {
             }
         }
         PlaylistActivity.me.addSongs(currentSong);
+        fb.users.put(PlaylistActivity.me.getUsername(), PlaylistActivity.me);
         fb.updateUserSongs(PlaylistActivity.me);
         //System.out.println("Favorite songs are now: " + PlaylistActivity.me.favSongs);
     }

@@ -169,6 +169,11 @@ public class FirebaseCalls {
         updateRoomRef.setValue(group.getSongs());
     }
 
+    public void pullUserSongs(User user) {
+        Firebase updateRef = userRef.child(user.getUsername()).child("favSongs");
+        //updateRef.value
+    }
+
     /*
     * ===================================
     * ===================================
