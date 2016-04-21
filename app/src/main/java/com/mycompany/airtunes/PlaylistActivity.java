@@ -119,7 +119,6 @@ public class PlaylistActivity extends ActionBarActivity {
 
         //handle dynamically adding / deleting songs
         deleteSongs();
-<<<<<<< HEAD
        // refreshView();
         mHandler = new Handler();
         //m_Runnable.run();
@@ -147,9 +146,6 @@ public class PlaylistActivity extends ActionBarActivity {
         }, 1000, 1000);
 
 
-
-
-=======
         refreshView();
 
         // Add users in firebase to current users
@@ -161,7 +157,6 @@ public class PlaylistActivity extends ActionBarActivity {
         // Handlers
         mHandler = new Handler();
         refreshMembers();
->>>>>>> cd46feb2f4ef9c45c1241bcad7240ecf34177701
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -276,15 +271,12 @@ public class PlaylistActivity extends ActionBarActivity {
                     fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
                     toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
-<<<<<<< HEAD
-=======
                     //Update Room information
                     model = (Group) getIntent().getSerializableExtra("Group");
                     ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                     ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
 //                    model.addMember(me.getUsername());
 //                    fb.updateRoomMembers(model);
->>>>>>> cd46feb2f4ef9c45c1241bcad7240ecf34177701
 
                     //Update view with list of current songs in room
                     playlist = (ListView) findViewById(R.id.listView);
@@ -373,11 +365,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
                 }
 
-<<<<<<< HEAD
-=======
             mHandler.postDelayed(m_Runnable,20000);
 
->>>>>>> cd46feb2f4ef9c45c1241bcad7240ecf34177701
         }
 
     };
