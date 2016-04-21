@@ -1,7 +1,9 @@
 package com.mycompany.airtunes;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -73,16 +75,27 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                     System.out.println("Its popularity is " + track.getPopularity());
 
                     Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
+                    if (track.isExplicit()) {
+                        song.setExplicit(true);
+                    }
                     PlaylistActivity.model.addSong(song);
                     PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                     PlaylistActivity.songNames.add(track.getName());
 
 
-
                     if (track.isExplicit()) {
                         System.out.println("This track is explicit!");
+                        if (!PlaylistActivity.model.isPG13) {
+
+                        } else {
+//                            System.out.println("toast to explicity");
+//                            PlaylistActivity.pl.makeToast("This track is explicit and cannot be added to playlist");
+                        }
                     } else {
                         System.out.println("It's OK, this track isn't explicit.");
+//                        PlaylistActivity.model.addSong(song);
+//                        PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
+//                        PlaylistActivity.songNames.add(track.getName());
                     }
                 } catch (Exception e) {
                     System.out.println("Something went wrong!" + e.getMessage());
@@ -123,12 +136,32 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                 Track track = t.getTrack();
                 System.out.println("track name = " + track.getName());
                 Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
+
+
                 if (PlaylistActivity.currentSong == null) {
                     PlaylistActivity.currentSong = song;
+                }
+                if (track.isExplicit()) {
+                    song.setExplicit(true);
                 }
                 PlaylistActivity.model.addSong(song);
                 PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                 PlaylistActivity.songNames.add(track.getName());
+
+                if (track.isExplicit()) {
+                    if (!PlaylistActivity.model.isPG13) {
+
+                    } else {
+                      //  new PlaylistActivity().makeToast("This track is explicit and cannot be added to playlist");
+                    }
+                } else {
+//                    if (PlaylistActivity.currentSong == null) {
+//                        PlaylistActivity.currentSong = song;
+//                    }
+//                    PlaylistActivity.model.addSong(song);
+//                    PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
+//                    PlaylistActivity.songNames.add(track.getName());
+                }
                // MainActivity.mPlayer.queue(track.getUri());
             } catch (Exception e) {
                 System.out.println(e);

@@ -23,6 +23,7 @@ public class Group implements Serializable {
     List<Song> songs;
      String owner;
     boolean isPrivate = false;
+    boolean isPG13;
 
 
 
@@ -34,13 +35,21 @@ public class Group implements Serializable {
 
     public Group(String groupName, String owner, boolean isPrivate) {
         this.groupName = groupName;
-
+        this.isPG13 = true;
         this.memberNames = new ArrayList<String>();
         this.songNames = new ArrayList<String>();
         this.songs = new ArrayList<Song>();
 
         this.owner = owner;
         this.isPrivate = isPrivate;
+    }
+
+    public boolean getPG13() {
+        return isPG13;
+    }
+
+    public void setPG13(boolean kids) {
+        isPG13 = kids;
     }
 
     public void changeToPrivate() {

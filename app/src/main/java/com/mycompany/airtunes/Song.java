@@ -10,6 +10,7 @@ public class Song implements Serializable {
     String name;
     String artist;
     String pictureUrl;
+    boolean isExplicit;
 
     public Song(String uri) {
         this.uri = uri;
@@ -26,6 +27,14 @@ public class Song implements Serializable {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public void setExplicit(boolean e) {
+        this.isExplicit = e;
+    }
+
+    public boolean getExplicit() {
+        return this.isExplicit;
     }
 
     public void setName(String name) {

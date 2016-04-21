@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
 public class PlaylistActivity extends ActionBarActivity {
     public static ArrayAdapter<String> queueAdapter;
@@ -41,7 +42,7 @@ public class PlaylistActivity extends ActionBarActivity {
     //public static ArrayList<String> queueSongs;
     boolean play = false;
     boolean isPaused = false;
-
+    public static PlaylistActivity pl;
     boolean isShuffling = false;
    // boolean isPaused = true;
     ListView playlist;
@@ -267,6 +268,11 @@ public class PlaylistActivity extends ActionBarActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
        // client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+
+        pl=this;
+
     }
 
     // To update the playlist
@@ -387,6 +393,10 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
+    public void onPg13ButtonClick(View view) {
+        model.setPG13(!model.isPG13);
+    }
+
     public void onSetShuffleButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
 //            isShuffling = !isShuffling;
@@ -404,20 +414,38 @@ public class PlaylistActivity extends ActionBarActivity {
         }
     }
 
-    public void onAddSongButtonClick(View view) {
+    public void onAddSongButtonClick(View view) throws ExecutionException, InterruptedException {
         SearchView search = (SearchView) findViewById(R.id.songSearchView);
         String query1 = search.getQuery() + "";
         String query2 = "track";
         String[] query = new String[2];
         query[0] = query1;
         query[1] = query2;
-        new RetrieveSongs().execute(query);
+        AsyncTask<String, Void, String> rs = new RetrieveSongs();
+        rs.execute(query);
+        rs.get();
+        List<Song> songs = model.getSongs();
 
+        if (model.isPG13 && songs.get(songs.size() - 1).isExplicit) {
+            model.removeSong(songs.get(songs.size() - 1));
+            makeToast("This song is explicit and cannot be added to playlist");
+        }
 
-        //ListView lv = (ListView) findViewById(R.id.listView);
+        queueAdapter.clear();;
+        queueAdapter.addAll(model.getSongNames());
+        queueAdapter.notifyDataSetChanged();
+
+//        ListView lv = (ListView) findViewById(R.id.listView);
 //        lv.requestLayout();
 
 
+    }
+
+    public void makeToast(String text) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     public void onFavoriteButtonClick(View view) {
