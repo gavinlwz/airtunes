@@ -172,4 +172,15 @@
         android:onClick="viewFavSongs"
         android:layout_toRightOf="@+id/addButton" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disband Group"
+        android:id="@+id/disband"
+        android:layout_alignBottom="@+id/ownerView"
+        android:layout_toRightOf="@+id/pauseButton"
+        android:layout_toEndOf="@+id/pauseButton"
+        android:onClick="onDisband"
+        />
+
 </RelativeLayout>
