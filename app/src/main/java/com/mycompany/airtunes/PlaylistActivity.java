@@ -245,7 +245,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     }
 //                    mHandler.postDelayed(mMemberChecker,3000);
                 }
-            }, 2000, 1000);
+            }, 2000, 4000);
     }
 
     public Handler mMemberHandler = new Handler() {
