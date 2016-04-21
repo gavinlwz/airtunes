@@ -128,24 +128,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
         // Handlers
         mHandler = new Handler();
-        m_Runnable.run();
-        // TODO: Combine under startRepeatingTasks
-//        mStatusChecker.run();
-
         refreshMembers();
-
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Do something after 5s = 5000ms
-//                startRepeatingTask();
-//
-//            }
-//        }, 10000);
-
-
-
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -204,6 +187,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
     //To send user leave room notification
 
+
+    // ----- SECTION to do leave room notifications -------
     String toastMsg;
 
     public void refreshMembers() {
@@ -260,7 +245,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     }
 //                    mHandler.postDelayed(mMemberChecker,3000);
                 }
-            }, 2000, 4000);
+            }, 2000, 1000);
     }
 
     public Handler mMemberHandler = new Handler() {
@@ -274,6 +259,7 @@ public class PlaylistActivity extends ActionBarActivity {
             toast.show();
         }
     };
+
 
     //To update the playlist
     Runnable mStatusChecker =
