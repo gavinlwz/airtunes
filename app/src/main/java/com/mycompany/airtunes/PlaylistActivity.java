@@ -121,6 +121,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
         // Add users in firebase to current users
         for (String name : model.getMemberNames()) {
+            System.out.println("Adding user to currentUserNames");
             currentUserNames.add(name);
         }
 
@@ -129,7 +130,18 @@ public class PlaylistActivity extends ActionBarActivity {
         m_Runnable.run();
         // TODO: Combine under startRepeatingTasks
 //        mStatusChecker.run();
-        startRepeatingTask();
+
+        refreshMembers();
+
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Do something after 5s = 5000ms
+//                startRepeatingTask();
+//
+//            }
+//        }, 10000);
 
 
 
@@ -178,32 +190,36 @@ public class PlaylistActivity extends ActionBarActivity {
         }, 1000, 1000);
     }
 
-    //Random Adding user to group
-    Runnable adder =
-            new Runnable() {
-                @Override
-                public void run() {
-
-                    mHandler.postDelayed(adder,10000);
-
-                }
-            };
+//    //Random Adding user to group
+//    Runnable adder =
+//            new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    mHandler.postDelayed(adder,10000);
+//
+//                }
+//            };
 
     //To send user leave room notification
-    Runnable mMemberChecker =
-            new Runnable() {
+
+    public void refreshMembers() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+//    Runnable mMemberChecker =
+//            new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Member checker is running. ");
+//                    System.out.println("Member checker is running. ");
                     Group remoteGroup = fb.groups.get(groupName);
                     List<String> serverNames = remoteGroup.getMemberNames();
 //                    List<String> serverNames = model.getMemberNames();
-                    System.out.println("Number of members in model: " + serverNames);
+//                    System.out.println("Number of members in model: " + serverNames);
                     int serverSize = serverNames.size();
                     int localSize = currentUserNames.size();
 
-                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
-                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
+//                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
+//                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
 
 //                    HashSet<String> testUserNames = new HashSet<String>();
 //                    testUserNames.add("ihugacownow");
@@ -227,6 +243,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
                         }
                     } else if (serverSize > currentUserNames.size()) {
+                        System.out.println(currentUserNames.size() + ": is the currentUserName Size");
                         for (String name : serverNames ) {
                             if (!currentUserNames.contains(name)) {
                                 currentUserNames.add(name);
@@ -245,9 +262,10 @@ public class PlaylistActivity extends ActionBarActivity {
 
                         }
                     }
-                    mHandler.postDelayed(mMemberChecker,5000);
+//                    mHandler.postDelayed(mMemberChecker,3000);
                 }
-            };
+            }, 2000, 4000);
+    }
 
     //To update the playlist
     Runnable mStatusChecker =
@@ -280,7 +298,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     void startRepeatingTask() {
         mStatusChecker.run();
-        mMemberChecker.run();
+//        mMemberChecker.run();
     }
 
     //Logic for deleting songs from playlist on long click
