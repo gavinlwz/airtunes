@@ -282,6 +282,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
         //handle dynamically adding / deleting songs
         deleteSongs();
+        songController();
        // refreshView();
         mHandler = new Handler();
         //m_Runnable.run();
@@ -358,6 +359,47 @@ public class PlaylistActivity extends ActionBarActivity {
             fb.updateUserSongs(me);
             //System.out.println(me.favSongs);
         }
+    }
+
+    public void songController() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                MainActivity.mPlayer.getPlayerState(new PlayerStateCallback() {
+                    @Override
+                    public void onPlayerState(PlayerState playerState) {
+                        if (me.getUsername().equals(model.getOwner())) {
+                            if (!playerState.playing) {
+                                if (play && isPaused && !firstTimePlayButtonPressed) {
+                                   MainActivity.mPlayer.resume();
+                                    isPaused = false;
+                                   return;
+                                    }
+                                if (model.getSongs().size() > 0) {
+                                    if (!isPaused) {
+                                        if (firstTimePlayButtonPressed) {
+                                            firstTimePlayButtonPressed = false;
+                                        }
+                                        MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+                                        model.removeSong(model.getSongs().get(0));
+                                        play = true;
+                                        return;
+                                    }
+                                }
+                            } else {
+                                if (play && isPaused) {
+                                    MainActivity.mPlayer.pause();
+                                    play = false;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }, 1000, 1000);
+
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -647,19 +689,22 @@ public class PlaylistActivity extends ActionBarActivity {
     //Skip to next song
     public void onNextButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
+            play = false;
+            isPaused = false;
+            MainActivity.mPlayer.pause();
             //MainActivity.mPlayer.skipToNext();
-            if (model.getSongs().size() > 0) {
-                //System.out.println("NEXT");
-                MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-                model.removeSong(model.getSongs().get(0));
-                if (isPaused) {
-                    isPaused = false;
-                }
-                if (!play) {
-                    play = true;
-                }
-            }
-
+//            if (model.getSongs().size() > 0) {
+//                //System.out.println("NEXT");
+//                MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
+//                model.removeSong(model.getSongs().get(0));
+//                if (isPaused) {
+//                    isPaused = false;
+//                }
+//                if (!play) {
+//                    play = true;
+//                }
+//            }
+//
         }
 
 
