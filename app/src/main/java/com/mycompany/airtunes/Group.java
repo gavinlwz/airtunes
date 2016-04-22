@@ -166,6 +166,10 @@ public class Group implements Serializable {
     }
 
     public List<String> getSongNames() {
+        if (this.songNames == null) {
+            this.songNames = new ArrayList<String>();
+        }
+
         return songNames;
     }
 
