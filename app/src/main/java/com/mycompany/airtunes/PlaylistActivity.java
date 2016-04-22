@@ -262,6 +262,12 @@ public class PlaylistActivity extends ActionBarActivity {
                 if (counter == 0) {
                     if (fb.groups.get(model.groupName) == null) {
                         System.out.println("akatsuka");
+                        model.setSongs(new ArrayList<Song>());
+                        //MainActivity.mPlayer.pause();
+                       // MainActivity.mPlayer.clearQueue();
+
+                       isPaused = true;
+
                         timer.cancel();
                         timer.purge();
                         finish();
@@ -430,11 +436,12 @@ public class PlaylistActivity extends ActionBarActivity {
             public void run() {
 //                    System.out.println("Member checker is running. ");
                 Group remoteGroup = fb.groups.get(groupName);
-                List<String> serverNames = remoteGroup.getMemberNames();
+                if (remoteGroup != null) {
+                    List<String> serverNames = remoteGroup.getMemberNames();
 //                    List<String> serverNames = model.getMemberNames();
 //                    System.out.println("Number of members in model: " + serverNames);
-                int serverSize = serverNames.size();
-                int localSize = currentUserNames.size();
+                    int serverSize = serverNames.size();
+                    int localSize = currentUserNames.size();
 
 //                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
 //                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
@@ -442,37 +449,39 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    HashSet<String> testUserNames = new HashSet<String>();
 //                    testUserNames.add("ihugacownow");
 //                    testUserNames.add("tahmid");
-                if (serverSize < currentUserNames.size()) {
-                    for (String name : currentUserNames) {
-                        if (!serverNames.contains(name)) {
-                            currentUserNames.remove(name);
+                    if (serverSize < currentUserNames.size()) {
+                        for (String name : currentUserNames) {
+                            if (!serverNames.contains(name)) {
+                                currentUserNames.remove(name);
 
-                            // Show Toast
-                            toastMsg = name + " has left the group";
-                            mMemberHandler.obtainMessage(1).sendToTarget();
+                                // Show Toast
+                                toastMsg = name + " has left the group";
+                                mMemberHandler.obtainMessage(1).sendToTarget();
 
-                            System.out.println("--------------- fucker " + name + " has left the group -------");
-                            break;
+                                System.out.println("--------------- fucker " + name + " has left the group -------");
+                                break;
 
-                        }
-
-                    }
-                } else if (serverSize > currentUserNames.size()) {
-                    System.out.println(currentUserNames.size() + ": is the currentUserName Size");
-                    for (String name : serverNames) {
-                        if (!currentUserNames.contains(name)) {
-                            currentUserNames.add(name);
-                            toastMsg = name + " has joined the group";
-                            mMemberHandler.obtainMessage(1).sendToTarget();
-
-
-                            System.out.println("--------------- fucker " + name + " has joined the group -------");
-                            break;
+                            }
 
                         }
+                    } else if (serverSize > currentUserNames.size()) {
+                        System.out.println(currentUserNames.size() + ": is the currentUserName Size");
+                        for (String name : serverNames) {
+                            if (!currentUserNames.contains(name)) {
+                                currentUserNames.add(name);
+                                toastMsg = name + " has joined the group";
+                                mMemberHandler.obtainMessage(1).sendToTarget();
 
+
+                                System.out.println("--------------- fucker " + name + " has joined the group -------");
+                                break;
+
+                            }
+
+                        }
                     }
                 }
+
 //                    mHandler.postDelayed(mMemberChecker,3000);
             }
         }, 2000, 4000);
@@ -742,11 +751,14 @@ public class PlaylistActivity extends ActionBarActivity {
                 model.removeSong(songs.get(songs.size() - 1));
                 System.out.println("entering here?");
                // fb.updateRoomSongs(model);
-                MainActivity.mPlayer.pause();
-                MainActivity.mPlayer.clearQueue();
-                play = false;
-                isPaused=false;
-                currentSong = null;
+                if (model.getSongs().size() == 0) {
+                    MainActivity.mPlayer.pause();
+                    MainActivity.mPlayer.clearQueue();
+                    play = false;
+                    isPaused=false;
+                    currentSong = null;
+                }
+
                 makeToast("This song is explicit and cannot be added to playlist");
             }
         }
@@ -853,6 +865,9 @@ public class PlaylistActivity extends ActionBarActivity {
 
     public void onDisband(View view) {
         if (me.getUsername().equals(model.owner)) {
+            //MainActivity.mPlayer.shutdown();
+//            MainActivity.mPlayer.pause();
+//            isPaused = true;
             fb.removeRoom(model.groupName);
         }
 

@@ -218,4 +218,11 @@ public class FirebaseCalls {
         info.put("favSongs", user.getFavSongs());
     }
 
+
+    public void toggleUserPrivacy(User user) {
+        Firebase updateRef = userRef.child(user.getUsername()).child("privacy");
+        updateRef.setValue(user.privacy);
+    }
+
+
 }
