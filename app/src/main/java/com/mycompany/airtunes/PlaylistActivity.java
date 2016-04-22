@@ -248,7 +248,8 @@ public class PlaylistActivity extends ActionBarActivity {
             public void run() {
                 if (tapCounter > 0 && time != 0) {
                     long ctime = System.currentTimeMillis();
-                    if (ctime - time >= 1000) {
+                    if (ctime - time >= (long)1000) {
+                        System.out.println("time diff is " + (ctime - time));
                         if (tapCounter == 1) {
                             singleClick();
                         } else {
@@ -767,19 +768,19 @@ public class PlaylistActivity extends ActionBarActivity {
 //                this, android.R.layout.simple_list_item_1, songNames);
 //        playlist.setAdapter(queueAdapter);
 
-        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                String songName = (String) playlist.getItemAtPosition(pos);
-                System.out.println("Clicked on: " + songName);
-                for (Song s : model.getSongs()) {
-                    if (s.getName().equals(songName)) {
-                        currentSong = s;
-                    }
-                }
-                new RetrieveSong().execute();
-            }
-        });
+//        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                String songName = (String) playlist.getItemAtPosition(pos);
+//                System.out.println("Clicked on: " + songName);
+//                for (Song s : model.getSongs()) {
+//                    if (s.getName().equals(songName)) {
+//                        currentSong = s;
+//                    }
+//                }
+//                new RetrieveSong().execute();
+//            }
+//        });
 
 
 
