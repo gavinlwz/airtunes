@@ -38,7 +38,7 @@ public class UserProfileActivity extends ActionBarActivity {
     private static FirebaseCalls fb;
     User me;
 
-    private boolean privacy;
+    private boolean privacy = false; // initial value of privacy
 
     EditText editText;
     TextView textView;
@@ -98,6 +98,8 @@ public class UserProfileActivity extends ActionBarActivity {
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
 
+        me = fb.currentUser;
+
         //Check for user info passed into Intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -116,10 +118,18 @@ public class UserProfileActivity extends ActionBarActivity {
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    privacy = true;
-
+                    if (me.getPrivacy()) {
+                        return;
+                    } else {
+                        me.togglePrivacy();
+                }
+                    //privacy = true;
                 } else {
-                    privacy = false;
+                    if (!me.getPrivacy()) {
+                        return;
+                    } else {
+                        me.togglePrivacy();
+                    }
                 }
             }
         });
