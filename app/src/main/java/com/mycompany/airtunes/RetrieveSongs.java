@@ -57,7 +57,7 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                     }
                     PlaylistActivity.model.addSong(song);
                     PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
-                    PlaylistActivity.songNames.add(track.getName());
+                    //PlaylistActivity.songNames.add(track.getName());
 
 
 
@@ -123,7 +123,7 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                 }
                 PlaylistActivity.model.addSong(song);
                 PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
-                PlaylistActivity.songNames.add(track.getName());
+                //PlaylistActivity.songNames.add(track.getName());
 
 
                 if (track.isExplicit()) {

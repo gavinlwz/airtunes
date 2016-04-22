@@ -91,7 +91,7 @@ public class Group implements Serializable {
             this.songNames = new ArrayList<>();
         }
         this.songs.add(index, song);
-        this.songNames.add(song.getName());
+        this.songNames.add(index, song.getName());
     }
 
     /**

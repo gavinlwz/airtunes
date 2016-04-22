@@ -81,7 +81,7 @@ public class PlaylistActivity extends ActionBarActivity {
     int pos = 0;
     int tapCounter = 0;
     long time=0;
-    public static List<String> songNames;
+    //public List<String> songNames;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,7 +140,7 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-        songNames = new ArrayList<String>();
+        //songNames = new ArrayList<String>();
 
         //Update user information
         me = fb.currentUser;
@@ -163,18 +163,28 @@ public class PlaylistActivity extends ActionBarActivity {
         //Update view with list of current songs in room
         playlist = (ListView) findViewById(R.id.listView);
         System.out.println("Model is : " + model);
+//        for (Song s : model.getSongs()) {
+//            songNames.add(s.getName());
+//        }
+        queueAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, model.getSongNames());
+        playlist.setAdapter(queueAdapter);
+        ArrayList<String> songNames = new ArrayList<String>();
+
         for (Song s : model.getSongs()) {
             songNames.add(s.getName());
         }
-        queueAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, songNames);
-        playlist.setAdapter(queueAdapter);
+        queueAdapter.clear();
+
+        queueAdapter.addAll(songNames);
+        queueAdapter.notifyDataSetChanged();
+        System.out.println("PLEASE UPDATE");
 
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-               pos = position;
-                tapCounter ++;
+                pos = position;
+                tapCounter++;
                 System.out.println("tap " + tapCounter);
                 time = System.currentTimeMillis();
             }
@@ -227,7 +237,7 @@ public class PlaylistActivity extends ActionBarActivity {
         //handle dynamically adding / deleting songs
         deleteSongs();
         songController();
-       // refreshView();
+        //refreshView();
         mHandler = new Handler();
         //m_Runnable.run();
 
@@ -289,7 +299,7 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void doubleClick() {
-        Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
         String songName = (String) playlist.getItemAtPosition(pos);
         Song songObject = null;
         for (Song s : model.getSongs()) {
@@ -328,8 +338,18 @@ public class PlaylistActivity extends ActionBarActivity {
                                         }
                                         MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
                                         model.removeSong(model.getSongs().get(0));
+                                        System.out.println("how often?");
+//                                        queueAdapter.clear();
+//                                        queueAdapter.addAll(model.getSongNames());
+//                                        queueAdapter.notifyDataSetChanged();
+                                        ArrayList<String> songNames = new ArrayList<String>();
+
+                                        for (Song s : model.getSongs()) {
+                                            songNames.add(s.getName());
+                                        }
                                         queueAdapter.clear();
-                                        queueAdapter.addAll(model.getSongNames());
+
+                                        queueAdapter.addAll(songNames);
                                         queueAdapter.notifyDataSetChanged();
                                         play = true;
                                         return;
@@ -374,10 +394,10 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    fb.updateRoomMembers(model);
 
                 //Update view with list of current songs in room
-                playlist = (ListView) findViewById(R.id.listView);
-
-                queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
-                playlist.setAdapter(queueAdapter);
+//                playlist = (ListView) findViewById(R.id.listView);
+//
+//                queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
+//                playlist.setAdapter(queueAdapter);
 
             }
         }, 1000, 1000);
@@ -489,10 +509,10 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    fb.updateRoomMembers(model);
 
                     //Update view with list of current songs in room
-                    playlist = (ListView) findViewById(R.id.listView);
-
-                    queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
-                    playlist.setAdapter(queueAdapter);
+//                    playlist = (ListView) findViewById(R.id.listView);
+//
+//                    queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
+//                    playlist.setAdapter(queueAdapter);
 
                     mHandler.postDelayed(mStatusChecker,1000);
 
@@ -525,11 +545,14 @@ public class PlaylistActivity extends ActionBarActivity {
                 String songName = (String) playlist.getItemAtPosition(position);
                 //System.out.println("Long Clicked on: " + songName);
                 for (Song s : model.getSongs()) {
-                    //System.out.println("Song in model is: " + s.getName());
+                    System.out.println("Song in model is: " + s.getName());
                     if (s.getName().equals(songName)) {
                         model.removeSong(s);
                         fb.updateRoomSongs(model);
-                        songNames.remove(s.getName());
+//                        queueAdapter.clear();
+//                        queueAdapter.addAll(model.getSongNames());
+//                        queueAdapter.notifyDataSetChanged();
+                        //songNames.remove(s.getName());
                         return true;
                     }
                 }
@@ -677,6 +700,19 @@ public class PlaylistActivity extends ActionBarActivity {
                 Song s = model.getSongs().get(n);
                 model.removeSong(s);
                 model.addSong(s, 0);
+                fb.updateRoomSongs(model);
+//                queueAdapter.clear();
+//                queueAdapter.addAll(model.getSongNames());
+//                queueAdapter.notifyDataSetChanged();
+                ArrayList<String> songNames = new ArrayList<String>();
+
+                for (Song so : model.getSongs()) {
+                    songNames.add(so.getName());
+                }
+                queueAdapter.clear();
+
+                queueAdapter.addAll(songNames);
+                queueAdapter.notifyDataSetChanged();
             }
 
 
@@ -697,10 +733,14 @@ public class PlaylistActivity extends ActionBarActivity {
         AsyncTask<String, Void, String> rs = new RetrieveSongs();
         rs.execute(query);
         rs.get();
+
         List<Song> songs = model.getSongs();
+        System.out.println("# of songs = " + songs.size());
         if (!songs.isEmpty()) {
             if (model.isPG13 && songs.get(songs.size() - 1).isExplicit) {
                 model.removeSong(songs.get(songs.size() - 1));
+                System.out.println("entering here?");
+               // fb.updateRoomSongs(model);
                 MainActivity.mPlayer.pause();
                 MainActivity.mPlayer.clearQueue();
                 play = false;
@@ -709,8 +749,15 @@ public class PlaylistActivity extends ActionBarActivity {
                 makeToast("This song is explicit and cannot be added to playlist");
             }
         }
+        fb.updateRoomSongs(model);
+        System.out.println("#songs = " + songs.size());
+        ArrayList<String> songNames = new ArrayList<String>();
+        for (Song s : songs) {
+            songNames.add(s.getName());
+        }
         queueAdapter.clear();
-        queueAdapter.addAll(model.getSongNames());
+
+        queueAdapter.addAll(songNames);
         queueAdapter.notifyDataSetChanged();
 //        songNames = new ArrayList<String>();
 //        for (Song s : model.getSongs()) {
