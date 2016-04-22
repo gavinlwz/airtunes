@@ -225,7 +225,7 @@ public class FirebaseCalls {
     }
 
     public void toggleGroupPrivacy(Group group) {
-        Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("privacy");
+        Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("isPrivate");
         updateRoomRef.setValue(group.getIsPrivate());
     }
 
