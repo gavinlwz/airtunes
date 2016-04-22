@@ -83,4 +83,6 @@ public class OnTouchListenerSwipeTap implements OnTouchListener {
     public void onSwipeDown() {
         // overridden in PlaylistActivity
     }
+
+
 }

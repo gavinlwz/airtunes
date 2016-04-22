@@ -23,6 +23,7 @@ import android.widget.ToggleButton;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuInflater;
+import android.widget.AdapterView;
 import android.view.MotionEvent;
 
 import com.firebase.client.Firebase;
@@ -130,24 +131,6 @@ public class PlaylistActivity extends ActionBarActivity {
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
     }
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent motionEvent) {
-//        // favorite a song on the double tap of the song title
-//        playlist.setOnTouchListener(new OnDoubleTapListener(this) {
-//            @Override
-//            public void onDoubleTap(MotionEvent e) {
-//                Toast.makeText(PlaylistActivity.this, "Double Tap", Toast.LENGTH_SHORT).show();
-//
-//                if (currentSong != null && me != null) {
-//                    me.addSongs(currentSong);
-//                    fb.updateUserSongs(me);
-//                    //System.out.println(me.favSongs);
-//                }
-//            }
-//        });
-//        return true;
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +176,45 @@ public class PlaylistActivity extends ActionBarActivity {
                 new RetrieveSong().execute();
             }
         });
+
+//        // Set the touch listener
+//        final OnTouchListenerSwipeTap swipeDetector = new OnTouchListenerSwipeTap();
+//        playlist.setOnTouchListener(swipeDetector);
+//        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//
+//                if (swipeDetector.swipeDetected()) {
+//                    if (swipeDetector.getAction() == OnTouchListenerSwipeTap.Action.LR) {
+//
+//                        Toast.makeText(getApplicationContext(),
+//                                "Added to favorites", Toast.LENGTH_SHORT).show();
+//                        String song = (String) playlist.getItemAtPosition(position);
+//                     Song songObject = null;
+//                for (Song s : model.getSongs()) {
+//                    if (s.getName().equals(song)) {
+//                        songObject = s;
+//                    }
+//                }
+//
+//                if (songObject != null && me != null) {
+//                    me.addSongs(songObject);
+//                    fb.updateUserSongs(me);
+//                }
+//
+//                    }
+////                    if (swipeDetector.getAction() == OnTouchListenerSwipeTap.Action.RL) {
+////
+////                        Toast.makeText(getApplicationContext(),
+////                                "Right to left", Toast.LENGTH_SHORT).show();
+////
+////                    }
+//                }
+//            }
+//        });
 
 //        playlist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 //            @Override
