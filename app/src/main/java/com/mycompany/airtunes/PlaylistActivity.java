@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
+import android.view.DragEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -293,6 +294,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     //Logic for deleting songs from playlist on long click
     public void deleteSongs() {
+
         playlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long id) {
