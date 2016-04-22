@@ -283,6 +283,7 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     public void doubleClick() {
+        Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
         String songName = (String) playlist.getItemAtPosition(pos);
         Song songObject = null;
         for (Song s : model.getSongs()) {
