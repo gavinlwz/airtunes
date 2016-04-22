@@ -6,6 +6,10 @@ import android.os.Handler;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,7 +22,7 @@ import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
 
-public class SearchGroupActivity extends Activity {
+public class SearchGroupActivity extends ActionBarActivity {
     public static final int SearchButtonActivity_ID = 1; //request code to create new Activity
     SearchController sc;
     public static ArrayAdapter<String> queueAdapter;
@@ -27,6 +31,51 @@ public class SearchGroupActivity extends Activity {
     FirebaseCalls fb;
 
     Handler mHandler;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_group, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID search for a group was selected
+            case R.id.searchForAGroup:
+                Toast.makeText(this, "Search for group selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
+                startActivity(i);
+                break;
+            // action with ID search for a user was selected
+            case R.id.searchForAUser:
+                Toast.makeText(this, "Search for user selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent ii = new Intent(getApplicationContext(), SearchUserActivity.class);
+                startActivity(ii);
+                break;
+            // action with ID go to my own profile was selected
+            case R.id.goToMyProfile:
+                Toast.makeText(this, "Go to profile selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent iii = new Intent(getApplicationContext(), UserProfileActivity.class);
+                startActivity(iii);
+                break;
+            // action with ID logout completely was selected
+            case R.id.logout:
+                Toast.makeText(this, "Logout selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent iiii = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(iiii);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
