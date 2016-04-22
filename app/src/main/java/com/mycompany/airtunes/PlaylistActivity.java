@@ -383,6 +383,9 @@ public class PlaylistActivity extends ActionBarActivity {
                                         }
                                         MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
                                         model.removeSong(model.getSongs().get(0));
+                                        queueAdapter.clear();
+                                        queueAdapter.addAll(model.getSongNames());
+                                        queueAdapter.notifyDataSetChanged();
                                         play = true;
                                         return;
                                     }
