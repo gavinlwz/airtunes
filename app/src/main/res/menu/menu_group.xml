@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mycompany.airtunes.SearchGroupActivity" >
+    <item android:id="@+id/searchForAGroup"
+        android:title="Search for a group"
+        android:orderInCategory="1"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/searchForAUser"
+        android:title="Search for a user"
+        android:orderInCategory="2"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/goToMyProfile"
+        android:title="Go to my profile"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/logout"
+        android:title="Logout"
+        android:orderInCategory="4"
+        app:showAsAction="never" />
+</menu>
