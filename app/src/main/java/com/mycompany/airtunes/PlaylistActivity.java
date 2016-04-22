@@ -149,6 +149,11 @@ public class PlaylistActivity extends ActionBarActivity {
 
         //Update Room information
         model = (Group) getIntent().getSerializableExtra("Group");
+        if (model.getSongs().isEmpty()) {
+            System.out.println("the model is new so it has on songs obviously!!!!!");
+        } else {
+            System.out.println("The model is new so how the hell can it have songs????!!!!!!!!!");
+        }
         ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
@@ -170,6 +175,7 @@ public class PlaylistActivity extends ActionBarActivity {
                                     int position, long id) {
                pos = position;
                 tapCounter ++;
+                System.out.println("tap " + tapCounter);
                 time = System.currentTimeMillis();
             }
         });
@@ -294,7 +300,7 @@ public class PlaylistActivity extends ActionBarActivity {
             public void run() {
                 if (tapCounter > 0 && time != 0) {
                     long ctime = System.currentTimeMillis();
-                    if (ctime - time >= 650) {
+                    if (ctime - time >= 1000) {
                         if (tapCounter == 1) {
                             singleClick();
                         } else {
@@ -764,13 +770,16 @@ public class PlaylistActivity extends ActionBarActivity {
                 makeToast("This song is explicit and cannot be added to playlist");
             }
         }
-        songNames = new ArrayList<String>();
-        for (Song s : model.getSongs()) {
-            songNames.add(s.getName());
-        }
-        queueAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, songNames);
-        playlist.setAdapter(queueAdapter);
+        queueAdapter.clear();
+        queueAdapter.addAll(model.getSongNames());
+        queueAdapter.notifyDataSetChanged();
+//        songNames = new ArrayList<String>();
+//        for (Song s : model.getSongs()) {
+//            songNames.add(s.getName());
+//        }
+//        queueAdapter = new ArrayAdapter<String>(
+//                this, android.R.layout.simple_list_item_1, songNames);
+//        playlist.setAdapter(queueAdapter);
 
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
