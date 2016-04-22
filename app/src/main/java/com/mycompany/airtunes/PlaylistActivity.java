@@ -7,7 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
+
 import android.view.DragEvent;
+
+import android.view.GestureDetector;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,10 +20,16 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuInflater;
+import android.view.MotionEvent;
 
 import com.firebase.client.Firebase;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.player.PlayerState;
 import com.spotify.sdk.android.player.PlayerStateCallback;
+import com.wrapper.spotify.models.Playlist;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -68,9 +78,76 @@ public class PlaylistActivity extends ActionBarActivity {
     Handler mHandler;
     static int counter = 0;
 
-
     public static List<String> songNames;
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID search for a group was selected
+            case R.id.searchForAGroup:
+                Toast.makeText(this, "Search for group selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
+                startActivity(i);
+                break;
+            // action with ID search for a user was selected
+            case R.id.searchForAUser:
+                Toast.makeText(this, "Search for user selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent ii = new Intent(getApplicationContext(), SearchUserActivity.class);
+                startActivity(ii);
+                break;
+            // action with ID go to my own profile was selected
+            case R.id.goToMyProfile:
+                Toast.makeText(this, "Go to profile selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent iii = new Intent(getApplicationContext(), UserProfileActivity.class);
+                startActivity(iii);
+                break;
+            // action with ID logout completely was selected
+            case R.id.logout:
+                Toast.makeText(this, "Logout selected", Toast.LENGTH_SHORT)
+                        .show();
+                Intent iiii = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(iiii);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    //Handles logout functionality
+    public void logout(View v) {
+        MainActivity.logout(v);
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(i);
+    }
+//
+//    @Override
+//    public boolean onTouchEvent(MotionEvent motionEvent) {
+//        // favorite a song on the double tap of the song title
+//        playlist.setOnTouchListener(new OnDoubleTapListener(this) {
+//            @Override
+//            public void onDoubleTap(MotionEvent e) {
+//                Toast.makeText(PlaylistActivity.this, "Double Tap", Toast.LENGTH_SHORT).show();
+//
+//                if (currentSong != null && me != null) {
+//                    me.addSongs(currentSong);
+//                    fb.updateUserSongs(me);
+//                    //System.out.println(me.favSongs);
+//                }
+//            }
+//        });
+//        return true;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +170,6 @@ public class PlaylistActivity extends ActionBarActivity {
         fb.updateRoomMembers(model);
         groupName = model.groupName;
 
-
-
         //Update view with list of current songs in room
         playlist = (ListView) findViewById(R.id.listView);
         System.out.println("Model is : " + model);
@@ -104,6 +179,7 @@ public class PlaylistActivity extends ActionBarActivity {
         queueAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, songNames);
         playlist.setAdapter(queueAdapter);
+
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -118,12 +194,78 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
+//        playlist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+//                Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
+//                String song = (String) playlist.getItemAtPosition(position);
+//                Song songObject = null;
+//                for (Song s : model.getSongs()) {
+//                    if (s.getName().equals(song)) {
+//                        songObject = s;
+//                    }
+//                }
+//
+//                if (songObject != null && me != null) {
+//                    me.addSongs(songObject);
+//                    fb.updateUserSongs(me);
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//            }
+//        });
+
+        playlist.setOnTouchListener(new OnTouchListenerSwipeTap(this) {
+//            @Override
+//            public void onDoubleTap(MotionEvent e) {
+//                Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
+//                 String songName = (String) playlist.getItemAtPosition(e.getSource());
+//                if (currentSong != null && me != null) {
+//                    me.addSongs(currentSong);
+//                    fb.updateUserSongs(me);
+//                    //System.out.println(me.favSongs);
+//                }
+//            }
+
+            // swipe down: search for groups
+            @Override
+            public void onSwipeDown() {
+                Toast.makeText(PlaylistActivity.this, "Search for groups", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
+                startActivity(i);
+            }
+
+            // swipe up: search for users
+            @Override
+            public void onSwipeUp() {
+                Toast.makeText(PlaylistActivity.this, "Search for users", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
+                startActivity(i);
+            }
+
+            // swipe right: view my own favorite list
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(PlaylistActivity.this, "View favorites list", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
+                i.putExtra("Group", model);
+                startActivity(i);
+            }
+
+            // nothing to do for this one
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(PlaylistActivity.this, "Swiped left!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //handle dynamically adding / deleting songs
         deleteSongs();
        // refreshView();
         mHandler = new Handler();
         //m_Runnable.run();
-        mStatusChecker.run();
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -154,6 +296,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
         // Handlers
         refreshMembers();
+        //mStatusChecker.run();
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -166,6 +309,24 @@ public class PlaylistActivity extends ActionBarActivity {
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }
+                //Update user information
+                me = fb.currentUser;
+                fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+                toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+
+                //Update Room information
+                model = (Group) getIntent().getSerializableExtra("Group");
+                ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
+                ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+//                    model.addMember(me.getUsername());
+//                    fb.updateRoomMembers(model);
+
+                //Update view with list of current songs in room
+                playlist = (ListView) findViewById(R.id.listView);
+
+                queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
+                playlist.setAdapter(queueAdapter);
+
             }
         }, 1000, 1000);
     }
@@ -493,11 +654,26 @@ public class PlaylistActivity extends ActionBarActivity {
                 makeToast("This song is explicit and cannot be added to playlist");
             }
         }
-
-
-        queueAdapter.clear();
-        queueAdapter.addAll(model.getSongNames());
-        queueAdapter.notifyDataSetChanged();
+        songNames = new ArrayList<String>();
+        for (Song s : model.getSongs()) {
+            songNames.add(s.getName());
+        }
+        queueAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, songNames);
+        playlist.setAdapter(queueAdapter);
+        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String songName = (String) playlist.getItemAtPosition(position);
+                System.out.println("Clicked on: " + songName);
+                for (Song s : model.getSongs()) {
+                    if (s.getName().equals(songName)) {
+                        currentSong = s;
+                    }
+                }
+                new RetrieveSong().execute();
+            }
+        });
 
 
 
