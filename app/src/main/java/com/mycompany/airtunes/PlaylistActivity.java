@@ -262,7 +262,6 @@ public class PlaylistActivity extends ActionBarActivity {
        // refreshView();
         mHandler = new Handler();
         //m_Runnable.run();
-        mStatusChecker.run();
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -293,6 +292,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
         // Handlers
         refreshMembers();
+        //mStatusChecker.run();
     }
 
     //Auto-refreshes view to dynamically add/delete songs
@@ -305,6 +305,24 @@ public class PlaylistActivity extends ActionBarActivity {
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }
+                //Update user information
+                me = fb.currentUser;
+                fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+                toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+
+                //Update Room information
+                model = (Group) getIntent().getSerializableExtra("Group");
+                ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
+                ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+//                    model.addMember(me.getUsername());
+//                    fb.updateRoomMembers(model);
+
+                //Update view with list of current songs in room
+                playlist = (ListView) findViewById(R.id.listView);
+
+                queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
+                playlist.setAdapter(queueAdapter);
+
             }
         }, 1000, 1000);
     }
@@ -631,11 +649,26 @@ public class PlaylistActivity extends ActionBarActivity {
                 makeToast("This song is explicit and cannot be added to playlist");
             }
         }
-
-
-        queueAdapter.clear();
-        queueAdapter.addAll(model.getSongNames());
-        queueAdapter.notifyDataSetChanged();
+        songNames = new ArrayList<String>();
+        for (Song s : model.getSongs()) {
+            songNames.add(s.getName());
+        }
+        queueAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, songNames);
+        playlist.setAdapter(queueAdapter);
+        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String songName = (String) playlist.getItemAtPosition(position);
+                System.out.println("Clicked on: " + songName);
+                for (Song s : model.getSongs()) {
+                    if (s.getName().equals(songName)) {
+                        currentSong = s;
+                    }
+                }
+                new RetrieveSong().execute();
+            }
+        });
 
 
 
