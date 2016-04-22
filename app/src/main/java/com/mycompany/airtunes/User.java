@@ -77,7 +77,7 @@ public class User implements Serializable{
      * */
     public void setFavSongs(ArrayList<Song> favSongs) {
         if (this.favSongs == null) {
-            favSongs = new ArrayList<>();
+            this.favSongs = new ArrayList<>();
         }
         this.favSongs = favSongs;
     }

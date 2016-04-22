@@ -259,6 +259,7 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    mHandler.postDelayed(mMemberChecker,3000);
                 }
             }, 2000, 4000);
+
     }
 
     public Handler mMemberHandler = new Handler() {
@@ -679,6 +680,7 @@ public class PlaylistActivity extends ActionBarActivity {
                 i.putExtra("songTitle", currentSong.getName());
                 i.putExtra("albumCover", currentSong.getPictureUrl());
                 i.putExtra("artistName", currentSong.getArtist());
+                i.putExtra("song", currentSong);
                 startActivity(i);
                 //System.out.println("I am done with async");
                 if (inStream != null) {

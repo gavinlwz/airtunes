@@ -23,6 +23,7 @@ public class SongDisplayActivity extends ActionBarActivity {
     String songTitle = "";
     String albumCover = "";
     String artistName = "";
+    Song song = null;
     public static FirebaseCalls fb = FirebaseCalls.getInstance();
 
     @Override
@@ -35,6 +36,7 @@ public class SongDisplayActivity extends ActionBarActivity {
             songTitle = extras.getString("songTitle");
             albumCover = extras.getString("albumCover");
             artistName = extras.getString("artistName");
+            song = (Song) extras.get("song");
             //System.out.println("songTitle is hallo there : " + songTitle);
             //System.out.println("albumCover is hallo there : " + albumCover);
             //System.out.println("artistName is hallo there : " + artistName);
@@ -51,17 +53,22 @@ public class SongDisplayActivity extends ActionBarActivity {
 
     public void onFavoriteButtonClick(View view) {
         Song currentSong = null;
-        for (Song song : PlaylistActivity.model.getSongs()) {
-            //System.out.println(song.getName());
-            //System.out.println(songTitle);
-            if (song.getName().equals(songTitle)) {
-                currentSong = song;
-                //System.out.println(currentSong);
-            }
-        }
-        PlaylistActivity.me.addSongs(currentSong);
-        fb.users.put(PlaylistActivity.me.getUsername(), PlaylistActivity.me);
-        fb.updateUserSongs(PlaylistActivity.me);
+//        if (PlaylistActivity.model != null) {
+//            //        for (Song song : PlaylistActivity.model.getSongs()) {
+////            //System.out.println(song.getName());
+////            //System.out.println(songTitle);
+////            if (song.getName().equals(songTitle)) {
+////                currentSong = song;
+////                //System.out.println(currentSong);
+////            }
+////        }
+//        } else {
+//
+//        }
+        currentSong = song;
+        fb.currentUser.addSongs(currentSong);
+        fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+        fb.updateUserSongs(fb.currentUser);
         //System.out.println("Favorite songs are now: " + PlaylistActivity.me.favSongs);
     }
 
