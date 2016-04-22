@@ -224,4 +224,11 @@ public class UserProfileActivity extends ActionBarActivity {
             iv.setImageDrawable(drawable);
         }
     }
+
+    public void onTogglePrivacyButtonClick(View view) {
+        fb.currentUser.privacy = !fb.currentUser.privacy;
+        fb.toggleUserPrivacy(fb.currentUser);
+    }
+
+
 }
