@@ -77,7 +77,9 @@ public class PlaylistActivity extends ActionBarActivity {
     ToggleButton toggleButton;
     Handler mHandler;
     static int counter = 0;
-
+    int pos = 0;
+    int tapCounter = 0;
+    long time=0;
     public static List<String> songNames;
 
     @Override
@@ -183,14 +185,9 @@ public class PlaylistActivity extends ActionBarActivity {
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                String songName = (String) playlist.getItemAtPosition(position);
-                System.out.println("Clicked on: " + songName);
-                for (Song s : model.getSongs()) {
-                    if (s.getName().equals(songName)) {
-                        currentSong = s;
-                    }
-                }
-                new RetrieveSong().execute();
+               pos = position;
+                tapCounter ++;
+                time = System.currentTimeMillis();
             }
         });
 
@@ -268,9 +265,22 @@ public class PlaylistActivity extends ActionBarActivity {
         //m_Runnable.run();
 
         timer = new Timer();
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                if (tapCounter > 0 && time != 0) {
+                    long ctime = System.currentTimeMillis();
+                    if (ctime - time >= 650) {
+                        if (tapCounter == 1) {
+                            singleClick();
+                        } else {
+                            doubleClick();
+                        }
+                        tapCounter = 0;
+                        time = 0;
+                    }
+                }
                 if (counter == 0) {
                     if (fb.groups.get(model.groupName) == null) {
                         System.out.println("akatsuka");
@@ -299,8 +309,38 @@ public class PlaylistActivity extends ActionBarActivity {
         //mStatusChecker.run();
     }
 
+
+    public void singleClick() {
+        String songName = (String) playlist.getItemAtPosition(pos);
+        System.out.println("Clicked on: " + songName);
+        for (Song s : model.getSongs()) {
+            if (s.getName().equals(songName)) {
+                currentSong = s;
+            }
+        }
+        new RetrieveSong().execute();
+    }
+
+    public void doubleClick() {
+        String songName = (String) playlist.getItemAtPosition(pos);
+        Song songObject = null;
+        for (Song s : model.getSongs()) {
+            if (s.getName().equals(songName)) {
+                System.out.println("got the song");
+                songObject = s;
+            }
+        }
+        if (songObject != null && me != null) {
+            System.out.println("whoo valid song!!!");
+            me.addSongs(songObject);
+            fb.updateUserSongs(me);
+            //System.out.println(me.favSongs);
+        }
+    }
+
     //Auto-refreshes view to dynamically add/delete songs
     public void refreshView() {
+
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -351,17 +391,17 @@ public class PlaylistActivity extends ActionBarActivity {
     public void refreshMembers() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-//    Runnable mMemberChecker =
+            //    Runnable mMemberChecker =
 //            new Runnable() {
-                @Override
-                public void run() {
+            @Override
+            public void run() {
 //                    System.out.println("Member checker is running. ");
-                    Group remoteGroup = fb.groups.get(groupName);
-                    List<String> serverNames = remoteGroup.getMemberNames();
+                Group remoteGroup = fb.groups.get(groupName);
+                List<String> serverNames = remoteGroup.getMemberNames();
 //                    List<String> serverNames = model.getMemberNames();
 //                    System.out.println("Number of members in model: " + serverNames);
-                    int serverSize = serverNames.size();
-                    int localSize = currentUserNames.size();
+                int serverSize = serverNames.size();
+                int localSize = currentUserNames.size();
 
 //                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
 //                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
@@ -369,40 +409,40 @@ public class PlaylistActivity extends ActionBarActivity {
 //                    HashSet<String> testUserNames = new HashSet<String>();
 //                    testUserNames.add("ihugacownow");
 //                    testUserNames.add("tahmid");
-                    if (serverSize < currentUserNames.size()) {
-                        for (String name : currentUserNames ) {
-                            if (!serverNames.contains(name)) {
-                                currentUserNames.remove(name);
+                if (serverSize < currentUserNames.size()) {
+                    for (String name : currentUserNames) {
+                        if (!serverNames.contains(name)) {
+                            currentUserNames.remove(name);
 
-                                // Show Toast
-                                toastMsg = name + " has left the group";
-                                mMemberHandler.obtainMessage(1).sendToTarget();
+                            // Show Toast
+                            toastMsg = name + " has left the group";
+                            mMemberHandler.obtainMessage(1).sendToTarget();
 
-                                System.out.println("--------------- fucker " + name + " has left the group -------");
-                                break;
-
-                            }
+                            System.out.println("--------------- fucker " + name + " has left the group -------");
+                            break;
 
                         }
-                    } else if (serverSize > currentUserNames.size()) {
-                        System.out.println(currentUserNames.size() + ": is the currentUserName Size");
-                        for (String name : serverNames ) {
-                            if (!currentUserNames.contains(name)) {
-                                currentUserNames.add(name);
-                                toastMsg = name + " has joined the group";
-                                mMemberHandler.obtainMessage(1).sendToTarget();
 
-
-                                System.out.println("--------------- fucker " + name + " has joined the group -------");
-                                break;
-
-                            }
-
-                        }
                     }
-//                    mHandler.postDelayed(mMemberChecker,3000);
+                } else if (serverSize > currentUserNames.size()) {
+                    System.out.println(currentUserNames.size() + ": is the currentUserName Size");
+                    for (String name : serverNames) {
+                        if (!currentUserNames.contains(name)) {
+                            currentUserNames.add(name);
+                            toastMsg = name + " has joined the group";
+                            mMemberHandler.obtainMessage(1).sendToTarget();
+
+
+                            System.out.println("--------------- fucker " + name + " has joined the group -------");
+                            break;
+
+                        }
+
+                    }
                 }
-            }, 2000, 4000);
+//                    mHandler.postDelayed(mMemberChecker,3000);
+            }
+        }, 2000, 4000);
 
     }
 
@@ -661,10 +701,11 @@ public class PlaylistActivity extends ActionBarActivity {
         queueAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, songNames);
         playlist.setAdapter(queueAdapter);
+
         playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                String songName = (String) playlist.getItemAtPosition(position);
+                String songName = (String) playlist.getItemAtPosition(pos);
                 System.out.println("Clicked on: " + songName);
                 for (Song s : model.getSongs()) {
                     if (s.getName().equals(songName)) {
@@ -679,6 +720,8 @@ public class PlaylistActivity extends ActionBarActivity {
 
 
     }
+
+
 
     public void makeToast(String text) {
         Context context = getApplicationContext();
