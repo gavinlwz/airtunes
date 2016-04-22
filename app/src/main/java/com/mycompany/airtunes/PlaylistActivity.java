@@ -15,6 +15,7 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -142,10 +143,22 @@ public class PlaylistActivity extends ActionBarActivity {
         fb = FirebaseCalls.getInstance();
         //songNames = new ArrayList<String>();
 
-        //Update user information
+        // Update user information
         me = fb.currentUser;
         fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+
+        // Toggle group privacy
         toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    model.setIsPrivate(true);
+                } else {
+                    model.setIsPrivate(false);
+                }
+                fb.toggleGroupPrivacy(model);
+            }
+        });
 
         //Update Room information
         model = (Group) getIntent().getSerializableExtra("Group");
