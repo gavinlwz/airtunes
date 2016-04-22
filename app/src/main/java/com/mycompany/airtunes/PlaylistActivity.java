@@ -174,68 +174,6 @@ public class PlaylistActivity extends ActionBarActivity {
             }
         });
 
-//        // Set the touch listener
-//        final OnTouchListenerSwipeTap swipeDetector = new OnTouchListenerSwipeTap();
-//        playlist.setOnTouchListener(swipeDetector);
-//        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//
-//                if (swipeDetector.swipeDetected()) {
-//                    if (swipeDetector.getAction() == OnTouchListenerSwipeTap.Action.LR) {
-//
-//                        Toast.makeText(getApplicationContext(),
-//                                "Added to favorites", Toast.LENGTH_SHORT).show();
-//                        String song = (String) playlist.getItemAtPosition(position);
-//                     Song songObject = null;
-//                for (Song s : model.getSongs()) {
-//                    if (s.getName().equals(song)) {
-//                        songObject = s;
-//                    }
-//                }
-//
-//                if (songObject != null && me != null) {
-//                    me.addSongs(songObject);
-//                    fb.updateUserSongs(me);
-//                }
-//
-//                    }
-////                    if (swipeDetector.getAction() == OnTouchListenerSwipeTap.Action.RL) {
-////
-////                        Toast.makeText(getApplicationContext(),
-////                                "Right to left", Toast.LENGTH_SHORT).show();
-////
-////                    }
-//                }
-//            }
-//        });
-
-//        playlist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-//                Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
-//                String song = (String) playlist.getItemAtPosition(position);
-//                Song songObject = null;
-//                for (Song s : model.getSongs()) {
-//                    if (s.getName().equals(song)) {
-//                        songObject = s;
-//                    }
-//                }
-//
-//                if (songObject != null && me != null) {
-//                    me.addSongs(songObject);
-//                    fb.updateUserSongs(me);
-//                }
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//            }
-//        });
-
         playlist.setOnTouchListener(new OnTouchListenerSwipeTap(this) {
 //            @Override
 //            public void onDoubleTap(MotionEvent e) {
@@ -294,7 +232,7 @@ public class PlaylistActivity extends ActionBarActivity {
             public void run() {
                 if (tapCounter > 0 && time != 0) {
                     long ctime = System.currentTimeMillis();
-                    if (ctime - time >= 650) {
+                    if (ctime - time >= 1000) {
                         if (tapCounter == 1) {
                             singleClick();
                         } else {
