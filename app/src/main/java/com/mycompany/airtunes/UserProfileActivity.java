@@ -118,19 +118,25 @@ public class UserProfileActivity extends ActionBarActivity {
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (me.getPrivacy()) {
-                        return;
-                    } else {
-                        me.togglePrivacy();
-                }
-                    //privacy = true;
+                    fb.currentUser.privacy = true;
                 } else {
-                    if (!me.getPrivacy()) {
-                        return;
-                    } else {
-                        me.togglePrivacy();
-                    }
+                    fb.currentUser.privacy = false;
                 }
+                fb.toggleUserPrivacy(fb.currentUser);
+//                if (isChecked) {
+//                    if (me.getPrivacy()) {
+//                        return;
+//                    } else {
+//                        me.togglePrivacy();
+//                }
+//                    //privacy = true;
+//                } else {
+//                    if (!me.getPrivacy()) {
+//                        return;
+//                    } else {
+//                        me.togglePrivacy();
+//                    }
+//                }
             }
         });
 
@@ -226,8 +232,8 @@ public class UserProfileActivity extends ActionBarActivity {
     }
 
     public void onTogglePrivacyButtonClick(View view) {
-        fb.currentUser.privacy = !fb.currentUser.privacy;
-        fb.toggleUserPrivacy(fb.currentUser);
+//        fb.currentUser.privacy = !fb.currentUser.privacy;
+//        fb.toggleUserPrivacy(fb.currentUser);
     }
 
 
