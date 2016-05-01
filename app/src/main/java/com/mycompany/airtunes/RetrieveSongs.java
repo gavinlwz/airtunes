@@ -18,38 +18,50 @@ import com.wrapper.spotify.models.Track;
 
 import java.util.Random;
 
+/**
+ * RetrieveSongs class
+ * */
 class RetrieveSongs extends AsyncTask<String, Void, String> {
     private Exception exception;
 
+    /**
+     * @param query String...
+     * */
     protected String doInBackground(String... query) {
-        for (String s : query) {
-            System.out.println(s);
-        }
+//        for (String s : query) {
+//            System.out.println(s);
+//        }
         if (query[query.length - 1].equals("track")) {
             StringBuilder songName = new StringBuilder();
             for (int i = 0; i < query.length - 1; i++) {
                 String q = query[i];
                 songName.append(q);
             }
+
+            // TODO: CODE SMELLLLLSSS
             final TrackSearchRequest requestquery = MainActivity.api.searchTracks(
                     songName.toString()).market("US").offset(0).limit(1).build();
             Page<Track> trackSearchResult = null;
+
             try {
                 trackSearchResult = requestquery.get();
             } catch (Exception e) {
-                System.out.println("Something went wrong!" + e.getMessage());
+                e.printStackTrace();
+                //System.out.println("Something went wrong!" + e.getMessage());
             }
-            Track track = new Track();
+
+            Track track;
             if (trackSearchResult.getItems() != null && trackSearchResult.getItems().size() > 0) {
                 //final TrackRequest request = MainActivity.api.getTrack("0eGsygTp906u18L0Oimnem").build();
                 String[] uri = trackSearchResult.getItems().get(0).getUri().split(":");
                 final TrackRequest request = MainActivity.api.getTrack(uri[2]).build();
+
                 try {
                     track = request.get();
                     track.setUri(trackSearchResult.getItems().get(0).getUri());
 
-                    System.out.println("Retrieved track " + track.getName());
-                    System.out.println("Its popularity is " + track.getPopularity());
+                    //System.out.println("Retrieved track " + track.getName());
+                    //System.out.println("Its popularity is " + track.getPopularity());
 
                     Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
                     if (track.isExplicit()) {
@@ -58,8 +70,6 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
                     PlaylistActivity.model.addSong(song);
                     PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
                     //PlaylistActivity.songNames.add(track.getName());
-
-
 
                     if (track.isExplicit()) {
                         System.out.println("This track is explicit!");

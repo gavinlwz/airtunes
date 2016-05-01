@@ -63,7 +63,6 @@ public class Group implements Serializable {
      * adds new member to group
      * @param name String
      * */
-
     public void addMember(String name) {
         if (!memberNames.contains(name)) {
             this.memberNames.add(name);

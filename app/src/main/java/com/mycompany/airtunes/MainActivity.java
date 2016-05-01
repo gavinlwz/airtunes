@@ -29,7 +29,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
+/**
+ * Main Activity class -- information regarding user / client
+ * */
 public class MainActivity extends Activity implements
         PlayerNotificationCallback, ConnectionStateCallback {
     static final String CLIENT_ID = "669bf6828431431c8b5c90f729921077";
@@ -102,24 +104,36 @@ public class MainActivity extends Activity implements
         }
     }
 
-    // Goes to SearchGroupActivity page to search for rooms to join
+    /**
+     * Goes to SearchGroupActivity page to search for rooms to join
+     * @param view View
+     * */
     public void onGoToGroupButtonClick(View view) {
         Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
         startActivity(i);
     }
 
-    // Goes to SearchUserActivity page to search for other users
+    /**
+     * Goes to SearchUserActivity page to search for other users
+     * @param view View
+     * */
     public void onGoToProfileButtonClick(View view) {
         Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
         startActivity(i);
     }
 
-    // Allows logout
+    /**
+     * Allows logout
+     * @param view View
+     * */
     public static void logout(View view) {
         AuthenticationClient.clearCookies(view.getContext());
     }
 
-    // Goes to UserProfileActivity to look at own profile
+    /**
+     * Goes to UserProfileActivity page to look at own profile
+     * @param view View
+     * */
     public void onViewMyProfileClick(View view) {
         Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
         i.putExtra("fullName", fullName);
@@ -130,11 +144,15 @@ public class MainActivity extends Activity implements
         startActivity(i);
     }
 
-    // Create and setup currentUser in app as well as firebase
+    /**
+     * Create and setup currentUser in app as well as firebase
+     * @param username String
+     * @param userID String
+     * */
     public void createCurrentUser(String username, String userID) {
         User currentUser = new User(username, userID);
         int count = 0;
-        // if user exists in database, set current user to existing User object
+        // If user exists in database, set current user to existing User object
         for (String u : fb.users.keySet()) {
             if (u.equals(userID)) {
                 count = 1;
@@ -142,7 +160,7 @@ public class MainActivity extends Activity implements
                 break;
             }
         }
-        // if user doesn't exist in database, create the user in Firebase
+        // If user doesn't exist in database, create the user in Firebase
         if (count == 0) {
             fb.createUser(currentUser);
         }

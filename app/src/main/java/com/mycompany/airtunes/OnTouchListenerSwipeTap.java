@@ -8,10 +8,10 @@ import android.view.MotionEvent;
 import android.view.GestureDetector.SimpleOnGestureListener;
 
 /**
- * Created by jessicadoheekim on 4/21/16.
- */
+ * Class that implements OnTouchListener for gestures (swipes) and double clicks
+ * -- makes use of GestureDetector
+ * */
 public class OnTouchListenerSwipeTap implements OnTouchListener {
-
     private GestureDetector gestureDetector;
 
     public OnTouchListenerSwipeTap(Context c) {
@@ -23,7 +23,6 @@ public class OnTouchListenerSwipeTap implements OnTouchListener {
     }
 
     private final class GestureListener extends SimpleOnGestureListener {
-
         private static final int SWIPE_THRESHOLD = 100;
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
@@ -83,6 +82,4 @@ public class OnTouchListenerSwipeTap implements OnTouchListener {
     public void onSwipeDown() {
         // overridden in PlaylistActivity
     }
-
-
 }
