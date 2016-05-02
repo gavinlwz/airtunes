@@ -33,7 +33,7 @@ public class SongDisplayActivity extends ActionBarActivity {
     String artistName = "";
     Song song = null;
     public static FirebaseCalls fb = FirebaseCalls.getInstance();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

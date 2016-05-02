@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements
     static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     static final String REDIRECT_URI = "airtunes-login://callback";
     static final int REQUEST_CODE = 1337;
-    public static String access_token;
+    public static String accessToken;
     public static String fullName;
     public static String accountType;
     public static String profilePic;
@@ -80,8 +80,8 @@ public class MainActivity extends Activity implements
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                access_token = response.getAccessToken();
-                api.setAccessToken(access_token);
+                accessToken = response.getAccessToken();
+                api.setAccessToken(accessToken);
 
                 // Retrieve user asynchronously
                 new RetrieveFeedTask().execute();
@@ -245,7 +245,7 @@ public class MainActivity extends Activity implements
         url = new URL("https://api.spotify.com/v1/me");
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
-        urlConnection.setRequestProperty("Authorization", "Bearer " + access_token);
+        urlConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
         urlConnection.setDoOutput(false);
         urlConnection.setDoInput(true);
         urlConnection.connect();
