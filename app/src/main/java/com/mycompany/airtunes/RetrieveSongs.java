@@ -13,9 +13,11 @@ import com.wrapper.spotify.methods.TrackSearchRequest;
 import com.wrapper.spotify.models.FeaturedPlaylists;
 import com.wrapper.spotify.models.Page;
 import com.wrapper.spotify.models.PlaylistTrack;
+import com.wrapper.spotify.models.SimpleArtist;
 import com.wrapper.spotify.models.SimplePlaylist;
 import com.wrapper.spotify.models.Track;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -28,136 +30,112 @@ class RetrieveSongs extends AsyncTask<String, Void, String> {
      * @param query String...
      * */
     protected String doInBackground(String... query) {
-//        for (String s : query) {
-//            System.out.println(s);
-//        }
         if (query[query.length - 1].equals("track")) {
-            StringBuilder songName = new StringBuilder();
-            for (int i = 0; i < query.length - 1; i++) {
-                String q = query[i];
-                songName.append(q);
-            }
-
-            // TODO: CODE SMELLLLLSSS
-            final TrackSearchRequest requestquery = MainActivity.api.searchTracks(
-                    songName.toString()).market("US").offset(0).limit(1).build();
-            Page<Track> trackSearchResult = null;
-
-            try {
-                trackSearchResult = requestquery.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-                //System.out.println("Something went wrong!" + e.getMessage());
-            }
-
-            Track track;
-            if (trackSearchResult.getItems() != null && trackSearchResult.getItems().size() > 0) {
-                //final TrackRequest request = MainActivity.api.getTrack("0eGsygTp906u18L0Oimnem").build();
-                String[] uri = trackSearchResult.getItems().get(0).getUri().split(":");
-                final TrackRequest request = MainActivity.api.getTrack(uri[2]).build();
-
-                try {
-                    track = request.get();
-                    track.setUri(trackSearchResult.getItems().get(0).getUri());
-
-                    //System.out.println("Retrieved track " + track.getName());
-                    //System.out.println("Its popularity is " + track.getPopularity());
-
-                    Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
-                    if (track.isExplicit()) {
-                        song.setExplicit(true);
-                    }
-                    PlaylistActivity.model.addSong(song);
-                    PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
-                    //PlaylistActivity.songNames.add(track.getName());
-
-                    if (track.isExplicit()) {
-                        System.out.println("This track is explicit!");
-                        if (!PlaylistActivity.model.isPG13) {
-
-                        } else {
-//                            System.out.println("toast to explicity");
-//                            PlaylistActivity.pl.makeToast("This track is explicit and cannot be added to playlist");
-                        }
-                    } else {
-                        System.out.println("It's OK, this track isn't explicit.");
-//                        PlaylistActivity.model.addSong(song);
-//                        PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
-//                        PlaylistActivity.songNames.add(track.getName());
-                    }
-                } catch (Exception e) {
-                    System.out.println("Something went wrong!" + e.getMessage());
-                }
-            }
+            searchSpecificTrack(query);
         }
 
         if (query[query.length - 1].equals("random")) {
             System.out.println("Generating random song");
-            final FeaturedPlaylistsRequest fprequest = MainActivity.api.
-                    getFeaturedPlaylists().country("US").build();
-            try {
-                FeaturedPlaylists fpresults = fprequest.get();
-                //System.out.println("Featured playlists = " + fpresults.getPlaylists().getTotal());
-                Random r = new Random();
-                int n = r.nextInt(fpresults.getPlaylists().getTotal());
-                SimplePlaylist p = fpresults.getPlaylists().getItems().get(n);
-                p.getTracks();
-                //System.out.println("playlist name = " + p.getName());
-                //System.out.println("playlist owner = " + p.getOwner().getId());
-                //System.out.println("playlist id = " + p.getId());
-                //System.out.println("playlist uri = " + p.getUri());
-                AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
-                        MainActivity.CLIENT_ID, AuthenticationResponse.Type.TOKEN,
-                        MainActivity.REDIRECT_URI);
-                builder.setScopes(new String[]{"user-read-private", "streaming",
-                        "user-read-birthdate", "user-read-email", "user-read-private",
-                        "playlist-modify-private"});
-                AuthenticationRequest request = builder.build();
-                System.out.println("refreshed token");
-                final PlaylistTracksRequest ptrequest = MainActivity.api.getPlaylistTracks(p.getOwner().getId(), p.getId()).build();
-                //System.out.println("success");
-                Page<PlaylistTrack> ptracks = ptrequest.get();
-                //System.out.println("Number of tracks = " + ptracks.getTotal());
-                n = r.nextInt(ptracks.getTotal());
-                PlaylistTrack t = ptracks.getItems().get(n);
-                Track track = t.getTrack();
-                //System.out.println("track name = " + track.getName());
-                Song song = new Song(track.getUri(), track.getName(), track.getArtists().get(0).getName(), null);
-
-
-                if (PlaylistActivity.currentSong == null) {
-                    PlaylistActivity.currentSong = song;
-                }
-                if (track.isExplicit()) {
-                    song.setExplicit(true);
-                }
-                PlaylistActivity.model.addSong(song);
-                PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
-                //PlaylistActivity.songNames.add(track.getName());
-
-
-                if (track.isExplicit()) {
-                    if (!PlaylistActivity.model.isPG13) {
-
-                    } else {
-                      //  new PlaylistActivity().makeToast("This track is explicit and cannot be added to playlist");
-                    }
-                } else {
-//                    if (PlaylistActivity.currentSong == null) {
-//                        PlaylistActivity.currentSong = song;
-//                    }
-//                    PlaylistActivity.model.addSong(song);
-//                    PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
-//                    PlaylistActivity.songNames.add(track.getName());
-                }
-               // MainActivity.mPlayer.queue(track.getUri());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            searchRandomSong();
         }
         return "";
     }
+
+
+    // query spotify based on specific track request by user
+    private void searchSpecificTrack(String[] query) {
+        // store user query in string
+        StringBuilder songName = new StringBuilder();
+        for (int i = 0; i < query.length - 1; i++) {
+            String q = query[i];
+            songName.append(q);
+        }
+    // spotify api call based on user query
+        TrackSearchRequest.Builder trackSearch = MainActivity.api.searchTracks(songName.toString());
+        final TrackSearchRequest requestquery = trackSearch.market("US").offset(0).limit(1).build();
+        Page<Track> trackSearchResult = null;
+
+        try {
+            trackSearchResult = requestquery.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Something went wrong!" + e.getMessage());
+        }
+
+        Track track;
+        List<Track> tracks = trackSearchResult.getItems();
+        if (tracks != null && tracks.size() > 0) {
+            // track found
+            String firstTrackUri = tracks.get(0).getUri();
+            String[] uri = firstTrackUri.split(":");
+            final TrackRequest request = MainActivity.api.getTrack(uri[2]).build();
+
+            try {
+                track = request.get();
+                track.setUri(firstTrackUri);
+                SimpleArtist artist = track.getArtists().get(0);
+                String artistName = artist.getName();
+                String trackuri = track.getUri();
+                Song song = new Song(trackuri, track.getName(), artistName, null);
+                if (track.isExplicit()) {
+                    song.setExplicit(true); //setting song explicity to true.
+                }
+                // add song to room's playlist
+                PlaylistActivity.model.addSong(song);
+                // update room songs on firebase
+                PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
+            } catch (Exception e) {
+                System.out.println("Something went wrong!" + e.getMessage());
+            }
+        }
+    }
+
+    // generate a "random" song. This is done by randomly picking one of the featured playlists,
+    // and then picking a song from that playlist at random
+    private void searchRandomSong() {
+
+        //randomly pick a featured playlist
+        final FeaturedPlaylistsRequest fprequest = MainActivity.api.
+                getFeaturedPlaylists().country("US").build();
+        try {
+            FeaturedPlaylists fpresults = fprequest.get();
+            Random r = new Random();
+            Page<SimplePlaylist> playlists = fpresults.getPlaylists();
+            int n = r.nextInt(playlists.getTotal());
+            SimplePlaylist p = playlists.getItems().get(n);
+
+            // now pick a random track from this playlist
+            p.getTracks();
+            AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(
+                    MainActivity.CLIENT_ID, AuthenticationResponse.Type.TOKEN,
+                    MainActivity.REDIRECT_URI);
+            builder.setScopes(new String[]{"user-read-private", "streaming",
+                    "user-read-birthdate", "user-read-email", "user-read-private",
+                    "playlist-modify-private"});
+            AuthenticationRequest request = builder.build();
+            System.out.println("refreshed token");
+            final PlaylistTracksRequest ptrequest = MainActivity.api.getPlaylistTracks(p.getOwner()
+                    .getId(), p.getId()).build();
+            Page<PlaylistTrack> ptracks = ptrequest.get();
+            n = r.nextInt(ptracks.getTotal());
+            PlaylistTrack t = ptracks.getItems().get(n);
+            Track track = t.getTrack();
+            String trackuri = track.getUri();
+            Song song = new Song(trackuri, track.getName(), track.getArtists().get(0)
+                    .getName(), null);
+            if (PlaylistActivity.currentSong == null) {
+                PlaylistActivity.currentSong = song;
+            }
+            if (track.isExplicit()) {
+                song.setExplicit(true);
+            }
+            PlaylistActivity.model.addSong(song);
+            PlaylistActivity.fb.updateRoomSongs(PlaylistActivity.model);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 

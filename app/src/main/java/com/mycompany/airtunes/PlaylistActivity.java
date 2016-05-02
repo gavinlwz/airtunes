@@ -82,7 +82,7 @@ public class PlaylistActivity extends ActionBarActivity {
     int pos = 0;
     int tapCounter = 0;
     long time=0;
-    //public List<String> songNames;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,44 +90,47 @@ public class PlaylistActivity extends ActionBarActivity {
         setContentView(R.layout.activity_playlist);
         Firebase.setAndroidContext(this);
         fb = FirebaseCalls.getInstance();
-        //songNames = new ArrayList<String>();
-
         // Update user information
         me = fb.currentUser;
         fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
 
         // Toggle group privacy
-        toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    model.setIsPrivate(true);
-                } else {
-                    model.setIsPrivate(false);
-                }
-                fb.toggleGroupPrivacy(model);
-            }
-        });
+        toggleGroupPrivacy();
 
         // Update Room information
+        updateRoomInformation();
+
+        // listen for all the possible gestures within playlist activity
+        playlistGestures();
+
+        // Handle dynamically adding / deleting songs
+        deleteSongs();
+        songController();
+        mHandler = new Handler();
+        songControlsTimer();
+
+        // Add users in firebase to current users
+        for (String name : model.getMemberNames()) {
+            System.out.println("Adding user to currentUserNames");
+            currentUserNames.add(name);
+        }
+        // Handlers
+        refreshMembers();
+    }
+
+    private void updateRoomInformation() {
         model = (Group) getIntent().getSerializableExtra("Group");
-//        if (model.getSongs().isEmpty()) {
-//            System.out.println("the model is new so it has on songs obviously!!!!!");
-//        } else {
-//            System.out.println("The model is new so how the hell can it have songs????!!!!!!!!!");
-//        }
         ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
         ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
         model.addMember(me.getUsername());
         fb.updateRoomMembers(model);
         groupName = model.groupName;
+        updateRoomWithExistingSongs();
+    }
 
-        // Update view with list of current songs in room
+    //update room with existing songs
+    private void updateRoomWithExistingSongs() {
         playlist = (ListView) findViewById(R.id.listView);
-       // System.out.println("Model is : " + model);
-//        for (Song s : model.getSongs()) {
-//            songNames.add(s.getName());
-//        }
         queueAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, model.getSongNames());
         playlist.setAdapter(queueAdapter);
@@ -140,58 +143,25 @@ public class PlaylistActivity extends ActionBarActivity {
 
         queueAdapter.addAll(songNames);
         queueAdapter.notifyDataSetChanged();
-       // System.out.println("PLEASE UPDATE");
+    }
 
-        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                pos = position;
-                tapCounter++;
-                //System.out.println("tap " + tapCounter);
-                time = System.currentTimeMillis();
+    // Toggle group privacy
+    private void toggleGroupPrivacy() {
+        toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    model.setIsPrivate(true);
+                } else {
+                    model.setIsPrivate(false);
+                }
+                fb.toggleGroupPrivacy(model);
             }
         });
+    }
 
-        playlist.setOnTouchListener(new OnTouchListenerSwipeTap(this) {
-            // swipe down: search for groups
-            @Override
-            public void onSwipeDown() {
-                Toast.makeText(PlaylistActivity.this, "Search for groups", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
-                startActivity(i);
-            }
-
-            // swipe up: search for users
-            @Override
-            public void onSwipeUp() {
-                Toast.makeText(PlaylistActivity.this, "Search for users", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
-                startActivity(i);
-            }
-
-            // swipe right: view my own favorite list
-            @Override
-            public void onSwipeRight() {
-                Toast.makeText(PlaylistActivity.this, "View favorites list", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
-                i.putExtra("Group", model);
-                startActivity(i);
-            }
-
-            // nothing to do for this one
-            @Override
-            public void onSwipeLeft() {
-                Toast.makeText(PlaylistActivity.this, "Swiped left!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Handle dynamically adding / deleting songs
-        deleteSongs();
-        songController();
-        //refreshView();
-        mHandler = new Handler();
-        //m_Runnable.run();
-
+    // control change of song, pause, play, next, user single/ double taps on song
+    private void songControlsTimer() {
         timer = new Timer();
 
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -232,16 +202,55 @@ public class PlaylistActivity extends ActionBarActivity {
 
             }
         }, 1000, 1000);
+    }
 
-        // Add users in firebase to current users
-        for (String name : model.getMemberNames()) {
-            System.out.println("Adding user to currentUserNames");
-            currentUserNames.add(name);
-        }
+    // handles user gestures on playlist
+    private void playlistGestures() {
+        // listen for user taps
+        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                pos = position;
+                tapCounter++;
 
-        // Handlers
-        refreshMembers();
-        //mStatusChecker.run();
+                time = System.currentTimeMillis();
+            }
+        });
+
+        // listen for swipes
+        playlist.setOnTouchListener(new OnTouchListenerSwipeTap(this) {
+            // swipe down: search for groups
+            @Override
+            public void onSwipeDown() {
+                Toast.makeText(PlaylistActivity.this, "Search for groups", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
+                startActivity(i);
+            }
+
+            // swipe up: search for users
+            @Override
+            public void onSwipeUp() {
+                Toast.makeText(PlaylistActivity.this, "Search for users", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
+                startActivity(i);
+            }
+
+            // swipe right: view my own favorite list
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(PlaylistActivity.this, "View favorites list", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
+                i.putExtra("Group", model);
+                startActivity(i);
+            }
+
+            // nothing to do for this one
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(PlaylistActivity.this, "Swiped left!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

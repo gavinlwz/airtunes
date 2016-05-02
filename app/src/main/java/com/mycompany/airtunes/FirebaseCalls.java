@@ -26,9 +26,10 @@ public class FirebaseCalls {
 
     private static final FirebaseCalls dataHolder = new FirebaseCalls();
     public static FirebaseCalls getInstance() { return dataHolder; }
-
+    // FirebaseCalls manages interaction between user and data. methods to add/ delete users, songs
+    // , playlists, etc.
     private FirebaseCalls() {
-        myFirebaseRef = new Firebase("https://crackling-fire-3903.firebaseio.com/");
+        myFirebaseRef = new Firebase("https://glowing-inferno-8998.firebaseio.com/");
         userRef = myFirebaseRef.child("users");
         userIDOne = userRef.child("1");
         roomRef = myFirebaseRef.child("rooms");
@@ -222,7 +223,7 @@ public class FirebaseCalls {
     public void updateUserSongs(User user) {
         Firebase updateRef = userRef.child(user.getUsername()).child("favSongs");
         updateRef.setValue(user.getFavSongs());
-        Map<String, Object> info = new HashMap<> ();
+        Map<String, Object> info = new HashMap<>();
         info.put("favSongs", user.getFavSongs());
     }
 
