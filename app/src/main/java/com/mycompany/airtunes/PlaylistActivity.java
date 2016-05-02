@@ -67,7 +67,7 @@ public class PlaylistActivity extends ActionBarActivity {
     public String groupName;
 
     boolean isShuffling = false;
-   // boolean isPaused = true;
+    //boolean isPaused = true;
     ListView playlist;
     public static Group model;
     public static FirebaseCalls fb;
@@ -83,6 +83,166 @@ public class PlaylistActivity extends ActionBarActivity {
     int tapCounter = 0;
     long time=0;
     //public List<String> songNames;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_playlist);
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
+        //songNames = new ArrayList<String>();
+
+        // Update user information
+        me = fb.currentUser;
+        fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
+
+        // Toggle group privacy
+        toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    model.setIsPrivate(true);
+                } else {
+                    model.setIsPrivate(false);
+                }
+                fb.toggleGroupPrivacy(model);
+            }
+        });
+
+        // Update Room information
+        model = (Group) getIntent().getSerializableExtra("Group");
+//        if (model.getSongs().isEmpty()) {
+//            System.out.println("the model is new so it has on songs obviously!!!!!");
+//        } else {
+//            System.out.println("The model is new so how the hell can it have songs????!!!!!!!!!");
+//        }
+        ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
+        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
+        model.addMember(me.getUsername());
+        fb.updateRoomMembers(model);
+        groupName = model.groupName;
+
+        // Update view with list of current songs in room
+        playlist = (ListView) findViewById(R.id.listView);
+       // System.out.println("Model is : " + model);
+//        for (Song s : model.getSongs()) {
+//            songNames.add(s.getName());
+//        }
+        queueAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_list_item_1, model.getSongNames());
+        playlist.setAdapter(queueAdapter);
+        ArrayList<String> songNames = new ArrayList<String>();
+
+        for (Song s : model.getSongs()) {
+            songNames.add(s.getName());
+        }
+        queueAdapter.clear();
+
+        queueAdapter.addAll(songNames);
+        queueAdapter.notifyDataSetChanged();
+       // System.out.println("PLEASE UPDATE");
+
+        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                pos = position;
+                tapCounter++;
+                //System.out.println("tap " + tapCounter);
+                time = System.currentTimeMillis();
+            }
+        });
+
+        playlist.setOnTouchListener(new OnTouchListenerSwipeTap(this) {
+            // swipe down: search for groups
+            @Override
+            public void onSwipeDown() {
+                Toast.makeText(PlaylistActivity.this, "Search for groups", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
+                startActivity(i);
+            }
+
+            // swipe up: search for users
+            @Override
+            public void onSwipeUp() {
+                Toast.makeText(PlaylistActivity.this, "Search for users", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
+                startActivity(i);
+            }
+
+            // swipe right: view my own favorite list
+            @Override
+            public void onSwipeRight() {
+                Toast.makeText(PlaylistActivity.this, "View favorites list", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
+                i.putExtra("Group", model);
+                startActivity(i);
+            }
+
+            // nothing to do for this one
+            @Override
+            public void onSwipeLeft() {
+                Toast.makeText(PlaylistActivity.this, "Swiped left!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Handle dynamically adding / deleting songs
+        deleteSongs();
+        songController();
+        //refreshView();
+        mHandler = new Handler();
+        //m_Runnable.run();
+
+        timer = new Timer();
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (tapCounter > 0 && time != 0) {
+                    long ctime = System.currentTimeMillis();
+                    if (ctime - time >= (long)1000) {
+                        System.out.println("time diff is " + (ctime - time));
+                        if (tapCounter == 1) {
+                            singleClick();
+                        } else {
+                            doubleClick();
+                        }
+                        tapCounter = 0;
+                        time = 0;
+                    }
+                }
+                if (counter == 0) {
+                    if (fb.groups.get(model.groupName) == null) {
+                        System.out.println("akatsuka");
+                        model.setSongs(new ArrayList<Song>());
+                        //MainActivity.mPlayer.pause();
+                        // MainActivity.mPlayer.clearQueue();
+
+                        isPaused = true;
+
+                        timer.cancel();
+                        timer.purge();
+                        finish();
+                        counter++;
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                    }
+
+                }
+
+
+            }
+        }, 1000, 1000);
+
+        // Add users in firebase to current users
+        for (String name : model.getMemberNames()) {
+            System.out.println("Adding user to currentUserNames");
+            currentUserNames.add(name);
+        }
+
+        // Handlers
+        refreshMembers();
+        //mStatusChecker.run();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,185 +288,19 @@ public class PlaylistActivity extends ActionBarActivity {
         return true;
     }
 
-    //Handles logout functionality
-    public void logout(View v) {
-        MainActivity.logout(v);
+    /**
+     * Handles logout functionality
+     * @param view View
+     * */
+    public void logout(View view) {
+        MainActivity.logout(view);
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlist);
-        Firebase.setAndroidContext(this);
-        fb = FirebaseCalls.getInstance();
-        //songNames = new ArrayList<String>();
-
-        // Update user information
-        me = fb.currentUser;
-        fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
-
-        // Toggle group privacy
-        toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    model.setIsPrivate(true);
-                } else {
-                    model.setIsPrivate(false);
-                }
-                fb.toggleGroupPrivacy(model);
-            }
-        });
-
-        //Update Room information
-        model = (Group) getIntent().getSerializableExtra("Group");
-        if (model.getSongs().isEmpty()) {
-            System.out.println("the model is new so it has on songs obviously!!!!!");
-        } else {
-            System.out.println("The model is new so how the hell can it have songs????!!!!!!!!!");
-        }
-        ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
-        ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
-        model.addMember(me.getUsername());
-        fb.updateRoomMembers(model);
-        groupName = model.groupName;
-
-        //Update view with list of current songs in room
-        playlist = (ListView) findViewById(R.id.listView);
-        System.out.println("Model is : " + model);
-//        for (Song s : model.getSongs()) {
-//            songNames.add(s.getName());
-//        }
-        queueAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, model.getSongNames());
-        playlist.setAdapter(queueAdapter);
-        ArrayList<String> songNames = new ArrayList<String>();
-
-        for (Song s : model.getSongs()) {
-            songNames.add(s.getName());
-        }
-        queueAdapter.clear();
-
-        queueAdapter.addAll(songNames);
-        queueAdapter.notifyDataSetChanged();
-        System.out.println("PLEASE UPDATE");
-
-        playlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                pos = position;
-                tapCounter++;
-                System.out.println("tap " + tapCounter);
-                time = System.currentTimeMillis();
-            }
-        });
-
-        playlist.setOnTouchListener(new OnTouchListenerSwipeTap(this) {
-//            @Override
-//            public void onDoubleTap(MotionEvent e) {
-//                Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
-//                 String songName = (String) playlist.getItemAtPosition(e.getSource());
-//                if (currentSong != null && me != null) {
-//                    me.addSongs(currentSong);
-//                    fb.updateUserSongs(me);
-//                    //System.out.println(me.favSongs);
-//                }
-//            }
-
-            // swipe down: search for groups
-            @Override
-            public void onSwipeDown() {
-                Toast.makeText(PlaylistActivity.this, "Search for groups", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
-                startActivity(i);
-            }
-
-            // swipe up: search for users
-            @Override
-            public void onSwipeUp() {
-                Toast.makeText(PlaylistActivity.this, "Search for users", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
-                startActivity(i);
-            }
-
-            // swipe right: view my own favorite list
-            @Override
-            public void onSwipeRight() {
-                Toast.makeText(PlaylistActivity.this, "View favorites list", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
-                i.putExtra("Group", model);
-                startActivity(i);
-            }
-
-            // nothing to do for this one
-            @Override
-            public void onSwipeLeft() {
-                Toast.makeText(PlaylistActivity.this, "Swiped left!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        //handle dynamically adding / deleting songs
-        deleteSongs();
-        songController();
-        //refreshView();
-        mHandler = new Handler();
-        //m_Runnable.run();
-
-        timer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (tapCounter > 0 && time != 0) {
-                    long ctime = System.currentTimeMillis();
-                    if (ctime - time >= (long)1000) {
-                        System.out.println("time diff is " + (ctime - time));
-                        if (tapCounter == 1) {
-                            singleClick();
-                        } else {
-                            doubleClick();
-                        }
-                        tapCounter = 0;
-                        time = 0;
-                    }
-                }
-                if (counter == 0) {
-                    if (fb.groups.get(model.groupName) == null) {
-                        System.out.println("akatsuka");
-                        model.setSongs(new ArrayList<Song>());
-                        //MainActivity.mPlayer.pause();
-                       // MainActivity.mPlayer.clearQueue();
-
-                       isPaused = true;
-
-                        timer.cancel();
-                        timer.purge();
-                        finish();
-                        counter++;
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(i);
-                    }
-
-                }
-
-
-            }
-        }, 1000, 1000);
-
-        // Add users in firebase to current users
-        for (String name : model.getMemberNames()) {
-            System.out.println("Adding user to currentUserNames");
-            currentUserNames.add(name);
-        }
-
-        // Handlers
-        refreshMembers();
-        //mStatusChecker.run();
-    }
-
-
+    /**
+     * What to do when song is clicked once
+     * */
     public void singleClick() {
         String songName = (String) playlist.getItemAtPosition(pos);
         System.out.println("Clicked on: " + songName);
@@ -318,24 +312,30 @@ public class PlaylistActivity extends ActionBarActivity {
         new RetrieveSong().execute();
     }
 
+    /**
+     * Determines what constitutes a double click (using milliseconds)
+     * */
     public void doubleClick() {
-//        Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(PlaylistActivity.this, "Added to favorites!", Toast.LENGTH_SHORT).show();
         String songName = (String) playlist.getItemAtPosition(pos);
         Song songObject = null;
         for (Song s : model.getSongs()) {
             if (s.getName().equals(songName)) {
-                System.out.println("got the song");
+                //System.out.println("got the song");
                 songObject = s;
             }
         }
         if (songObject != null && me != null) {
-            System.out.println("whoo valid song!!!");
+            //System.out.println("whoo valid song!!!");
             me.addSongs(songObject);
             fb.updateUserSongs(me);
             //System.out.println(me.favSongs);
         }
     }
 
+    /**
+     * Song controller
+     * */
     public void songController() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -390,7 +390,9 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
-    //Auto-refreshes view to dynamically add/delete songs
+    /**
+     * Auto-refreshes view to dynamically add/delete songs
+     * */
     public void refreshView() {
 
         timer = new Timer();
@@ -401,19 +403,19 @@ public class PlaylistActivity extends ActionBarActivity {
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                 }
-                //Update user information
+                // Update user information
                 me = fb.currentUser;
                 fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
                 toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
-                //Update Room information
+                // Update Room information
                 model = (Group) getIntent().getSerializableExtra("Group");
                 ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                 ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
 //                    model.addMember(me.getUsername());
 //                    fb.updateRoomMembers(model);
 
-                //Update view with list of current songs in room
+                // Update view with list of current songs in room
 //                playlist = (ListView) findViewById(R.id.listView);
 //
 //                queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
@@ -434,16 +436,19 @@ public class PlaylistActivity extends ActionBarActivity {
 //                }
 //            };
 
-    //To send user leave room notification
-
-
-    // ----- SECTION to do leave room notifications -------
+    /*
+    * =======================================
+    * =======================================
+    * SECTION FOR ROOM NOTIFICATIONS AND SUCH
+    * =======================================
+    * =======================================
+    * */
     String toastMsg;
 
     public void refreshMembers() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-            //    Runnable mMemberChecker =
+            //Runnable mMemberChecker =
 //            new Runnable() {
             @Override
             public void run() {
@@ -471,14 +476,14 @@ public class PlaylistActivity extends ActionBarActivity {
                                 toastMsg = name + " has left the group";
                                 mMemberHandler.obtainMessage(1).sendToTarget();
 
-                                System.out.println("--------------- fucker " + name + " has left the group -------");
+                                //System.out.println("--------------- fucker " + name + " has left the group -------");
                                 break;
 
                             }
 
                         }
                     } else if (serverSize > currentUserNames.size()) {
-                        System.out.println(currentUserNames.size() + ": is the currentUserName Size");
+                        //System.out.println(currentUserNames.size() + ": is the currentUserName Size");
                         for (String name : serverNames) {
                             if (!currentUserNames.contains(name)) {
                                 currentUserNames.add(name);
@@ -486,7 +491,7 @@ public class PlaylistActivity extends ActionBarActivity {
                                 mMemberHandler.obtainMessage(1).sendToTarget();
 
 
-                                System.out.println("--------------- fucker " + name + " has joined the group -------");
+                                //System.out.println("--------------- fucker " + name + " has joined the group -------");
                                 break;
 
                             }
@@ -519,12 +524,12 @@ public class PlaylistActivity extends ActionBarActivity {
             new Runnable() {
                 @Override
                 public void run() {
-                    //Update user information
+                    // Update user information
                     me = fb.currentUser;
                     fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
                     toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
 
-                    //Update Room information
+                    // Update Room information
                     model = (Group) getIntent().getSerializableExtra("Group");
                     ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                     ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
@@ -536,7 +541,6 @@ public class PlaylistActivity extends ActionBarActivity {
 //
 //                    queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
 //                    playlist.setAdapter(queueAdapter);
-
                     mHandler.postDelayed(mStatusChecker,1000);
 
                 }
@@ -549,6 +553,7 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     //Logic for deleting songs from playlist on long click
+
     public void deleteSongs() {
 
         playlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -806,14 +811,12 @@ public class PlaylistActivity extends ActionBarActivity {
 //                new RetrieveSong().execute();
 //            }
 //        });
-
-
-
-
     }
 
-
-
+    /**
+     * Makes a toast for given text
+     * @param text String
+     * */
     public void makeToast(String text) {
         Context context = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;
@@ -821,9 +824,10 @@ public class PlaylistActivity extends ActionBarActivity {
         toast.show();
     }
 
-
-    //Favorite current song and add to user's "favorites" list
-
+    /**
+     * Favorite current song and add to user's favorites list
+     * @param view View
+     * */
     public void onFavoriteButtonClick(View view) {
         if (currentSong != null && me != null) {
             me.addSongs(currentSong);
@@ -832,14 +836,22 @@ public class PlaylistActivity extends ActionBarActivity {
         }
     }
 
-    //Make the current group private
+    /**
+     * Make the current group private
+     * @param view View
+     * */
     public void onPrivacyButtonClick(View view) {
         model.setIsPrivate(!model.isPrivate);
     }
 
-    //check if user is a DJ, if so transfer DJ rights
-    // check if user is last user in group, if so we need to disable the room
-    // disabling the room involves: 1. delete the room from list of rooms 2. deleting songs from the room.
+    /**
+     * Check if user is a DJ, if so transfer DJ rights
+     * Check if user is the last user in group, if so we need to disable the room
+     * Disabling the room involves:
+     *      1. delete the room from list of rooms
+     *      2. delete songs from the room
+     * @param view View
+     * */
     public void onLeaveRoomButtonClick(View view) {
 
         //System.out.println(me.getUsername());
@@ -858,17 +870,18 @@ public class PlaylistActivity extends ActionBarActivity {
                 finish();
                 return;
             }
+
             if (model.getOwner().equals(fb.currentUser.getUsername())) {
                 reassignDj();
 
-
             }
         }
-
         finish();
     }
 
-    //Reassigns DJ rights when DJ leaves room
+    /**
+     * Reassigns DJ rights when owner leaves the room
+     * */
     public void reassignDj() {
         //System.out.println("model.getMemberNames().get(0)" + model.getMemberNames().get(0));
         model.changeDj(model.getMemberNames().get(0));
@@ -876,6 +889,10 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Allows owner to disband group
+     * @param view View
+     * */
     public void onDisband(View view) {
         if (me.getUsername().equals(model.owner)) {
             //MainActivity.mPlayer.shutdown();
@@ -886,7 +903,10 @@ public class PlaylistActivity extends ActionBarActivity {
 
     }
 
-    //Queries a random song from Spotify
+    /**
+     * Queries a random song from Spotify
+     * @param view View
+     * */
     public void onRandomButtonClick(View view) {
         String[] query = new String[1];
         query[0] = "random";
@@ -894,14 +914,20 @@ public class PlaylistActivity extends ActionBarActivity {
     }
 
     //Allows user to view their favorite songs from the View
+    /**
+     * Allows user to view their favorite songs from the View
+     * @param view View
+     * */
     public void viewFavSongs(View v) {
         Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
         i.putExtra("Group", model);
         startActivity(i);
     }
 
-    //Async method to retrieve song information from Spotify
-    //Prevents locking of main UI thread
+    /**
+     * Async method to retieve song information from Spotify
+     * Prevents locking of main UI thread
+     * */
     class RetrieveSong extends AsyncTask<Void, Void, String> {
         private Exception exception;
 
@@ -979,5 +1005,4 @@ public class PlaylistActivity extends ActionBarActivity {
             return null;
         }
     }
-
 }

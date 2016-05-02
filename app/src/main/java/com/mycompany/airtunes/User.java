@@ -89,7 +89,6 @@ public class User implements Serializable{
     * ==========================================
     * ==========================================
     * */
-
     public String getName() { return name; }
 
     public boolean getPrivacy() { return privacy; }
@@ -107,7 +106,4 @@ public class User implements Serializable{
     public String getLastName() {
         return this.lastName;
     }
-
-
-
 }

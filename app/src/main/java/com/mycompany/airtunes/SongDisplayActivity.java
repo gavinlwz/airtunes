@@ -24,12 +24,40 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * Activity class mainly for displaying songs
+ * */
 public class SongDisplayActivity extends ActionBarActivity {
     String songTitle = "";
     String albumCover = "";
     String artistName = "";
     Song song = null;
     public static FirebaseCalls fb = FirebaseCalls.getInstance();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_song_display);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            songTitle = extras.getString("songTitle");
+            albumCover = extras.getString("albumCover");
+            artistName = extras.getString("artistName");
+            song = (Song) extras.get("song");
+            //System.out.println("songTitle is hallo there : " + songTitle);
+            //System.out.println("albumCover is hallo there : " + albumCover);
+            //System.out.println("artistName is hallo there : " + artistName);
+        }
+
+        new RetrieveImageBitmap().execute();
+
+        TextView tv = (TextView) findViewById(R.id.songTitle);
+        tv.setText(songTitle);
+
+        tv = (TextView) findViewById(R.id.artistName);
+        tv.setText(artistName);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,31 +101,6 @@ public class SongDisplayActivity extends ActionBarActivity {
                 break;
         }
         return true;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_song_display);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            songTitle = extras.getString("songTitle");
-            albumCover = extras.getString("albumCover");
-            artistName = extras.getString("artistName");
-            song = (Song) extras.get("song");
-            //System.out.println("songTitle is hallo there : " + songTitle);
-            //System.out.println("albumCover is hallo there : " + albumCover);
-            //System.out.println("artistName is hallo there : " + artistName);
-        }
-
-        new RetrieveImageBitmap().execute();
-
-        TextView tv = (TextView) findViewById(R.id.songTitle);
-        tv.setText(songTitle);
-
-        tv = (TextView) findViewById(R.id.artistName);
-        tv.setText(artistName);
     }
 
     public void onFavoriteButtonClick(View view) {
@@ -152,5 +155,4 @@ public class SongDisplayActivity extends ActionBarActivity {
             imageView.setImageBitmap(bitMap);
         }
     }
-
 }

@@ -23,28 +23,70 @@ import java.io.InputStream;
 import java.net.URL;
 import android.widget.Button;
 import android.provider.MediaStore;
+
 /**
  * Activity class that dynamically creates view for user profiles
  * */
 public class UserProfileActivity extends ActionBarActivity {
     private static final int RESULT_LOAD_IMAGE = 1;
     private String fullName;
-    private String username; //spotify user uri
-    private String accountType; //premium account
-    private String profilePic; //url grabbed from facebook
+    private String username; // Spotify user uri
+    private String accountType; // Premium account
+    private String profilePic; // URL grabbed from facebook
     String id;
     private Drawable drawable;
 
     private static FirebaseCalls fb;
     User me;
 
-    private boolean privacy = false; // initial value of privacy
+    private boolean privacy = false; // Initial value of privacy
 
     EditText editText;
     TextView textView;
 
-    ImageView picture;
-    Button upload;
+    ImageView picture; // Profile picture
+    Button upload; // For uploading profile picture
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_profile);
+
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
+
+        me = fb.currentUser;
+
+        // Check for user info passed into Intent
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            fullName = extras.getString("fullName");
+            accountType = extras.getString("accountType");
+            profilePic = extras.getString("profilePic");
+            username = extras.getString("username");
+            id = extras.getString("id");
+        }
+
+        TextView tv = (TextView) findViewById(R.id.fullName);
+        tv.setText(MainActivity.fullName);
+
+        new RetrieveFeedTask().execute();
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.privacyToggle);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    fb.currentUser.privacy = true;
+                } else {
+                    fb.currentUser.privacy = false;
+                }
+                fb.toggleUserPrivacy(fb.currentUser);
+            }
+        });
+
+        picture = (ImageView) findViewById(R.id.uploadProfilePic);
+        upload = (Button) findViewById(R.id.uploadProfilePicButton);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,74 +132,31 @@ public class UserProfileActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
-
-        Firebase.setAndroidContext(this);
-        fb = FirebaseCalls.getInstance();
-
-        me = fb.currentUser;
-
-        //Check for user info passed into Intent
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            fullName = extras.getString("fullName");
-            accountType = extras.getString("accountType");
-            profilePic = extras.getString("profilePic");
-            username = extras.getString("username");
-            id = extras.getString("id");
-        }
-        TextView tv = (TextView) findViewById(R.id.fullName);
-        tv.setText(MainActivity.fullName);
-
-        new RetrieveFeedTask().execute();
-
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.privacyToggle);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    fb.currentUser.privacy = true;
-                } else {
-                    fb.currentUser.privacy = false;
-                }
-                fb.toggleUserPrivacy(fb.currentUser);
-//                if (isChecked) {
-//                    if (me.getPrivacy()) {
-//                        return;
-//                    } else {
-//                        me.togglePrivacy();
-//                }
-//                    //privacy = true;
-//                } else {
-//                    if (!me.getPrivacy()) {
-//                        return;
-//                    } else {
-//                        me.togglePrivacy();
-//                    }
-//                }
-            }
-        });
-
-        picture = (ImageView) findViewById(R.id.uploadProfilePic);
-        upload = (Button) findViewById(R.id.uploadProfilePicButton);
-    }
-
-    //Allows user to change username display
-    public void changeUsername(View v) {
+    /**
+     * Allows user to change username display
+     * @param view View
+     * */
+    public void changeUsername(View view) {
         editText = (EditText) findViewById(R.id.username);
         textView = (TextView) findViewById(R.id.textuser);
         textView.setText(editText.getText());
     }
 
-    //Allows user to upload new profile picture from uploads
+    /**
+     * Allows user to upload new profile picture from uploads
+     * @param view View
+     * */
     public void uploadNewPicture(View view) {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
 
-    //Handles events following proper login, like grabbing profile pic
+    /**
+     * Handles events following proper login, like grabbing profile pic
+     * @param request int
+     * @param result int
+     * @param i Intent
+     * */
     @Override
     public void onActivityResult(int request, int result, Intent i) {
         super.onActivityResult(request, result, i);
@@ -167,45 +166,65 @@ public class UserProfileActivity extends ActionBarActivity {
         }
     }
 
-    //Takes user to view where they can search for other users
-    public void launchSearch(View v) {
+    /**
+     * Takes user to view where they can search for other users
+     * @param view View
+     * */
+    public void launchSearch(View view) {
         Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
         startActivity(i);
     }
 
-    //Takes user to view where they can search for groups
-    public void launchGroupSearch(View v) {
+    /**
+     * Takes user to view where they can search for groups
+     * @param view View
+     * */
+    public void launchGroupSearch(View view) {
         Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
         startActivity(i);
     }
 
-    //Handles logout functionality
-    public void logout(View v) {
-        MainActivity.logout(v);
+    /**
+     * Handles logout functionality
+     * @param view View
+     * */
+    public void logout(View view) {
+        MainActivity.logout(view);
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(i);
     }
 
-    //Takes user to appropriate playlist
+    /**
+     * Takes user to appropriate playlist
+     * @param view View
+     * */
     public void onGoToGroupButtonClick(View view) {
         Intent i = new Intent(getApplicationContext(), SearchGroupActivity.class);
         startActivity(i);
     }
 
-    //Takes user to view of profile
+    /**
+     * Takes user to view of profile
+     * @param view View
+     * */
     public void onGoToProfileButtonClick(View view) {
         Intent i = new Intent(getApplicationContext(), SearchUserActivity.class);
         startActivity(i);
     }
 
-    //Takes user to view of favorite songs list
-    public void viewFavSongs(View v) {
+    /**
+     * Takes uer to view of favorite songs list
+     * @param view View
+     * */
+    public void viewFavSongs(View view) {
         Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
         startActivity(i);
     }
 
-    //Retrieves the Spotify user account feed
-    //Async to prevent locking of main UI thread
+    /**
+     * Retrieves the Spotify user account feed
+     * Async to prevent locking of main UI thread
+     * */
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         private Exception exception;
 
@@ -213,8 +232,8 @@ public class UserProfileActivity extends ActionBarActivity {
 
         protected String doInBackground(Void... urls) {
             try {
-                //Grabs user profile picture
-                URL url = null;
+                // Grabs user profile picture
+                URL url;
                 url = new URL(MainActivity.profilePic);
                 InputStream content = (InputStream)url.getContent();
                 Drawable d = Drawable.createFromStream(content , "src");
@@ -235,6 +254,4 @@ public class UserProfileActivity extends ActionBarActivity {
 //        fb.currentUser.privacy = !fb.currentUser.privacy;
 //        fb.toggleUserPrivacy(fb.currentUser);
     }
-
-
 }

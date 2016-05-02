@@ -22,15 +22,47 @@ import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
 
+/**
+ * Activity class for searching groups
+ * */
 public class SearchGroupActivity extends ActionBarActivity {
-    public static final int SearchButtonActivity_ID = 1; //request code to create new Activity
+    public static final int SearchButtonActivity_ID = 1; // Request code to create new Activity
     SearchController sc;
     public static ArrayAdapter<String> queueAdapter;
     public static ArrayList<String> groupNames;
     ListView grouplist;
     FirebaseCalls fb;
-
     Handler mHandler;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search_group);
+
+        // Sets up logic and view for table of groups
+        sc = new SearchController();
+        grouplist = (ListView) findViewById(R.id.listOfGroups);
+        groupNames = new ArrayList<>();
+
+        // Set up queueAdapater backer for the table view
+        queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
+        grouplist.setAdapter(queueAdapter);
+        grouplist.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String groupName = (String) grouplist.getItemAtPosition(position);
+                Group group = fb.groups.get(groupName);
+                transition(group);
+            }
+        });
+
+        // Set up Firebase context
+        Firebase.setAndroidContext(this);
+        fb = FirebaseCalls.getInstance();
+
+        // Set up event listners
+        mHandler = new Handler();
+        this.startRepeatingTask();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,55 +108,31 @@ public class SearchGroupActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_group);
-
-        // Sets up logic and view for table of groups
-        sc = new SearchController();
-        grouplist = (ListView) findViewById(R.id.listOfGroups);
-        groupNames = new ArrayList<>();
-
-        // Set up queueAdapater backer for the table view
-        queueAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNames);
-        grouplist.setAdapter(queueAdapter);
-        grouplist.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String groupName = (String) grouplist.getItemAtPosition(position);
-                Group group = fb.groups.get(groupName);
-                transition(group);
-            }
-        });
-
-        // Set up Firebase context
-        Firebase.setAndroidContext(this);
-        fb = FirebaseCalls.getInstance();
-
-        // Set up event listners
-        mHandler = new Handler();
-        this.startRepeatingTask();
-    }
-
-    // Starts checking for invites sent from the DJ of a private group
+    /**
+     * Starts checking for invites sent from the DJ of a private group
+     * */
     Runnable inviteChecker = new Runnable() {
         @Override
         public void run() {
             try {
-                goToGroupInvitedTo(); //this function can change value of mInterval
+                goToGroupInvitedTo(); // This function can change value of mInterval
             } finally {
-                //even if update method throws an exception, this will happen
+                // Even if update method throws an exception, this will happen
                 mHandler.postDelayed(inviteChecker, 4000);
             }
         }
     };
 
-    // Runs the invitation checker
+    /**
+     * Runs the invitation checker
+     * */
     void startRepeatingTask() {
         inviteChecker.run();
     }
 
-    // Transitions to the room that User is invited to
+    /**
+     * Transitions to the room that User is invited to
+     * */
     void goToGroupInvitedTo() {
         if (fb.testGroup != null) {
             Intent goToRoom = new Intent(this, PlaylistActivity.class);
@@ -134,47 +142,50 @@ public class SearchGroupActivity extends ActionBarActivity {
         }
     }
 
-    // Transitions to new group
+    /**
+     * Transitions to new group
+     * @param group Group
+     * */
     public void transition(Group group) {
         Intent goToRoom = new Intent(this, PlaylistActivity.class);
         goToRoom.putExtra("Group", group);
         startActivityForResult(goToRoom, SearchButtonActivity_ID);
     }
 
-    // Create new group
+    /**
+     * Create new group
+     * @param view View
+     * */
     public void onCreateButtonClick(View view) {
-
         String groupName = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
         if (fb.groups.containsKey(groupName)) {
-            // Show alert that group already exists if the names are the same
-
+            //Show alert that group already exists if the names are the same
             Context context = getApplicationContext();
             CharSequence text = "A group with that name already exists!";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-
             // Adds new group to firebase if no existing groups with same name found
             Group g = new Group(groupName, fb.currentUser.getUsername(), false);
-
             // Update Firebase
             fb.groups.put(groupName, g);
             fb.createRoom(g);
-
             // Transition to group page
             transition(g);
         }
     }
 
-    // Search for existing group
+    /**
+     * Search for existing group
+     * @param view View
+     * */
     public void onSearchButtonClick(View view) {
         // Clear array of results
         queueAdapter.clear();
         queueAdapter.notifyDataSetChanged();
         String search = ((SearchView) findViewById(R.id.searchView)).getQuery() + "";
         boolean contains = sc.searchGroup(search, fb.groups);
-
         // Show alert if group is not found
         if (!contains) {
             Context context = getApplicationContext();
@@ -186,6 +197,4 @@ public class SearchGroupActivity extends ActionBarActivity {
             return;
         }
     }
-
-
 }

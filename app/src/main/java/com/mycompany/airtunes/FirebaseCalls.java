@@ -40,11 +40,10 @@ public class FirebaseCalls {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                System.out.println(dataSnapshot.getValue());
+                System.out.println(dataSnapshot.getValue());
                 users = null;
-                users = new HashMap<String, User>();
+                users = new HashMap<>();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-
                     System.out.println(snapshot);
                     String username = snapshot.getKey();
 
@@ -64,7 +63,7 @@ public class FirebaseCalls {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-//                System.out.println("The read failed: " + firebaseError.getMessage());
+                //System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
 
@@ -75,9 +74,9 @@ public class FirebaseCalls {
                 System.out.println("* Room information is changing");
                 System.out.println(dataSnapshot.getValue());
                 groups = null;
-                groups = new HashMap<String, Group>();
+                groups = new HashMap<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    System.out.println(snapshot);
+                    //System.out.println(snapshot);
                     String groupName = snapshot.getKey();
                     try {
                         Group group = snapshot.getValue(Group.class);
@@ -91,7 +90,7 @@ public class FirebaseCalls {
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-//                System.out.println("The read failed: " + firebaseError.getMessage());
+                //System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
     }
@@ -115,9 +114,9 @@ public class FirebaseCalls {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-//                    System.out.println("Room could not be saved. " + firebaseError.getMessage());
+                    //System.out.println("Room could not be saved. " + firebaseError.getMessage());
                 } else {
-//                    System.out.println("New room saved successfully w ID: " + newRoomRef.getKey());
+                    //System.out.println("New room saved successfully w ID: " + newRoomRef.getKey());
                 }
             }
         });
@@ -146,7 +145,7 @@ public class FirebaseCalls {
     }
 
     /**
-     * delete a group from database
+     * Delete a group from database
      * @param groupName String
      * */
     public void removeRoom(String groupName) {
@@ -157,7 +156,7 @@ public class FirebaseCalls {
     }
 
     /**
-     * update new owner of group
+     * Update new owner of group
      * @param group Group
      * */
     public void updateDj(Group group) {
@@ -173,12 +172,21 @@ public class FirebaseCalls {
     }
 
     /**
-     * update group's songs in playlist
+     * Update group's songs in playlist
      * @param group Group
      * */
     public void updateRoomSongs(Group group) {
         Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("songs");
         updateRoomRef.setValue(group.getSongs());
+    }
+
+    /**
+     * Change privacy of group
+     * @param group User
+     * */
+    public void toggleGroupPrivacy(Group group) {
+        Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("isPrivate");
+        updateRoomRef.setValue(group.getIsPrivate());
     }
 
     public void pullUserSongs(User user) {
@@ -199,9 +207,9 @@ public class FirebaseCalls {
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-//                    System.out.println("User could not be saved. " + firebaseError.getMessage());
+                    //System.out.println("User could not be saved. " + firebaseError.getMessage());
                 } else {
-//                    System.out.println("User saved successfully  with ID: ");
+                    //System.out.println("User saved successfully  with ID: ");
                 }
             }
         });
@@ -219,15 +227,12 @@ public class FirebaseCalls {
     }
 
 
+    /**
+     * change privacy of user
+     * @param user User
+     * */
     public void toggleUserPrivacy(User user) {
         Firebase updateRef = userRef.child(user.getUsername()).child("privacy");
         updateRef.setValue(user.privacy);
     }
-
-    public void toggleGroupPrivacy(Group group) {
-        Firebase updateRoomRef = roomRef.child(group.getGroupName()).child("isPrivate");
-        updateRoomRef.setValue(group.getIsPrivate());
-    }
-
-
 }
