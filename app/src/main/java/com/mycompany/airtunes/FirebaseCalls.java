@@ -28,7 +28,8 @@ public class FirebaseCalls {
     public static FirebaseCalls getInstance() { return dataHolder; }
 
     private FirebaseCalls() {
-        myFirebaseRef = new Firebase("https://crackling-fire-3903.firebaseio.com/");
+//        myFirebaseRef = new Firebase("https://crackling-fire-3903.firebaseio.com/");
+        myFirebaseRef = new Firebase("https://glowing-inferno-8998.firebaseIO.com");
         userRef = myFirebaseRef.child("users");
         userIDOne = userRef.child("1");
         roomRef = myFirebaseRef.child("rooms");
@@ -222,7 +223,7 @@ public class FirebaseCalls {
     public void updateUserSongs(User user) {
         Firebase updateRef = userRef.child(user.getUsername()).child("favSongs");
         updateRef.setValue(user.getFavSongs());
-        Map<String, Object> info = new HashMap<> ();
+        Map<String, Object> info = new HashMap<>();
         info.put("favSongs", user.getFavSongs());
     }
 

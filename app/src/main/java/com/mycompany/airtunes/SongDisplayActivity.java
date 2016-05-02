@@ -33,7 +33,7 @@ public class SongDisplayActivity extends ActionBarActivity {
     String artistName = "";
     Song song = null;
     public static FirebaseCalls fb = FirebaseCalls.getInstance();
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,7 @@ public class SongDisplayActivity extends ActionBarActivity {
         tv.setText(artistName);
     }
 
+    //  Creates an option menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -66,6 +67,8 @@ public class SongDisplayActivity extends ActionBarActivity {
         return true;
     }
 
+
+    // Provides options for the side menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -103,20 +106,10 @@ public class SongDisplayActivity extends ActionBarActivity {
         return true;
     }
 
+
+    // Places favorited songs into the favorite songs list of the user
     public void onFavoriteButtonClick(View view) {
         Song currentSong = null;
-//        if (PlaylistActivity.model != null) {
-//            //        for (Song song : PlaylistActivity.model.getSongs()) {
-////            //System.out.println(song.getName());
-////            //System.out.println(songTitle);
-////            if (song.getName().equals(songTitle)) {
-////                currentSong = song;
-////                //System.out.println(currentSong);
-////            }
-////        }
-//        } else {
-//
-//        }
         currentSong = song;
         fb.currentUser.addSongs(currentSong);
         fb.users.put(fb.currentUser.getUsername(), fb.currentUser);
@@ -124,6 +117,7 @@ public class SongDisplayActivity extends ActionBarActivity {
         //System.out.println("Favorite songs are now: " + PlaylistActivity.me.favSongs);
     }
 
+    // Retrieves from Spotify the imageBitmaps for the cover of the song
     class RetrieveImageBitmap extends AsyncTask<Void, Void, Void> {
         Bitmap bitMap;
 
