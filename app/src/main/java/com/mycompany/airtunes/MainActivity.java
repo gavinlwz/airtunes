@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements
     static final String CLIENT_SECRET = "06d91d09593e46a78ca86fe7a118d10d";
     static final String REDIRECT_URI = "airtunes-login://callback";
     static final int REQUEST_CODE = 1337;
-    public static String access_token;
+    public static String accessToken;
     public static String fullName;
     public static String accountType;
     public static String profilePic;
@@ -80,8 +80,8 @@ public class MainActivity extends Activity implements
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
             if (response.getType() == AuthenticationResponse.Type.TOKEN) {
-                access_token = response.getAccessToken();
-                api.setAccessToken(access_token);
+                accessToken = response.getAccessToken();
+                api.setAccessToken(accessToken);
 
                 // Retrieve user asynchronously
                 new RetrieveFeedTask().execute();
@@ -206,36 +206,15 @@ public class MainActivity extends Activity implements
     class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
         protected String doInBackground(Void... urls) {
             HttpURLConnection urlConnection = null;
-            URL url;
-            JSONObject object;
+            URL url = null;
+            JSONObject object = null;
             InputStream inStream = null;
             try {
-                // Do validation and establish URL connection with Spotify
-                url = new URL("https://api.spotify.com/v1/me");
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setRequestProperty("Authorization", "Bearer " + access_token);
-                urlConnection.setDoOutput(false);
-                urlConnection.setDoInput(true);
-                urlConnection.connect();
-                inStream = urlConnection.getInputStream();
+                // Create URL Connection and Update name fields
+                createURLConnectionAndUpdateFields(urlConnection,url, object,inStream);
 
-                // Read in response from urlConnection
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
-                String temp, response = "";
-                while ((temp = bReader.readLine()) != null) { response += temp; }
-                object = (JSONObject) new JSONTokener(response).nextValue();
-                if (object.get("display_name") == null) {
-                    fullName = "unknown";
-                } else {
-                    fullName = object.get("display_name").toString();
-                }
-
-                // Create and set currentUser of app
-                username = (String) object.get("email");
-                id = (String) object.get("id");
+                // Create Current User based on updated name fields
                 createCurrentUser(username, id);
-
                 // Redirect to Premium Account sign up page
                 accountType = (String) object.get("product");
                 if (!accountType.equals("premium")) {
@@ -258,6 +237,34 @@ public class MainActivity extends Activity implements
             }
             return null;
         }
+    }
+
+    private void createURLConnectionAndUpdateFields(HttpURLConnection urlConnection,
+                                                    URL url, JSONObject object,
+                                                    InputStream inStream) throws Exception {
+        url = new URL("https://api.spotify.com/v1/me");
+        urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.setRequestProperty("Authorization", "Bearer " + accessToken);
+        urlConnection.setDoOutput(false);
+        urlConnection.setDoInput(true);
+        urlConnection.connect();
+        inStream = urlConnection.getInputStream();
+
+        // Read in response from urlConnection
+        BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
+        String temp, response = "";
+        while ((temp = bReader.readLine()) != null) { response += temp; }
+        object = (JSONObject) new JSONTokener(response).nextValue();
+        if (object.get("display_name") == null) {
+            fullName = "unknown";
+        } else {
+            fullName = object.get("display_name").toString();
+        }
+
+        // Create and set currentUser of app
+        username = (String) object.get("email");
+        id = (String) object.get("id");
     }
 }
 
