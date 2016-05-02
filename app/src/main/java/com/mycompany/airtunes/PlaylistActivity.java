@@ -443,7 +443,7 @@ public class PlaylistActivity extends ActionBarActivity {
                     int serverSize = serverNames.size();
                     int localSize = currentUserNames.size();
 
-                    if (serverSize < localSize)) {
+                    if (serverSize < localSize) {
                         for (String name : currentUserNames) {
                             if (!serverNames.contains(name)) {
                                 currentUserNames.remove(name);
@@ -851,9 +851,7 @@ public class PlaylistActivity extends ActionBarActivity {
 
     //Allows user to view their favorite songs from the View
     /**
-     * Allows user to view their favorite songs from the View
-     * @param view View
-     * */
+     * Allows user to view their favorite songs from the View  */
     public void viewFavSongs(View v) {
         Intent i = new Intent(getApplicationContext(), FavoriteSongsDisplayActivity.class);
         i.putExtra("Group", model);
@@ -899,7 +897,7 @@ public class PlaylistActivity extends ActionBarActivity {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
 
-                urlConnection.setRequestProperty("Authorization", "Bearer " + MainActivity.access_token);
+                urlConnection.setRequestProperty("Authorization", "Bearer " + MainActivity.accessToken);
                 urlConnection.setDoOutput(false);
                 urlConnection.setDoInput(true);
                 urlConnection.connect();
