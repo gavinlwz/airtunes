@@ -358,10 +358,6 @@ public class PlaylistActivity extends ActionBarActivity {
                                         }
                                         MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
                                         model.removeSong(model.getSongs().get(0));
-                                        System.out.println("how often?");
-//                                        queueAdapter.clear();
-//                                        queueAdapter.addAll(model.getSongNames());
-//                                        queueAdapter.notifyDataSetChanged();
                                         ArrayList<String> songNames = new ArrayList<String>();
 
                                         for (Song s : model.getSongs()) {
@@ -412,29 +408,10 @@ public class PlaylistActivity extends ActionBarActivity {
                 model = (Group) getIntent().getSerializableExtra("Group");
                 ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                 ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
-//                    model.addMember(me.getUsername());
-//                    fb.updateRoomMembers(model);
-
-                // Update view with list of current songs in room
-//                playlist = (ListView) findViewById(R.id.listView);
-//
-//                queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
-//                playlist.setAdapter(queueAdapter);
-
             }
         }, 1000, 1000);
     }
 
-//    //Random Adding user to group
-//    Runnable adder =
-//            new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    mHandler.postDelayed(adder,10000);
-//
-//                }
-//            };
 
     /*
     * =======================================
@@ -445,29 +422,19 @@ public class PlaylistActivity extends ActionBarActivity {
     * */
     String toastMsg;
 
+    // Refresh members in the room
     public void refreshMembers() {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
-            //Runnable mMemberChecker =
-//            new Runnable() {
             @Override
             public void run() {
-//                    System.out.println("Member checker is running. ");
                 Group remoteGroup = fb.groups.get(groupName);
                 if (remoteGroup != null) {
                     List<String> serverNames = remoteGroup.getMemberNames();
-//                    List<String> serverNames = model.getMemberNames();
-//                    System.out.println("Number of members in model: " + serverNames);
                     int serverSize = serverNames.size();
                     int localSize = currentUserNames.size();
 
-//                    System.out.println("fb group size is: " + fb.groups.get(groupName).getMemberNames().size());
-//                    System.out.println("User size: " + serverSize + " currentUser size: " + localSize);
-
-//                    HashSet<String> testUserNames = new HashSet<String>();
-//                    testUserNames.add("ihugacownow");
-//                    testUserNames.add("tahmid");
-                    if (serverSize < currentUserNames.size()) {
+                    if (serverSize < localSize)) {
                         for (String name : currentUserNames) {
                             if (!serverNames.contains(name)) {
                                 currentUserNames.remove(name);
@@ -475,32 +442,21 @@ public class PlaylistActivity extends ActionBarActivity {
                                 // Show Toast
                                 toastMsg = name + " has left the group";
                                 mMemberHandler.obtainMessage(1).sendToTarget();
-
-                                //System.out.println("--------------- fucker " + name + " has left the group -------");
                                 break;
-
                             }
 
                         }
                     } else if (serverSize > currentUserNames.size()) {
-                        //System.out.println(currentUserNames.size() + ": is the currentUserName Size");
                         for (String name : serverNames) {
                             if (!currentUserNames.contains(name)) {
                                 currentUserNames.add(name);
                                 toastMsg = name + " has joined the group";
                                 mMemberHandler.obtainMessage(1).sendToTarget();
-
-
-                                //System.out.println("--------------- fucker " + name + " has joined the group -------");
                                 break;
-
                             }
-
                         }
                     }
                 }
-
-//                    mHandler.postDelayed(mMemberChecker,3000);
             }
         }, 2000, 4000);
 
@@ -510,9 +466,7 @@ public class PlaylistActivity extends ActionBarActivity {
         public void handleMessage(Message msg) {
             // Show Toast
             Context context = getApplicationContext();
-//            CharSequence text = msg + " has joined the group";
             int duration = Toast.LENGTH_LONG;
-
             Toast toast = Toast.makeText(context, toastMsg, duration);
             toast.show();
         }
@@ -533,27 +487,16 @@ public class PlaylistActivity extends ActionBarActivity {
                     model = (Group) getIntent().getSerializableExtra("Group");
                     ((TextView) findViewById(R.id.ownerView)).setText(model.owner);
                     ((TextView) findViewById(R.id.roomNameView)).setText(model.groupName);
-//                    model.addMember(me.getUsername());
-//                    fb.updateRoomMembers(model);
-
-                    //Update view with list of current songs in room
-//                    playlist = (ListView) findViewById(R.id.listView);
-//
-//                    queueAdapter = new ArrayAdapter<String>(PlaylistActivity.this, android.R.layout.simple_list_item_1, songNames);
-//                    playlist.setAdapter(queueAdapter);
                     mHandler.postDelayed(mStatusChecker,1000);
-
                 }
             };
 
 
     void startRepeatingTask() {
         mStatusChecker.run();
-//        mMemberChecker.run();
     }
 
     //Logic for deleting songs from playlist on long click
-
     public void deleteSongs() {
 
         playlist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -577,10 +520,6 @@ public class PlaylistActivity extends ActionBarActivity {
                     if (s.getName().equals(songName)) {
                         model.removeSong(s);
                         fb.updateRoomSongs(model);
-//                        queueAdapter.clear();
-//                        queueAdapter.addAll(model.getSongNames());
-//                        queueAdapter.notifyDataSetChanged();
-                        //songNames.remove(s.getName());
                         return true;
                     }
                 }
@@ -687,29 +626,17 @@ public class PlaylistActivity extends ActionBarActivity {
 
     //Skip to next song
     public void onNextButtonClick(View view) {
-        if (me.getUsername().equals(model.getOwner())) {
+        String theOwner = model.getOwner();
+        String myUsername = me.getUsername();
+        if (myUsername.equals(theOwner)) {
             play = false;
             isPaused = false;
             MainActivity.mPlayer.pause();
-            //MainActivity.mPlayer.skipToNext();
-//            if (model.getSongs().size() > 0) {
-//                //System.out.println("NEXT");
-//                MainActivity.mPlayer.play(model.getSongs().get(0).getUri());
-//                model.removeSong(model.getSongs().get(0));
-//                if (isPaused) {
-//                    isPaused = false;
-//                }
-//                if (!play) {
-//                    play = true;
-//                }
-//            }
-//
         }
-
-
     }
 
 
+    // Sets permissions for explicit content
     public void onPg13ButtonClick(View view) {
         if (me.getUsername().equals(model.getOwner())) {
             model.setPG13(!model.isPG13);
